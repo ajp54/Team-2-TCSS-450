@@ -1,4 +1,4 @@
-package edu.uw.tcss450.chatapp;
+package edu.uw.tcss450.chatapp.ui.home.register;
 
 import android.os.Bundle;
 

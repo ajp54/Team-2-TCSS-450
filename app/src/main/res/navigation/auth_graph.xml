@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="edu.uw.tcss450.chatapp.LoginFragment"
+        android:name="edu.uw.tcss450.chatapp.ui.home.signin.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="edu.uw.tcss450.chatapp.RegisterFragment"
+        android:name="edu.uw.tcss450.chatapp.ui.home.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
