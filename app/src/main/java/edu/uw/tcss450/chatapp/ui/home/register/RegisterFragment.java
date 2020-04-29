@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.uw.tcss450.chatapp.databinding.FragmentRegisterBinding;
-import edu.uw.tcss450.combinatorpattern.util.PasswordValidator;
+import edu.uw.tcss450.chatapp.utils.PasswordValidator;
 
 
 /**

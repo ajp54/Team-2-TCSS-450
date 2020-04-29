@@ -45,7 +45,7 @@ dependencies {
 
     apply plugin: "androidx.navigation.safeargs"
 
-    implementation project(path: ':CombinatorPattern')
+    //implementation project(path: ':CombinatorPattern')
 
 
 
