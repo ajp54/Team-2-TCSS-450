@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import edu.uw.tcss450.combinatorpattern.util.PasswordValidator;
 import edu.uw.tcss450.chatapp.databinding.FragmentLoginBinding;
 
 
@@ -21,6 +22,12 @@ import edu.uw.tcss450.chatapp.databinding.FragmentLoginBinding;
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
+
+    private PasswordValidator mEmailValidator =
+            (PasswordValidator.checkPwdSpecialChar("@"));
+
+    // add more maybe later
+    private PasswordValidator mPasswordValidator = PasswordValidator.checkPwdLength(1);
 
     public LoginFragment() {
         // Required empty public constructor
@@ -55,6 +62,30 @@ public class LoginFragment extends Fragment {
     }
 
     private void handleLogin() {
+        mEmailValidator.processResult(
+                mEmailValidator.apply(binding.editEmailLogin.getText().toString().trim()),
+                this::validatePassword,
+                this::handleEmailError);
+    }
+
+    private void validatePassword() {
+        mPasswordValidator.processResult(
+                mPasswordValidator.apply(binding.editPassLogin.getText().toString()),
+                this::navigateToMain,
+                this::handlePasswordError);
+    }
+
+    private void handlePasswordError(PasswordValidator.ValidationResult validationResult) {
+        String message = "Password must be at least of length two";
+        binding.editPassLogin.setError(message);
+    }
+
+    private void handleEmailError(PasswordValidator.ValidationResult validationResult) {
+        String message = "Email must contain a '@'";
+        binding.editEmailLogin.setError(message);
+    }
+
+    private void navigateToMain() {
         Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
     }
 
