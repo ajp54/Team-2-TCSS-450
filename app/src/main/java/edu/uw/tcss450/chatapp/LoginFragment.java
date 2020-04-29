@@ -45,12 +45,17 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.buttonLoginRegister.setOnClickListener(button -> Navigation.findNavController(getView())
-                .navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment2()));
+                .navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment()));
 
+        binding.buttonLoginSignin.setOnClickListener(button -> handleLogin());
         //NavDirections directions = LoginFragmentDirections.actionLoginFragmentToRegisterFragment();
 
 
 
+    }
+
+    private void handleLogin() {
+        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
     }
 
 }

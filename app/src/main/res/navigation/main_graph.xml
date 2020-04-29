@@ -3,11 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/auth_graph"
-    app:startDestination="@id/success">
+    app:startDestination="@id/navigation_home">
 
     <fragment
-        android:id="@+id/success"
-        android:name="edu.uw.tcss450.chatapp.Success"
+        android:id="@+id/navigation_home"
+        android:name="edu.uw.tcss450.chatapp.SuccessFragment"
         android:label="fragment_success"
         tools:layout="@layout/fragment_success" />
+    <fragment
+        android:id="@+id/navigation_weather"
+        android:name="edu.uw.tcss450.chatapp.WeatherFragment"
+        android:label="fragment_weather"
+        tools:layout="@layout/fragment_weather" />
+    <fragment
+        android:id="@+id/navigation_contacts"
+        android:name="edu.uw.tcss450.chatapp.ContactsFragment"
+        android:label="fragment_contacts"
+        tools:layout="@layout/fragment_contacts" />
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="edu.uw.tcss450.chatapp.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>

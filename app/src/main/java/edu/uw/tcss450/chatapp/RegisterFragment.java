@@ -46,15 +46,8 @@ public class RegisterFragment extends Fragment {
 
         // Add the OnClickListener to the register button
 
-        binding.buttonRegisterRegister.setOnClickListener(null);
-
-    }
-
-    private void navigateToLogin() {
-
         binding.buttonRegisterRegister.setOnClickListener(button -> Navigation.findNavController(getView())
-                .navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment2()));
-
+                .navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()));
 
     }
 }

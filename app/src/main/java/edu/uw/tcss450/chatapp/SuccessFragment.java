@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Success extends Fragment {
+public class SuccessFragment extends Fragment {
 
-    public Success() {
+    public SuccessFragment() {
         // Required empty public constructor
     }
 
