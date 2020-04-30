@@ -5,12 +5,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import edu.uw.tcss450.chatapp.utils.PasswordValidator;
 import edu.uw.tcss450.chatapp.databinding.FragmentLoginBinding;
@@ -22,6 +26,9 @@ import edu.uw.tcss450.chatapp.databinding.FragmentLoginBinding;
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
+
+    private SignInViewModel mSignInModel;
+
 
     private PasswordValidator mEmailValidator =
             (PasswordValidator.checkPwdSpecialChar("@"));
@@ -36,6 +43,8 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSignInModel = new ViewModelProvider(getActivity())
+                .get(SignInViewModel.class);
     }
 
 
@@ -55,6 +64,15 @@ public class LoginFragment extends Fragment {
                 .navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment()));
 
         binding.buttonLoginSignin.setOnClickListener(button -> handleLogin());
+
+        mSignInModel.addResponseObserver(
+                getViewLifecycleOwner(),
+                this::observeResponse);
+
+        LoginFragmentArgs args = LoginFragmentArgs.fromBundle(getArguments());
+
+        binding.editEmailLogin.setText(args.getEmail().equals("default") ? "" : args.getEmail());
+        binding.editPassLogin.setText(args.getPassword().equals("default") ? "" : args.getPassword());
         //NavDirections directions = LoginFragmentDirections.actionLoginFragmentToRegisterFragment();
 
 
@@ -71,8 +89,15 @@ public class LoginFragment extends Fragment {
     private void validatePassword() {
         mPasswordValidator.processResult(
                 mPasswordValidator.apply(binding.editPassLogin.getText().toString()),
-                this::navigateToMain,
+                this::verifyAuthWithServer,
                 this::handlePasswordError);
+    }
+
+    private void verifyAuthWithServer() {
+        mSignInModel.connect( binding.editEmailLogin.getText().toString(),
+                binding.editPassLogin.getText().toString());
+        //This is an Asynchronous call. No statements after should rely on the //result of connect().
+
     }
 
     private void handlePasswordError(PasswordValidator.ValidationResult validationResult) {
@@ -85,8 +110,37 @@ public class LoginFragment extends Fragment {
         binding.editEmailLogin.setError(message);
     }
 
-    private void navigateToMain() {
-        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
+    private void navigateToMain(final String email, final String jwt) {
+//        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
+        Navigation.findNavController(getView()).navigate(LoginFragmentDirections
+                .actionLoginFragmentToMainActivity(email, jwt));
+    }
+
+    /**
+     * An observer on the HTTP Response from the web server. This observer should be
+     * attached to SignInViewModel.
+     *
+     * @param response the Response from the server
+     */
+    private void observeResponse(final JSONObject response) {
+        Log.e("LOGIN BUTTON", "OBSERVE RESPONSE CALLED");
+        if (response.length() > 0) {
+            if (response.has("code")) {
+                try { binding.editEmailLogin.setError(
+                        "Error Authenticating: " + response.getJSONObject("data").getString("message"));
+                } catch (JSONException e) {
+                    Log.e("JSON Parse Error", e.getMessage());
+                }
+            } else {
+                try {
+                    navigateToMain(binding.editEmailLogin.getText().toString(), response.getString("token"));
+                } catch (JSONException e) {
+                    Log.e("JSON Parse Error", e.getMessage()); }
+            }
+        } else {
+            Log.d("JSON Response", "No Response");
+        }
+
     }
 
 }

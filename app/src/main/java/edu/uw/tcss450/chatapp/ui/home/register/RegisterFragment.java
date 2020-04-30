@@ -8,9 +8,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import edu.uw.tcss450.chatapp.databinding.FragmentRegisterBinding;
 import edu.uw.tcss450.chatapp.utils.PasswordValidator;
@@ -20,6 +24,9 @@ import edu.uw.tcss450.chatapp.utils.PasswordValidator;
  * A simple {@link Fragment} subclass.
  */
 public class RegisterFragment extends Fragment {
+
+    private RegisterViewModel mRegisterModel;
+
 
     private FragmentRegisterBinding binding;
 
@@ -39,6 +46,8 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRegisterModel = new ViewModelProvider(getActivity())
+                .get(RegisterViewModel.class);
     }
 
     @Override
@@ -57,6 +66,9 @@ public class RegisterFragment extends Fragment {
 
         binding.buttonRegisterRegister.setOnClickListener(this::attemptRegister);
 
+        mRegisterModel.addResponseObserver(getViewLifecycleOwner(),
+                this::observeResponse);
+
 //        binding.buttonRegisterRegister.setOnClickListener(button -> Navigation.findNavController(getView())
 //                .navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()));
 
@@ -73,9 +85,15 @@ public class RegisterFragment extends Fragment {
     private void validatePassword() {
         mPasswordValidator.processResult(
                 mPasswordValidator.apply(binding.editPassRegister.getText().toString()),
-                this::navigateToLogin,
+                this::verifyAuthWithServer,
                 this::handlePasswordError);
     }
+
+    private void verifyAuthWithServer() {
+        mRegisterModel.connect( binding.editFnameRegister.getText().toString(),
+                binding.editLnameRegister.getText().toString(), binding.editEmailRegister.getText().toString(), binding.editPassRegister.getText().toString());
+    }
+
 
     private void handlePasswordError(PasswordValidator.ValidationResult validationResult) {
         String message = "Error";
@@ -115,8 +133,40 @@ public class RegisterFragment extends Fragment {
         binding.editEmailRegister.setError(message);
     }
 
+
     public void navigateToLogin() {
-        Navigation.findNavController(getView())
-                .navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment());
+
+//        Navigation.findNavController(getView())
+//                .navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment());
+
+        RegisterFragmentDirections.ActionRegisterFragmentToLoginFragment directions =
+                RegisterFragmentDirections.actionRegisterFragmentToLoginFragment();
+
+        directions.setEmail(binding.editEmailRegister.getText().toString());
+        directions.setPassword(binding.editPassRegister.getText().toString());
+
+        Navigation.findNavController(getView()).navigate(directions);
+
+    }
+
+
+    /**
+     * An observer on the HTTP Response from the web server. This observer should be
+     * attached to SignInViewModel.
+     *
+     * @param response the Response from the server
+     */
+    private void observeResponse(final JSONObject response) {
+        if (response.length() > 0) {
+            if (response.has("code")) {
+                try { binding.editEmailRegister.setError(
+                        "Error Authenticating: " + response.getJSONObject("data").getString("message"));
+                } catch (JSONException e) {
+                    Log.e("JSON Parse Error", e.getMessage()); }
+            } else { navigateToLogin();
+            }
+        } else {
+            Log.d("JSON Response", "No Response");
+        }
     }
 }
