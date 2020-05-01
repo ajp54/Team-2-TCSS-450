@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.utils.PasswordValidator;
 import edu.uw.tcss450.chatapp.databinding.FragmentLoginBinding;
 
@@ -101,12 +102,12 @@ public class LoginFragment extends Fragment {
     }
 
     private void handlePasswordError(PasswordValidator.ValidationResult validationResult) {
-        String message = "Password must be at least of length two";
+        String message = getString(R.string.error_password_one_char);
         binding.editPassLogin.setError(message);
     }
 
     private void handleEmailError(PasswordValidator.ValidationResult validationResult) {
-        String message = "Email must contain a '@'";
+        String message = getString(R.string.error_email_character);
         binding.editEmailLogin.setError(message);
     }
 

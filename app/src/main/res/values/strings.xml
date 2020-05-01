@@ -1,6 +1,30 @@
 <resources>
     <string name="app_name">Chat App</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- Naming convention: (how it will be used)_(description) -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_general">Error</string>
+    <string name="error_email_two_chars">Email must include more than 2 characters</string>
+    <string name="error_email_character">Email must contain a \'@\'</string>
+    <string name="error_email_whitespace">Email must not include whitespace</string>
+    <string name="error_password_one_char">Password must include more than 1 character</string>
+    <string name="error_password_match">Passwords must match</string>
+    <string name="error_password_five_chars">Password must include more than 5 characters</string>
+    <string name="error_password_whitespace">Password must not include whitespace</string>
+
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_first">First Name</string>
+    <string name="hint_last">Last Name</string>
+
+    <string name="label_register">Register</string>
+    <string name="label_sign_in">Sign In</string>
+    <string name="label_home">Home</string>
+    <string name="label_chat">Chat</string>
+    <string name="label_contacts">Contacts</string>
+    <string name="label_weather">Weather</string>
+
+
 </resources>

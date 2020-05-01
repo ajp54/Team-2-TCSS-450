@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.databinding.FragmentRegisterBinding;
 import edu.uw.tcss450.chatapp.utils.PasswordValidator;
 
@@ -96,16 +97,16 @@ public class RegisterFragment extends Fragment {
 
 
     private void handlePasswordError(PasswordValidator.ValidationResult validationResult) {
-        String message = "Error";
+        String message = getString(R.string.error_general);
         switch (validationResult) {
             case PWD_CLIENT_ERROR:
-                message = "Passwords must match";
+                message = getString(R.string.error_password_match);
                 break;
             case PWD_INVALID_LENGTH:
-                message = "Password must include more than 5 characters";
+                message = getString(R.string.error_password_five_chars);
                 break;
             case PWD_INCLUDES_WHITESPACE:
-                message = "Password must not include whitespace";
+                message = getString(R.string.error_password_whitespace);
                 break;
             default:
                 // might need a case
@@ -115,16 +116,16 @@ public class RegisterFragment extends Fragment {
     }
 
     private void handleEmailError(PasswordValidator.ValidationResult validationResult) {
-        String message = "Error";
+        String message = getString(R.string.error_general);
         switch (validationResult) {
             case PWD_INVALID_LENGTH:
-                message = "Email must include more than 2 characters";
+                message = getString(R.string.error_email_two_chars);
                 break;
             case PWD_INCLUDES_WHITESPACE:
-                message = "Email must not include whitespace";
+                message = getString(R.string.error_email_whitespace);
                 break;
             case PWD_MISSING_SPECIAL:
-                message = "Email must include '@'";
+                message = getString(R.string.error_email_character);
                 break;
             default:
                 // might need a case
