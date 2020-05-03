@@ -36,8 +36,11 @@ public class RegisterFragment extends Fragment {
             .and(PasswordValidator.checkPwdSpecialChar("@"));
 
     // add more maybe later
-    private PasswordValidator mPasswordValidator = PasswordValidator.checkPwdLength(5)
-            .and(PasswordValidator.checkExcludeWhiteSpace());
+    private PasswordValidator mPasswordValidator = PasswordValidator.checkPwdLength(7)
+            .and(PasswordValidator.checkPwdSpecialChar())
+            .and(PasswordValidator.checkExcludeWhiteSpace())
+            .and(PasswordValidator.checkPwdDigit())
+            .and(PasswordValidator.checkPwdLowerCase().or(PasswordValidator.checkPwdUpperCase()));
 
 
     public RegisterFragment() {
@@ -103,10 +106,22 @@ public class RegisterFragment extends Fragment {
                 message = getString(R.string.error_password_match);
                 break;
             case PWD_INVALID_LENGTH:
-                message = getString(R.string.error_password_five_chars);
+                message = getString(R.string.error_password_seven_chars);
                 break;
             case PWD_INCLUDES_WHITESPACE:
                 message = getString(R.string.error_password_whitespace);
+                break;
+            case PWD_MISSING_DIGIT:
+                message = getString(R.string.error_password_digit);
+                break;
+            case PWD_MISSING_SPECIAL:
+                message = getString(R.string.error_password_special);
+                break;
+            case PWD_MISSING_LOWER:
+                message = getString(R.string.error_password_lower);
+                break;
+            case PWD_MISSING_UPPER:
+                message = getString(R.string.error_password_upper);
                 break;
             default:
                 // might need a case

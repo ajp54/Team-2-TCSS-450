@@ -10,8 +10,13 @@
     <string name="error_email_whitespace">Email must not include whitespace</string>
     <string name="error_password_one_char">Password must include more than 1 character</string>
     <string name="error_password_match">Passwords must match</string>
-    <string name="error_password_five_chars">Password must include more than 5 characters</string>
+    <string name="error_password_seven_chars">Password must include more than 7 characters</string>
     <string name="error_password_whitespace">Password must not include whitespace</string>
+    <string name="error_password_digit">Password must include a digit</string>
+    <string name="error_password_special">Password must include a special character</string>
+    <string name="error_password_lower">Password must include a lower case letter</string>
+    <string name="error_password_upper">Password must include a capital letter</string>
+
 
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
