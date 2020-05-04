@@ -26,15 +26,14 @@ import edu.uw.tcss450.chatapp.databinding.FragmentLoginBinding;
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
-
     private SignInViewModel mSignInModel;
 
+    private PasswordValidator mEmailValidator = PasswordValidator.checkPwdLength(2)
+                    .and(PasswordValidator.checkExcludeWhiteSpace())
+                    .and(PasswordValidator.checkPwdSpecialChar("@"));
 
-    private PasswordValidator mEmailValidator =
-            (PasswordValidator.checkPwdSpecialChar("@"));
-
-    // add more maybe later
-    private PasswordValidator mPasswordValidator = PasswordValidator.checkPwdLength(1);
+    private PasswordValidator mPasswordValidator = PasswordValidator.checkPwdLength(1)
+            .and(PasswordValidator.checkExcludeWhiteSpace());
 
     public LoginFragment() {
         // Required empty public constructor
