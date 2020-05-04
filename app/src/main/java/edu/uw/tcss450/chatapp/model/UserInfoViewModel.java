@@ -4,26 +4,48 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+/**
+ * A simple {@link ViewModel} subclass.
+ */
 public class UserInfoViewModel extends ViewModel {
 
     private final String mEmail;
     private final String mJwt;
 
+    /**
+     * Class Constructor.
+     *
+     * @param email user's email.
+     * @param jwt User's JSON Web Token.
+     */
     private UserInfoViewModel(String email, String jwt) {
         mEmail = email;
         mJwt = jwt;
     }
 
+    /**
+     * Get's the user's JSON Web Token.
+     *
+     * @return user's JSON Web Token.
+     */
     public String getEmail() {
 
         return mEmail;
     }
 
+    /**
+     * Get's the user's email.
+     *
+     * @return user's email.
+     */
     public String getmJwt() {
 
         return mJwt;
     }
 
+    /**
+     * Instantiates the UserInfoViewModel
+     */
     public static class UserInfoViewModelFactory implements ViewModelProvider.Factory {
 
         private final String email;

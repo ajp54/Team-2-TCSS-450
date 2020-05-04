@@ -16,6 +16,9 @@ import edu.uw.tcss450.chatapp.R;
  */
 public class ChatFragment extends Fragment {
 
+    /**
+     * Class constructor
+     */
     public ChatFragment() {
         // Required empty public constructor
     }
