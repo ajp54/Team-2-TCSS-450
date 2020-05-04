@@ -37,6 +37,9 @@ public class LoginFragment extends Fragment {
     // add more maybe later
     private PasswordValidator mPasswordValidator = PasswordValidator.checkPwdLength(1);
 
+    /**
+     * Class constructor
+     */
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -80,6 +83,12 @@ public class LoginFragment extends Fragment {
 
     }
 
+    /**
+     * Pass the the email and password into their corresponding validation methods.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void handleLogin() {
         mEmailValidator.processResult(
                 mEmailValidator.apply(binding.editEmailLogin.getText().toString().trim()),
@@ -87,6 +96,12 @@ public class LoginFragment extends Fragment {
                 this::handleEmailError);
     }
 
+    /**
+     * Verifies that the password the user has entered meets all of our requirements.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void validatePassword() {
         mPasswordValidator.processResult(
                 mPasswordValidator.apply(binding.editPassLogin.getText().toString()),
@@ -94,23 +109,57 @@ public class LoginFragment extends Fragment {
                 this::handlePasswordError);
     }
 
+    /**
+     * Verifies that the email the user has entered meets all of our requirements.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void verifyAuthWithServer() {
         mSignInModel.connect( binding.editEmailLogin.getText().toString(),
                 binding.editPassLogin.getText().toString());
-        //This is an Asynchronous call. No statements after should rely on the //result of connect().
+        //This is an Asynchronous call. No statements after should rely on the
+        // result of connect().
 
     }
 
+    /**
+     * Takes the result of a password validator and checks to see if the the password the user entered
+     * contained any errors. If so, the corresponding error message will be displayed to the user.
+     *
+     * @param validationResult  The result of the password validation.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void handlePasswordError(PasswordValidator.ValidationResult validationResult) {
         String message = getString(R.string.error_password_one_char);
         binding.editPassLogin.setError(message);
     }
 
+    /**
+     * Takes the result of a password validator and checks to see if the the email the user entered
+     * contained any errors. If so, the corresponding error message will be displayed to the user.
+     *
+     * @param validationResult  The result of the password validation.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void handleEmailError(PasswordValidator.ValidationResult validationResult) {
         String message = getString(R.string.error_email_character);
         binding.editEmailLogin.setError(message);
     }
 
+    /**
+     * Navigates from the login fragment to the main activity.
+     *
+     * @param email User's email getting passed into the main activity
+     * @param jwt   JSON Web Token getting passed into the main activity
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void navigateToMain(final String email, final String jwt) {
 //        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
         Navigation.findNavController(getView()).navigate(LoginFragmentDirections
@@ -122,6 +171,9 @@ public class LoginFragment extends Fragment {
      * attached to SignInViewModel.
      *
      * @param response the Response from the server
+     *
+     * @author Charles Bryan
+     * @version 1.0
      */
     private void observeResponse(final JSONObject response) {
         Log.e("LOGIN BUTTON", "OBSERVE RESPONSE CALLED");

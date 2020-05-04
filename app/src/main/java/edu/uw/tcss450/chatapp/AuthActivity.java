@@ -11,10 +11,13 @@ import android.view.ViewGroup;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link android.app.Activity} subclass.
  */
 public class AuthActivity extends AppCompatActivity {
 
+    /**
+     * Class constructor
+     */
     public AuthActivity() {
         // Required empty public constructor
     }

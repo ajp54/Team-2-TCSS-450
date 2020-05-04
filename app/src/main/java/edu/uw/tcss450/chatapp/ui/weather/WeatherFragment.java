@@ -16,6 +16,9 @@ import edu.uw.tcss450.chatapp.R;
  */
 public class WeatherFragment extends Fragment {
 
+    /**
+     * Class constructor
+     */
     public WeatherFragment() {
         // Required empty public constructor
     }

@@ -42,7 +42,12 @@ public class RegisterFragment extends Fragment {
             .and(PasswordValidator.checkPwdDigit())
             .and(PasswordValidator.checkPwdLowerCase().or(PasswordValidator.checkPwdUpperCase()));
 
+    private PasswordValidator mUsernameValidator = PasswordValidator.checkPwdLength(2)
+            .and(PasswordValidator.checkExcludeWhiteSpace());
 
+    /**
+     * class constructor
+     */
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -78,14 +83,40 @@ public class RegisterFragment extends Fragment {
 
     }
 
+    /**
+     * Pass the the email and password into their corresponding validation methods.
+     *
+     * @param view  A UI element.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void attemptRegister(View view) {
         mEmailValidator.processResult(
                 mEmailValidator.apply(binding.editEmailRegister.getText().toString().trim()),
-                this::validatePassword,
+                this::validateUsername,
                 this::handleEmailError);
     }
 
+    /**
+     * Verifies that the username the user has entered meets all of our requirements.
+     *
+     * @author Anders Pedersen
+     * @version 1.0
+     */
+    private void validateUsername() {
+        mUsernameValidator.processResult(
+                mUsernameValidator.apply(binding.editUsernameRegister.getText().toString()),
+                this::validatePassword,
+                this::handleUsernameError);
+    }
 
+    /**
+     * Verifies that the password the user has entered meets all of our requirements.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void validatePassword() {
         mPasswordValidator.processResult(
                 mPasswordValidator.apply(binding.editPassRegister.getText().toString()),
@@ -93,12 +124,27 @@ public class RegisterFragment extends Fragment {
                 this::handlePasswordError);
     }
 
+    /**
+     * Connects to the server and tries sending the validated credentials.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void verifyAuthWithServer() {
         mRegisterModel.connect( binding.editFnameRegister.getText().toString(),
                 binding.editLnameRegister.getText().toString(), binding.editEmailRegister.getText().toString(), binding.editPassRegister.getText().toString());
     }
 
-
+    /**
+     * Takes the result of a password validator and checks to see if the the password the user entered
+     * contained any errors. If so, the corresponding error message will be displayed to the user.
+     *
+     * @param validationResult  The result of the password validation.
+     *
+     * @author Charles Bryan
+     * @author Bayley Cope
+     * @version 1.1
+     */
     private void handlePasswordError(PasswordValidator.ValidationResult validationResult) {
         String message = getString(R.string.error_general);
         switch (validationResult) {
@@ -130,6 +176,15 @@ public class RegisterFragment extends Fragment {
         binding.editPassRegister.setError(message);
     }
 
+    /**
+     * Takes the result of a password validator and checks to see if the the email the user entered
+     * contained any errors. If so, the corresponding error message will be displayed to the user.
+     *
+     * @param validationResult  The result of the password validation.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void handleEmailError(PasswordValidator.ValidationResult validationResult) {
         String message = getString(R.string.error_general);
         switch (validationResult) {
@@ -149,7 +204,38 @@ public class RegisterFragment extends Fragment {
         binding.editEmailRegister.setError(message);
     }
 
+    /**
+     * Takes the result of a password validator and checks to see if the the email the user entered
+     * contained any errors. If so, the corresponding error message will be displayed to the user.
+     *
+     * @param validationResult  The result of the password validation.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
+    private void handleUsernameError(PasswordValidator.ValidationResult validationResult) {
+        String message = getString(R.string.error_general);
+        switch (validationResult) {
+            case PWD_INVALID_LENGTH:
+                message = getString(R.string.error_username_two_chars);
+                break;
+            case PWD_INCLUDES_WHITESPACE:
+                message = getString(R.string.error_username_whitespace);
+                break;
+            default:
+                // might need a case
+                break;
+        }
+        binding.editUsernameRegister.setError(message);
+    }
 
+
+    /**
+     * Navigates from the register fragment to the login fragment
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     public void navigateToLogin() {
 
 //        Navigation.findNavController(getView())
@@ -171,6 +257,9 @@ public class RegisterFragment extends Fragment {
      * attached to SignInViewModel.
      *
      * @param response the Response from the server
+     *                 
+     * @author Charles Bryan
+     * @version 1.0
      */
     private void observeResponse(final JSONObject response) {
         if (response.length() > 0) {
