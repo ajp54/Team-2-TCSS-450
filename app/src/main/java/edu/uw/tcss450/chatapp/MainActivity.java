@@ -10,6 +10,9 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * A simple {@link android.app.Activity} subclass.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;

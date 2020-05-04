@@ -1,6 +1,38 @@
 <resources>
+
+    <!-- Naming convention: (how it will be used)_(description) -->
     <string name="app_name">Chat App</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_general">Error</string>
+    <string name="error_email_two_chars">Email must include more than 2 characters</string>
+    <string name="error_email_character">Email must contain a \'@\'</string>
+    <string name="error_email_whitespace">Email must not include whitespace</string>
+    <string name="error_password_one_char">Password must include more than 1 character</string>
+    <string name="error_password_match">Passwords must match</string>
+    <string name="error_password_seven_chars">Password must include more than 7 characters</string>
+    <string name="error_password_whitespace">Password must not include whitespace</string>
+    <string name="error_password_digit">Password must include a digit</string>
+    <string name="error_password_special">Password must include a special character</string>
+    <string name="error_password_lower">Password must include a lower case letter</string>
+    <string name="error_password_upper">Password must include a capital letter</string>
+    <string name="error_username_two_chars">Username must include more than 2 characters</string>
+    <string name="error_username_whitespace">Username must not include whitespace</string>
+
+
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_first">First Name</string>
+    <string name="hint_last">Last Name</string>
+    <string name="hint_user">Username</string>
+
+    <string name="label_register">Register</string>
+    <string name="label_sign_in">Sign In</string>
+    <string name="label_home">Home</string>
+    <string name="label_chat">Chat</string>
+    <string name="label_contacts">Contacts</string>
+    <string name="label_weather">Weather</string>
+
 </resources>

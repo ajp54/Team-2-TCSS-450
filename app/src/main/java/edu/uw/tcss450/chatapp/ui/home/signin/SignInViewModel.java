@@ -25,10 +25,21 @@ import java.util.Objects;
 
 import edu.uw.tcss450.chatapp.io.RequestQueueSingleton;
 
+/**
+ * a {@link androidx.lifecycle.ViewModel} for the register fragment
+ */
 public class SignInViewModel extends AndroidViewModel {
 
     private MutableLiveData<JSONObject> mResponse;
 
+    /**
+     * Class constructor
+     *
+     * @param application application currently running.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     public SignInViewModel(@NonNull Application application) {
         super(application);
         mResponse = new MutableLiveData<>();
@@ -41,10 +52,14 @@ public class SignInViewModel extends AndroidViewModel {
         mResponse.observe(owner, observer);
     }
 
-
-
-
-
+    /**
+     * Handles Volley errors.
+     *
+     * @param error the error that needs to be handled.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     private void handleError(final VolleyError error) {
         if (Objects.isNull(error.networkResponse)) {
             try {
@@ -69,6 +84,15 @@ public class SignInViewModel extends AndroidViewModel {
         }
     }
 
+    /**
+     * Attempts to send the user's registration data to the server.
+     *
+     * @param email user's email
+     * @param password user's password
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
     public void connect(final String email, final String password) {
         String url = "https://cfb3-lab4-backend-2020sp.herokuapp.com/auth";
         Request request = new JsonObjectRequest( Request.Method.GET,
