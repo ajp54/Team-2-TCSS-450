@@ -31,8 +31,8 @@
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
-            android:id="@+id/action_registerFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_registerFragment_to_registerConfirmFragment"
+            app:destination="@id/registerConfirmFragment" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
@@ -46,4 +46,28 @@
             android:name="jwt"
             app:argType="string" />
     </activity>
+    <fragment
+        android:id="@+id/registerConfirmFragment"
+        android:name="edu.uw.tcss450.chatapp.ui.home.registerConfirm.RegisterConfirmFragment"
+        android:label="fragment_register_confirm"
+        tools:layout="@layout/fragment_register_confirm" >
+        <argument
+            android:name="fname"
+            app:argType="string" />
+        <argument
+            android:name="lname"
+            app:argType="string" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="user"
+            app:argType="string" />
+        <argument
+            android:name="pass"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_registerConfirmFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>
