@@ -5,16 +5,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.databinding.FragmentRegisterBinding;
@@ -25,8 +21,6 @@ import edu.uw.tcss450.chatapp.utils.PasswordValidator;
  * A simple {@link Fragment} subclass.
  */
 public class RegisterFragment extends Fragment {
-
-    private RegisterViewModel mRegisterModel;
 
 
     private FragmentRegisterBinding binding;
@@ -55,8 +49,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRegisterModel = new ViewModelProvider(getActivity())
-                .get(RegisterViewModel.class);
+
     }
 
     @Override
@@ -73,25 +66,22 @@ public class RegisterFragment extends Fragment {
 
         // Add the OnClickListener to the register button
 
-        binding.buttonRegisterRegister.setOnClickListener(this::attemptRegister);
 
-        mRegisterModel.addResponseObserver(getViewLifecycleOwner(),
-                this::observeResponse);
+        binding.buttonRegisterRegister.setOnClickListener(button -> attemptRegister());
 
-//        binding.buttonRegisterRegister.setOnClickListener(button -> Navigation.findNavController(getView())
-//                .navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()));
+
 
     }
+
 
     /**
      * Pass the the email and password into their corresponding validation methods.
      *
-     * @param view  A UI element.
      *
      * @author Charles Bryan
      * @version 1.0
      */
-    private void attemptRegister(View view) {
+    private void attemptRegister() {
         mEmailValidator.processResult(
                 mEmailValidator.apply(binding.editEmailRegister.getText().toString().trim()),
                 this::validateUsername,
@@ -120,20 +110,17 @@ public class RegisterFragment extends Fragment {
     private void validatePassword() {
         mPasswordValidator.processResult(
                 mPasswordValidator.apply(binding.editPassRegister.getText().toString()),
-                this::verifyAuthWithServer,
+                this::navigateToConfirm,
                 this::handlePasswordError);
     }
 
-    /**
-     * Connects to the server and tries sending the validated credentials.
-     *
-     * @author Charles Bryan
-     * @version 1.0
-     */
-    private void verifyAuthWithServer() {
-        mRegisterModel.connect( binding.editFnameRegister.getText().toString(),
-                binding.editLnameRegister.getText().toString(), binding.editEmailRegister.getText().toString(), binding.editPassRegister.getText().toString());
+    private void navigateToConfirm() {
+        Navigation.findNavController(getView())
+                .navigate(RegisterFragmentDirections.actionRegisterFragmentToRegisterConfirmFragment(binding.editFnameRegister.getText().toString(),
+                        binding.editLnameRegister.getText().toString(), binding.editEmailRegister.getText().toString(),
+                        binding.editUsernameRegister.getText().toString(), binding.editPassRegister.getText().toString()));
     }
+
 
     /**
      * Takes the result of a password validator and checks to see if the the password the user entered
@@ -230,48 +217,4 @@ public class RegisterFragment extends Fragment {
     }
 
 
-    /**
-     * Navigates from the register fragment to the login fragment
-     *
-     * @author Charles Bryan
-     * @version 1.0
-     */
-    public void navigateToLogin() {
-
-//        Navigation.findNavController(getView())
-//                .navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment());
-
-        RegisterFragmentDirections.ActionRegisterFragmentToLoginFragment directions =
-                RegisterFragmentDirections.actionRegisterFragmentToLoginFragment();
-
-        directions.setEmail(binding.editEmailRegister.getText().toString());
-        directions.setPassword(binding.editPassRegister.getText().toString());
-
-        Navigation.findNavController(getView()).navigate(directions);
-
-    }
-
-
-    /**
-     * An observer on the HTTP Response from the web server. This observer should be
-     * attached to SignInViewModel.
-     *
-     * @param response the Response from the server
-     *                 
-     * @author Charles Bryan
-     * @version 1.0
-     */
-    private void observeResponse(final JSONObject response) {
-        if (response.length() > 0) {
-            if (response.has("code")) {
-                try { binding.editEmailRegister.setError(
-                        "Error Authenticating: " + response.getJSONObject("data").getString("message"));
-                } catch (JSONException e) {
-                    Log.e("JSON Parse Error", e.getMessage()); }
-            } else { navigateToLogin();
-            }
-        } else {
-            Log.d("JSON Response", "No Response");
-        }
-    }
 }

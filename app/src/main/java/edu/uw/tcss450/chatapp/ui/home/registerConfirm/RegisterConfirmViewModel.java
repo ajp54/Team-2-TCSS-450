@@ -1,4 +1,4 @@
-package edu.uw.tcss450.chatapp.ui.home.register;
+package edu.uw.tcss450.chatapp.ui.home.registerConfirm;
 
 import android.app.Application;
 import android.util.Log;
@@ -24,7 +24,7 @@ import java.util.Objects;
 /**
  * a {@link androidx.lifecycle.ViewModel} for the register fragment
  */
-public class RegisterViewModel extends AndroidViewModel {
+public class RegisterConfirmViewModel extends AndroidViewModel {
 
     private MutableLiveData<JSONObject> mResponse;
 
@@ -33,7 +33,7 @@ public class RegisterViewModel extends AndroidViewModel {
      *
      * @param application application currently running.
      */
-    public RegisterViewModel(@NonNull Application application) {
+    public RegisterConfirmViewModel(@NonNull Application application) {
         super(application);
         mResponse = new MutableLiveData<>();
         mResponse.setValue(new JSONObject());
