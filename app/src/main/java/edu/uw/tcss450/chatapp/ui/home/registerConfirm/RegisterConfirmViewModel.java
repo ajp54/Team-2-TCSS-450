@@ -88,44 +88,30 @@ public class RegisterConfirmViewModel extends AndroidViewModel {
     /**
      * Attempts to send the user's registration data to the server.
      *
-     * @param first user's first name
-     * @param last user's last name
+     * @param fname user's first name
+     * @param lname user's last name
      * @param email user's email
      * @param password user's password
      *
      * @author Charles Bryan
      * @version 1.0
      */
-    public void connect(final String first,
-                        final String last,
-                        final String email,
+    public void connect(final String fname, final String lname, final String email,
                         final String password) {
-        //String url = "https://cfb3-lab4-backend-2020sp.herokuapp.com/auth";
-        //String url = "http://localhost:5000/auth";
-        String url = "https://team-2-tcss-450-backend.herokuapp.com/auth";
-
-        JSONObject body = new JSONObject();
-        try {
-            body.put("first", first);
-            body.put("last", last);
+        String url = "https://cfb3-lab4-backend-2020sp.herokuapp.com/auth";
+        JSONObject body = new JSONObject(); try {
+            body.put("first", fname);
+            body.put("last", lname);
             body.put("email", email);
             body.put("password", password);
         } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Request request = new JsonObjectRequest(
-                Request.Method.POST,
+            e.printStackTrace(); }
+        Request request = new JsonObjectRequest( Request.Method.POST,
                 url,
-                body,
-                mResponse::setValue,
-                this::handleError);
-
-        request.setRetryPolicy(new DefaultRetryPolicy(
-                10_000,
+                body, mResponse::setValue, this::handleError);
+        request.setRetryPolicy(new DefaultRetryPolicy( 10_000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         //Instantiate the RequestQueue and add the request to the queue
-        Volley.newRequestQueue(getApplication().getApplicationContext())
-                .add(request);
-    }
+        Volley.newRequestQueue(getApplication().getApplicationContext()).add(request); }
 }
