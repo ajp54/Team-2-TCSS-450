@@ -175,7 +175,6 @@ public class LoginFragment extends Fragment {
      * @version 1.0
      */
     private void observeResponse(final JSONObject response) {
-        Log.e("LOGIN BUTTON", "OBSERVE RESPONSE CALLED");
         if (response.length() > 0) {
             if (response.has("code")) {
                 try { binding.editEmailLogin.setError(
