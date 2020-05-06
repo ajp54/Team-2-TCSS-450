@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
-        android:text="Continue"
+        android:text="@string/label_continue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -21,7 +21,7 @@
         android:id="@+id/textView_registerConfirm_greeting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirmation Page"
+        android:text="@string/label_verify_email"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
