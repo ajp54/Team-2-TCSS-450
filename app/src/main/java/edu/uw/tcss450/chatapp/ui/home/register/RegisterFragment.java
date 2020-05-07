@@ -5,15 +5,21 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.databinding.FragmentRegisterBinding;
+import edu.uw.tcss450.chatapp.ui.home.registerConfirm.RegisterConfirmFragmentArgs;
 import edu.uw.tcss450.chatapp.utils.PasswordValidator;
 
 
@@ -21,6 +27,8 @@ import edu.uw.tcss450.chatapp.utils.PasswordValidator;
  * A simple {@link Fragment} subclass.
  */
 public class RegisterFragment extends Fragment {
+
+    private RegisterViewModel mRegisterModel;
 
 
     private FragmentRegisterBinding binding;
@@ -49,6 +57,8 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRegisterModel = new ViewModelProvider(getActivity())
+                .get(RegisterViewModel.class);
 
     }
 
@@ -69,9 +79,12 @@ public class RegisterFragment extends Fragment {
 
         binding.buttonRegisterRegister.setOnClickListener(button -> attemptRegister());
 
-
+        mRegisterModel.addResponseObserver(getViewLifecycleOwner(),
+                this::observeResponse);
 
     }
+
+
 
 
     /**
@@ -110,15 +123,30 @@ public class RegisterFragment extends Fragment {
     private void validatePassword() {
         mPasswordValidator.processResult(
                 mPasswordValidator.apply(binding.editPassRegister.getText().toString()),
-                this::navigateToConfirm,
+                this::verifyAuthWithServer,
                 this::handlePasswordError);
     }
 
     private void navigateToConfirm() {
         Navigation.findNavController(getView())
-                .navigate(RegisterFragmentDirections.actionRegisterFragmentToRegisterConfirmFragment(binding.editFnameRegister.getText().toString(),
-                        binding.editLnameRegister.getText().toString(), binding.editEmailRegister.getText().toString(),
-                        binding.editUsernameRegister.getText().toString(), binding.editPassRegister.getText().toString()));
+                .navigate(RegisterFragmentDirections.actionRegisterFragmentToRegisterConfirmFragment(binding.editEmailRegister.getText().toString(),
+                        binding.editPassRegister.getText().toString()));
+    }
+
+    /**
+     * Connects to the server and tries sending the validated credentials.
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
+    private void verifyAuthWithServer() {
+
+//        RegisterConfirmFragmentArgs args = RegisterConfirmFragmentArgs.fromBundle(getArguments());
+
+        mRegisterModel.connect(binding.editFnameRegister.getText().toString(),
+                binding.editLnameRegister.getText().toString(), binding.editEmailRegister.getText().toString(),
+                binding.editPassRegister.getText().toString());
+
     }
 
 
@@ -214,6 +242,29 @@ public class RegisterFragment extends Fragment {
                 break;
         }
         binding.editUsernameRegister.setError(message);
+    }
+
+    /**
+     * An observer on the HTTP Response from the web server. This observer should be
+     * attached to SignInViewModel.
+     *
+     * @param response the Response from the server
+     *
+     * @author Charles Bryan
+     * @version 1.0
+     */
+    private void observeResponse(final JSONObject response) {
+        if (response.length() > 0) {
+            if (response.has("code")) {
+                try { binding.editEmailRegister.setError(
+                        "Error Authenticating: " + response.getJSONObject("data").getString("message"));
+                } catch (JSONException e) {
+                    Log.e("JSON Parse Error", e.getMessage()); }
+            } else { navigateToConfirm();
+            }
+        } else {
+            Log.d("JSON Response", "No Response");
+        }
     }
 
 

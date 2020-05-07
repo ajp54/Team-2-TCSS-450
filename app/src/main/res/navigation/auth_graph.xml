@@ -52,16 +52,7 @@
         android:label="fragment_register_confirm"
         tools:layout="@layout/fragment_register_confirm" >
         <argument
-            android:name="fname"
-            app:argType="string" />
-        <argument
-            android:name="lname"
-            app:argType="string" />
-        <argument
             android:name="email"
-            app:argType="string" />
-        <argument
-            android:name="user"
             app:argType="string" />
         <argument
             android:name="pass"
