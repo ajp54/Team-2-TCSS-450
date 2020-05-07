@@ -17,13 +17,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.uw.tcss450.chatapp.databinding.FragmentRegisterConfirmBinding;
+import edu.uw.tcss450.chatapp.ui.home.register.RegisterViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RegisterConfirmFragment extends Fragment {
 
-    private RegisterConfirmViewModel mRegisterModel;
+    //private RegisterViewModel mRegisterModel;
 
     private FragmentRegisterConfirmBinding binding;
 
@@ -35,8 +36,8 @@ public class RegisterConfirmFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRegisterModel = new ViewModelProvider(getActivity())
-                .get(RegisterConfirmViewModel.class);
+//        mRegisterModel = new ViewModelProvider(getActivity())
+//                .get(RegisterViewModel.class);
     }
 
 
@@ -54,26 +55,26 @@ public class RegisterConfirmFragment extends Fragment {
 
         // Add the OnClickListener to the register button
 
-        binding.buttonConfirmRegisterContinue.setOnClickListener(this::verifyAuthWithServer);
+        binding.buttonConfirmRegisterContinue.setOnClickListener(this::navigateToLogin);
 
-        mRegisterModel.addResponseObserver(getViewLifecycleOwner(),
-                this::observeResponse);
+//        mRegisterModel.addResponseObserver(getViewLifecycleOwner(),
+//                this::observeResponse);
 
 
 
     }
 
-    /**
-     * Connects to the server and tries sending the validated credentials.
-     *
-     * @author Charles Bryan
-     * @version 1.0
-     */
-    private void verifyAuthWithServer(View view) {
-        RegisterConfirmFragmentArgs args = RegisterConfirmFragmentArgs.fromBundle(getArguments());
-
-        mRegisterModel.connect(args.getFname(), args.getLname(), args.getEmail(), args.getPass());
-    }
+//    /**
+//     * Connects to the server and tries sending the validated credentials.
+//     *
+//     * @author Charles Bryan
+//     * @version 1.0
+//     */
+//    private void verifyAuthWithServer(View view) {
+//        RegisterConfirmFragmentArgs args = RegisterConfirmFragmentArgs.fromBundle(getArguments());
+//
+//        mRegisterModel.connect(args.getFname(), args.getLname(), args.getEmail(), args.getPass());
+//    }
 
     /**
      * Navigates from the register fragment to the login fragment
@@ -81,13 +82,13 @@ public class RegisterConfirmFragment extends Fragment {
      * @author Charles Bryan
      * @version 1.0
      */
-    public void navigateToLogin() {
+    public void navigateToLogin(View view) {
         RegisterConfirmFragmentArgs args = RegisterConfirmFragmentArgs.fromBundle(getArguments());
-
-
+//
+//
 //        Navigation.findNavController(getView())
-//                .navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment());
-
+//                .navigate(RegisterConfirmFragmentDirections.actionRegisterConfirmFragmentToLoginFragment());
+//
         RegisterConfirmFragmentDirections.ActionRegisterConfirmFragmentToLoginFragment directions =
                 RegisterConfirmFragmentDirections.actionRegisterConfirmFragmentToLoginFragment();
 
@@ -98,28 +99,28 @@ public class RegisterConfirmFragment extends Fragment {
 
     }
 
-    /**
-     * An observer on the HTTP Response from the web server. This observer should be
-     * attached to SignInViewModel.
-     *
-     * @param response the Response from the server
-     *
-     * @author Charles Bryan
-     * @version 1.0
-     */
-    private void observeResponse(final JSONObject response) {
-        if (response.length() > 0) {
-            if (response.has("code")) {
-                try { binding.textViewRegisterConfirmGreeting.setError(
-                        "Error Authenticating: " + response.getJSONObject("data").getString("message"));
-                } catch (JSONException e) {
-                    Log.e("JSON Parse Error", e.getMessage()); }
-            } else { navigateToLogin();
-            }
-        } else {
-            Log.d("JSON Response", "No Response");
-        }
-    }
+//    /**
+//     * An observer on the HTTP Response from the web server. This observer should be
+//     * attached to SignInViewModel.
+//     *
+//     * @param response the Response from the server
+//     *
+//     * @author Charles Bryan
+//     * @version 1.0
+//     */
+//    private void observeResponse(final JSONObject response) {
+//        if (response.length() > 0) {
+//            if (response.has("code")) {
+//                try { binding.textViewRegisterConfirmGreeting.setError(
+//                        "Error Authenticating: " + response.getJSONObject("data").getString("message"));
+//                } catch (JSONException e) {
+//                    Log.e("JSON Parse Error", e.getMessage()); }
+//            } else { navigateToLogin();
+//            }
+//        } else {
+//            Log.d("JSON Response", "No Response");
+//        }
+//    }
 
 
 }
