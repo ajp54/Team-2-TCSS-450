@@ -6,11 +6,15 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import edu.uw.tcss450.chatapp.ui.home.signin.LoginFragmentDirections;
 
 /**
  * A simple {@link android.app.Activity} subclass.
@@ -42,7 +46,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) { //TODO open a settings fragment Log.d("SETTINGS", "Clicked"); return true;
+        if (id == R.id.action_toggleTheme) {
+            //TODO toggle colors Log.d("Toggle Theme", "Clicked"); return true;
+        } else if (id == R.id.action_changePassword) {
+            //TODO open a change password fragment Log.d("Change Password", "Clicked"); return true;
+        } else if(id == R.id.action_signOut) {
+            Intent intent = new Intent(this, AuthActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
