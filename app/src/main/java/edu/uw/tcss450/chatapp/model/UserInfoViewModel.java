@@ -34,9 +34,9 @@ public class UserInfoViewModel extends ViewModel {
     }
 
     /**
-     * Get's the user's email.
+     * Get's the JSON Web Token.
      *
-     * @return user's email.
+     * @return user's JSON Web Token.
      */
     public String getmJwt() {
 
