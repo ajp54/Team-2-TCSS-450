@@ -48,7 +48,6 @@ public class SignInViewModel extends AndroidViewModel {
 
     public void addResponseObserver(@NonNull LifecycleOwner owner,
                                     @NonNull Observer<? super JSONObject> observer) {
-        Log.e("On Observer Added", owner.getClass().toString() + " "  + mResponse.hasActiveObservers());
         mResponse.observe(owner, observer);
     }
 

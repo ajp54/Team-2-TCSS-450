@@ -11,4 +11,6 @@
     <color name="colorPrimary2">#673AB7</color>
     <color name="colorPrimaryDark2">#512DA8</color>
     <color name="colorAccent2">#536DFE</color>
+
+    <color name="colorOffWhite">#E9E9E9</color>
 </resources>
