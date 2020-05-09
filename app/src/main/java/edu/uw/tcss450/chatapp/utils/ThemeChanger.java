@@ -46,7 +46,6 @@ public class ThemeChanger {
                 break;
             case THEME_BLUE_DARK:
                 activity.setTheme(R.style.Theme_App_BlueDark);
-                Log.i("Dark Theme", "Clicked");
                 break;
             default:
         }
