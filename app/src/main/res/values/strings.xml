@@ -37,6 +37,13 @@
     <string name="label_verify_email">Please Verify Your Email</string>
     <string name="label_continue">Continue</string>
 
+    <string name="toggle_theme">Toggle Theme</string>
+    <string name="change_password">Change Password</string>
+    <string name="sign_out">Sign Out</string>
+
+    <string name="orange_theme">Orange Theme</string>
+    <string name="blue_theme_light">Blue Theme Light</string>
+    <string name="blue_theme_dark">Blue Theme Dark</string>
     <string name="keys_shared_prefs">My Auth App Shared Prefs</string>
     <string name="keys_prefs_jwt">Sharded Prefs JWT</string>
 

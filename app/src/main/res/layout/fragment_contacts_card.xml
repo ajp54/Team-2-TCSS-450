@@ -19,7 +19,7 @@
             android:id="@+id/text_pubdate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/orangeColorPrimary"
             android:paddingLeft="8dp"
             android:paddingTop="8dp"
             android:paddingRight="8dp"
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="Send Message"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/orangeColorAccent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_preview"
             tools:visibility="visible" />

@@ -1,7 +1,6 @@
 package edu.uw.tcss450.chatapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -17,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import edu.uw.tcss450.chatapp.ui.home.signin.LoginFragmentDirections;
 import edu.uw.tcss450.chatapp.ui.settings.ChangePasswordFragment;
+import edu.uw.tcss450.chatapp.utils.ThemeChanger;
 
 /**
  * A simple {@link android.app.Activity} subclass.
@@ -47,14 +47,33 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-        } else if(id == R.id.action_signOut) {
-            Intent intent = new Intent(this, AuthActivity.class);
-            startActivity(intent);
+        switch (item.getItemId()) {
+            case R.id.action_toggleTheme:
+                return true;
+
+            case R.id.action_changePassword:
+                //TODO open a change password fragment Log.d("Change Password", "Clicked"); return true;
+                return true;
+
+            case R.id.action_signOut:
+                Intent intent = new Intent(this, AuthActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.themeOrange:
+                ThemeChanger.changeTheme(this, ThemeChanger.THEME_ORANGE);
+                return true;
+
+            case R.id.themeBlueLight:
+                ThemeChanger.changeTheme(this, ThemeChanger.THEME_BLUE_LIGHT);
+                return true;
+
+            case R.id.themeBlueDark:
+                ThemeChanger.changeTheme(this, ThemeChanger.THEME_BLUE_DARK);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }
