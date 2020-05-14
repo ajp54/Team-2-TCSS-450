@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import edu.uw.tcss450.chatapp.utils.ThemeChanger;
+
 
 /**
  * A simple {@link android.app.Activity} subclass.
@@ -25,6 +27,7 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeChanger.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_auth);
         //
     }
