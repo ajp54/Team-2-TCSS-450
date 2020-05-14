@@ -5,16 +5,28 @@
     <item
         android:id="@+id/action_toggleTheme"
         android:orderInCategory="100"
-        android:title="Toggle Theme"
-        app:showAsAction="never" />
+        android:title="@string/toggle_theme"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/themeOrange"
+                android:title="@string/orange_theme"/>
+            <item
+                android:id="@+id/themeBlueLight"
+                android:title="@string/blue_theme_light"/>
+            <item
+                android:id="@+id/themeBlueDark"
+                android:title="@string/blue_theme_dark"/>
+        </menu>
+    </item>
     <item
         android:id="@+id/action_changePassword"
         android:orderInCategory="100"
-        android:title="Change Password"
+        android:title="@string/change_password"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_signOut"
         android:orderInCategory="100"
-        android:title="Sign Out"
+        android:title="@string/sign_out"
         app:showAsAction="never" />
 </menu>
