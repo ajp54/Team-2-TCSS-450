@@ -1,4 +1,4 @@
-package edu.uw.tcss450.chatapp.ui.home.register;
+package edu.uw.tcss450.chatapp.ui.settings;
 
 import android.app.Application;
 import android.util.Log;
@@ -21,11 +21,7 @@ import org.json.JSONObject;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
-/**
- * a {@link androidx.lifecycle.ViewModel} for the register fragment
- */
-public class RegisterViewModel extends AndroidViewModel {
-
+public class ChangePasswordViewModel extends AndroidViewModel {
     private MutableLiveData<JSONObject> mResponse;
 
     /**
@@ -33,7 +29,7 @@ public class RegisterViewModel extends AndroidViewModel {
      *
      * @param application application currently running.
      */
-    public RegisterViewModel(@NonNull Application application) {
+    public ChangePasswordViewModel(@NonNull Application application) {
         super(application);
         mResponse = new MutableLiveData<>();
         mResponse.setValue(new JSONObject());
@@ -88,20 +84,16 @@ public class RegisterViewModel extends AndroidViewModel {
     /**
      * Attempts to send the user's registration data to the server.
      *
-     * @param fname user's first name
-     * @param lname user's last name
      * @param email user's email
      * @param password user's password
      *
      * @author Charles Bryan
      * @version 1.0
      */
-    public void connect(final String fname, final String lname, final String email,
+    public void connect(final String email,
                         final String password) {
-        String url = "https://team-2-tcss-450-backend.herokuapp.com/auth";
+        String url = "https://team-2-tcss-450-backend.herokuapp.com/change_pass";
         JSONObject body = new JSONObject(); try {
-            body.put("first", fname);
-            body.put("last", lname);
             body.put("email", email);
             body.put("password", password);
         } catch (JSONException e) {

@@ -8,5 +8,23 @@
         android:id="@+id/settingsFragment"
         android:name="edu.uw.tcss450.chatapp.ui.settings.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="edu.uw.tcss450.chatapp.ui.settings.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" >
+        <action
+            android:id="@+id/action_changePasswordFragment_to_changePassConfirmFragment"
+            app:destination="@id/changePassConfirmFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePassConfirmFragment"
+        android:name="edu.uw.tcss450.chatapp.ui.settings.ChangePassConfirmFragment"
+        android:label="fragment_change_pass_confirm"
+        tools:layout="@layout/fragment_change_pass_confirm" />
 </navigation>
