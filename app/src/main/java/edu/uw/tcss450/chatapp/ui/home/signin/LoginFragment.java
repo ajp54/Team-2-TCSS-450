@@ -164,7 +164,6 @@ public class LoginFragment extends Fragment {
      * @version 1.0
      */
     private void navigateToMain(final String email, final String jwt) {
-//        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
 
         mEmail = email;
 
