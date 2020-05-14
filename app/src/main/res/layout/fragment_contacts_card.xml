@@ -12,15 +12,15 @@
         android:id="@+id/layout_inner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/text_title"
-        app:layout_constraintTop_toTopOf="@+id/text_title">
+        android:background="@color/orangeColorPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/text_message"
+        app:layout_constraintTop_toTopOf="@+id/text_message">
 
         <TextView
-            android:id="@+id/text_pubdate"
+            android:id="@+id/text_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/orangeColorPrimaryDark"
             android:paddingLeft="8dp"
             android:paddingTop="8dp"
             android:paddingRight="8dp"
@@ -32,21 +32,8 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Name" />
 
-        <ImageButton
-            android:id="@+id/buitton_more"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/ic_more_horiz_black_24dp"
-            android:backgroundTint="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_more_horiz_white_24dp" />
-
         <TextView
-            android:id="@+id/text_title"
+            android:id="@+id/text_username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -58,7 +45,7 @@
             android:textColor="@color/colorOffWhite"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_pubdate" />
+            app:layout_constraintTop_toBottomOf="@+id/text_name" />
 
         <TextView
             android:id="@+id/text_preview"
@@ -72,12 +59,12 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_pubdate" />
+            app:layout_constraintTop_toBottomOf="@+id/text_name" />
 
         <!--            app:srcCompat="@drawable/ic_more_grey_24dp" />-->
 
         <Button
-            android:id="@+id/button_full_post"
+            android:id="@+id/button_send_message"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
