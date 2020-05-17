@@ -4,6 +4,10 @@
     <string name="keys_json_contacts_first">first</string>
     <string name="keys_json_contacts_last">last</string>
 
+    <string name="keys_json_chat_row_count">rowCount</string>
+    <string name="keys_json_chat_members">members</string>
+    <string name="keys_json_chat_email">email</string>
+
     <string name="keys_json_chat_room_response">response</string>
     <string name="keys_json_chat_room_data">data</string>
     <string name="keys_json_chat_room_people">people</string>

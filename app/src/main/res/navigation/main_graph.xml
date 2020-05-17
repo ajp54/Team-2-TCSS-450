@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_contacts" />
     <fragment
         android:id="@+id/navigation_chat"
-        android:name="edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomFragment"
+        android:name="edu.uw.tcss450.chatapp.ui.chat.ChatListFragment"
         android:label="@string/label_chat"
         tools:layout="@layout/fragment_chat" />
 </navigation>

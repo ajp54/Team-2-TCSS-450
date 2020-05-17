@@ -1,4 +1,4 @@
-package edu.uw.tcss450.chatapp.ui.chat;
+package edu.uw.tcss450.chatapp.ui.chat.chat_room;
 
 import androidx.annotation.Nullable;
 

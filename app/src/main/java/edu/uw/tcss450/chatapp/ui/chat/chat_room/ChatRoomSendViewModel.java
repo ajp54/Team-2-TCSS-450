@@ -1,4 +1,4 @@
-package edu.uw.tcss450.chatapp.ui.chat;
+package edu.uw.tcss450.chatapp.ui.chat.chat_room;
 
 import android.app.Application;
 import android.util.Log;
@@ -25,15 +25,15 @@ import java.util.Objects;
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.io.RequestQueueSingleton;
 
-public class ChatSendViewModel extends AndroidViewModel {
+public class ChatRoomSendViewModel extends AndroidViewModel {
 
     private final MutableLiveData<JSONObject> mResponse;
 
-    private ChatSendViewModel mSendModel;
+    private ChatRoomSendViewModel mSendModel;
 
 
 
-    public ChatSendViewModel(@NonNull Application application) {
+    public ChatRoomSendViewModel(@NonNull Application application) {
         super(application);
         mResponse = new MutableLiveData<>();
         mResponse.setValue(new JSONObject());
