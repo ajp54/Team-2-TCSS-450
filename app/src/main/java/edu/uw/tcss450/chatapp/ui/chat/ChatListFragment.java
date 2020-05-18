@@ -6,10 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,6 +37,8 @@ public class ChatListFragment extends Fragment {
     private ChatRoomViewModel mChatModel;
     private UserInfoViewModel mUserModel;
 
+    private List<Integer> chatIds;
+
     /**
      * Class constructor
      */
@@ -56,8 +60,14 @@ public class ChatListFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mUserModel = provider.get(UserInfoViewModel.class);
         mChatModel = provider.get(ChatRoomViewModel.class);
-        mChatModel.getFirstMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
-        Log.i("CHATLIST", "char map length:" + mChatModel.getChatMap().size());
+        //mChatModel.getFirstMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
+        mChatModel.getChatIds(124, mUserModel.getmJwt());
+        chatIds = mChatModel.getChatIdList();
+
+        for(int i = 0; i < chatIds.size(); i++) {
+            mChatModel.getFirstMessages(chatIds.get(i), mUserModel.getmJwt());
+        }
+        //Log.i("CHATLIST", "char map length:" + mChatModel.getChatMap().size());
     }
 
     @Override
@@ -65,36 +75,27 @@ public class ChatListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         FragmentChatBinding binding = FragmentChatBinding.bind(getView());
 
-//        List<ChatRoom> rooms = new ArrayList<ChatRoom>();
-//        List<Integer> chatIDs = new ArrayList<Integer>(mChatModel.getChatMap().keySet());
-//        Log.i("CHATLIST", "chat ids length:" + chatIDs.size());
-//        for(int chatID : chatIDs) {
-//            ChatRoom room = new ChatRoom(new ChatRoom.Builder("People", Integer.toString(chatID), "recent message."));
-//            rooms.add(room);
-//            Log.i("CHATLIST", "Added chat id:" + chatID);
-//        }
-//
-//        binding.recyclerChatRooms.setAdapter(new ChatRecyclerViewAdapter(rooms));
-
-
-
-
-
-//        final RecyclerView rv = binding.recyclerChatRooms;
-        //Set the Adapter to hold a reference to the list FOR THIS chat ID that the ViewModel
-        //holds.
-//        rv.setAdapter(new ChatRecyclerViewAdapter(mChatModel.getChatMap()));
-//                mChatModel.getMessageListByChatId(HARD_CODED_CHAT_ID),
-//                mUserModel.getEmail()));
+        //TODO add correct chatId
+        ChatRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position) -> {
+            navigateToChat(1);
+        };
 
         mChatModel.addChatRoomObserver(1, getViewLifecycleOwner(), chatList -> {
             if (!chatList.isEmpty()) {
                 binding.recyclerChatRooms.setAdapter(
-                        new ChatRecyclerViewAdapter(chatList)
+                        new ChatRecyclerViewAdapter(chatList, listener)
                 );
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
             }
         });
+
+
+    }
+
+    private void navigateToChat(final int chatId) {
+//        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
+        Navigation.findNavController(getView()).navigate(ChatListFragmentDirections
+                .actionNavigationChatToChatRoomFragment2(chatId));
     }
 }

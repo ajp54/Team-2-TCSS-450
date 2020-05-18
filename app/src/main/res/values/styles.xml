@@ -1,6 +1,6 @@
 
 <resources>
-    <style name="Base.Theme.App" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Base.Theme.App" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <item name="colorPrimary">@color/orangeColorPrimary</item>
         <item name="colorPrimaryDark">@color/orangeColorPrimaryDark</item>
         <item name="colorAccent">@color/orangeColorAccent</item>
@@ -18,13 +18,7 @@
         <item name="colorAccent">@color/blueDarkColorAccent</item>
     </style>
 
-    <!-- This is a MaterialDesignTheme. Required when using Material Components -->
-    <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/chatPrimaryColor</item>
-        <item name="colorPrimaryDark">@color/chatPrimaryDarkColor</item>
-        <item name="colorAccent">@color/chatSecondaryColor</item>
-    </style>
+
 
     <style name="Widget.App.Button.OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="iconPadding">0dp</item>

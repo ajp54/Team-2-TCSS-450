@@ -38,6 +38,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
      */
     private Map<Integer, MutableLiveData<List<ChatMessage>>> mMessages;
     private MutableLiveData<List<ChatRoom>> mRoomList;
+    private List<Integer> chatIds = new ArrayList<Integer>();
 
     public ChatRoomViewModel(@NonNull Application application) {
         super(application);
@@ -105,12 +106,12 @@ public class ChatRoomViewModel extends AndroidViewModel {
     public void getFirstMessages(final int chatId, final String jwt) {
         String url = getApplication().getResources().getString(R.string.base_url) +
                 "messages/" + chatId;
-
+        //Log.i("CHATROOM", "url: " + url);
         Request request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
                 null, //no body for this get request
-                this::handelSuccess,
+                this::handelMessageSuccess,
                 this::handleError) {
 
             @Override
@@ -156,7 +157,40 @@ public class ChatRoomViewModel extends AndroidViewModel {
                 Request.Method.GET,
                 url,
                 null, //no body for this get request
-                this::handelSuccess,
+                this::handelMessageSuccess,
+                this::handleError) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                // add headers <key,value>
+                headers.put("Authorization", jwt);
+                return headers;
+            }
+        };
+
+
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                10_000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //Instantiate the RequestQueue and add the request to the queue
+        RequestQueueSingleton.getInstance(getApplication().getApplicationContext())
+                .addToRequestQueue(request);
+
+        //code here will run
+    }
+
+    public void getChatIds(final int memberId, final String jwt) {
+        String url = getApplication().getResources().getString(R.string.base_url) +
+                "chats/" + memberId;
+
+        Request request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null, //no body for this get request
+                this::handelChatIdSuccess,
                 this::handleError) {
 
             @Override
@@ -191,7 +225,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
         getOrCreateMapEntry(chatId).setValue(list);
     }
 
-    private void handelSuccess(final JSONObject response) {
+    private void handelMessageSuccess(final JSONObject response) {
         List<ChatMessage> list;
         if (!response.has("chatId")) {
             throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
@@ -226,6 +260,33 @@ public class ChatRoomViewModel extends AndroidViewModel {
         }
     }
 
+    private void handelChatIdSuccess(final JSONObject response) {
+        List<ChatMessage> list;
+        if (!response.has("memberId")) {
+            throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
+        }
+        try {
+            Log.i("CHATROOM", "recieved a response");
+            list = getMessageListByChatId(response.getInt("memberId"));
+            JSONArray messages = response.getJSONArray("rows");
+            JSONArray myIds = new JSONArray();
+            for(int i = 0; i < messages.length(); i++) {
+                JSONObject message = messages.getJSONObject(i);
+                myIds = message.getJSONArray("members");
+            }
+
+            for(int i = 0; i < myIds.length(); i++) {
+                chatIds.add(myIds.getInt(i));
+                Log.i("CHATROOM", "ID added: " + chatIds.get(i));
+            }
+            //inform observers of the change (setValue)
+            getOrCreateMapEntry(response.getInt("chatId")).setValue(list);
+        }catch (JSONException e) {
+            Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
+            Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
+        }
+    }
+
     private void handleError(final VolleyError error) {
         if (Objects.isNull(error.networkResponse)) {
             Log.e("NETWORK ERROR", error.getMessage());
@@ -239,7 +300,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
         }
     }
 
-    public Map<Integer, MutableLiveData<List<ChatMessage>>> getChatMap() {
-        return mMessages;
+    public List<Integer> getChatIdList() {
+        return chatIds;
     }
 }

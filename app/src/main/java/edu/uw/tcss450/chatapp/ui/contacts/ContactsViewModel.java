@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,41 +46,26 @@ public class ContactsViewModel extends AndroidViewModel {
         throw new IllegalStateException(error.getMessage());
     }
 
-    private void handleResult(final JSONObject result) {
-        IntFunction<String> getString =
-                getApplication().getResources()::getString;
+    private void handleResult(final JSONObject response) {
+        List<Contact> list = new ArrayList<Contact>();
+        if (!response.has("memberId")) {
+            throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
+        }
         try {
-            JSONObject root = result;
-            if (root.has(getString.apply(R.string.keys_json_contacts_username))) {
-                JSONObject username =
-                        root.getJSONObject(getString.apply(
-                                R.string.keys_json_contacts_username));
-                if (username.has(getString.apply(R.string.keys_json_contacts_first))) {
-                    JSONObject first =
-                            root.getJSONObject(getString.apply(
-                                    R.string.keys_json_contacts_first));
-                    if (first.has(getString.apply(R.string.keys_json_contacts_last))) {
-                        JSONObject last =
-                                root.getJSONObject(getString.apply(
-                                        R.string.keys_json_contacts_last));
-
-                    } else {
-                        Log.e("ERROR!", "No last name");
-                    }
-
-                } else {
-                    Log.e("ERROR!", "No first name");
-                }
-            } else {
-                Log.e("ERROR!", "No username");
+            Log.i("CONTACTS", "recieved a response");
+            JSONArray memberIds = response.getJSONArray("rows");
+            JSONArray myIds = new JSONArray();
+            for(int i = 0; i < memberIds.length(); i++) {
+                JSONObject contact = memberIds.getJSONObject(i);
+                list.add(new Contact(new Contact.Builder("username", "first", "last")));
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Log.e("ERROR!", e.getMessage());
+            //inform observers of the change (setValue)
+        }catch (JSONException e) {
+            Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
+            Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
-
-        mContactList.setValue(mContactList.getValue());
+            mContactList.setValue(list);
     }
 
     public void connectGet() {

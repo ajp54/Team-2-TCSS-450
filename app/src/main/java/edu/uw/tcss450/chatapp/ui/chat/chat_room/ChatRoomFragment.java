@@ -1,6 +1,7 @@
 package edu.uw.tcss450.chatapp.ui.chat.chat_room;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.uw.tcss450.chatapp.databinding.FragmentChatRoomBinding;
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
@@ -27,6 +31,8 @@ public class ChatRoomFragment extends Fragment {
     private UserInfoViewModel mUserModel;
     private ChatRoomSendViewModel mSendModel;
 
+    private List<Integer> ChatIds;
+
     public ChatRoomFragment() {
         // Required empty public constructor
     }
@@ -37,15 +43,18 @@ public class ChatRoomFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mUserModel = provider.get(UserInfoViewModel.class);
         mChatModel = provider.get(ChatRoomViewModel.class);
+        mChatModel.getChatIds(124, mUserModel.getmJwt());
         mChatModel.getFirstMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
+        ChatIds = mChatModel.getChatIdList();
         mSendModel = provider.get(ChatRoomSendViewModel.class);
+        Log.i("CHATROOM", "created the chat room");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+        return inflater.inflate(R.layout.fragment_chat_room, container, false);
     }
 
     @Override
