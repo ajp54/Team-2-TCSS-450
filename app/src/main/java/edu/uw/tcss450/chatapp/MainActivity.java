@@ -18,6 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.ui.home.signin.LoginFragmentDirections;
+import edu.uw.tcss450.chatapp.ui.settings.ChangePasswordFragment;
 import edu.uw.tcss450.chatapp.utils.ThemeChanger;
 
 /**
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
     }
 
     @Override
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -68,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_changePassword:
-                //TODO open a change password fragment Log.d("Change Password", "Clicked"); return true;
+                Intent intent1 = new Intent(this, SettingsActivity.class);
+                startActivity(intent1);
                 return true;
 
             case R.id.action_signOut:

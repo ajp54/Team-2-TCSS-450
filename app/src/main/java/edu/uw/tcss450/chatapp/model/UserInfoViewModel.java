@@ -18,7 +18,7 @@ public class UserInfoViewModel extends ViewModel {
      * @param email user's email.
      * @param jwt User's JSON Web Token.
      */
-    private UserInfoViewModel(String email, String jwt) {
+    public UserInfoViewModel(String email, String jwt) {
         mEmail = email;
         mJwt = jwt;
     }

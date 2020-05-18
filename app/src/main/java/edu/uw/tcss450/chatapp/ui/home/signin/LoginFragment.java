@@ -1,5 +1,7 @@
 package edu.uw.tcss450.chatapp.ui.home.signin;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,8 @@ import edu.uw.tcss450.chatapp.databinding.FragmentLoginBinding;
  * A simple {@link Fragment} subclass.
  */
 public class LoginFragment extends Fragment {
+
+    private static String mEmail;
 
     private FragmentLoginBinding binding;
     private SignInViewModel mSignInModel;
@@ -160,9 +164,16 @@ public class LoginFragment extends Fragment {
      * @version 1.0
      */
     private void navigateToMain(final String email, final String jwt) {
-//        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
+
+        mEmail = email;
+
         Navigation.findNavController(getView()).navigate(LoginFragmentDirections
                 .actionLoginFragmentToMainActivity(email, jwt));
+
+    }
+
+    public static String getEmail() {
+        return mEmail;
     }
 
     /**
