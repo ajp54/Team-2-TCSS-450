@@ -1,6 +1,6 @@
 
 <resources>
-    <style name="Base.Theme.App" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Base.Theme.App" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <item name="colorPrimary">@color/orangeColorPrimary</item>
         <item name="colorPrimaryDark">@color/orangeColorPrimaryDark</item>
         <item name="colorAccent">@color/orangeColorAccent</item>
@@ -12,7 +12,7 @@
         <item name="colorAccent">@color/blueLightColorAccent</item>
     </style>
 
-    <style name="Theme.App.BlueDark" parent="Theme.AppCompat">
+    <style name="Theme.App.BlueDark" parent="Theme.MaterialComponents.Bridge">
         <item name="colorPrimary">@color/blueDarkColorPrimary</item>
         <item name="colorPrimaryDark">@color/blueDarkColorPrimaryDark</item>-
         <item name="colorAccent">@color/blueDarkColorAccent</item>
