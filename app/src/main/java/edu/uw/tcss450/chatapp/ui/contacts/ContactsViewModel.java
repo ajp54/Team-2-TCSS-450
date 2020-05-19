@@ -30,6 +30,7 @@ import edu.uw.tcss450.chatapp.R;
 public class ContactsViewModel extends AndroidViewModel {
     private MutableLiveData<List<Contact>> mContactList;
 
+
     public ContactsViewModel(@NonNull Application application) {
         super(application);
         mContactList = new MutableLiveData<>();
@@ -68,7 +69,7 @@ public class ContactsViewModel extends AndroidViewModel {
             mContactList.setValue(list);
     }
 
-    public void connectGet() {
+    public void connectGet(String jwt) {
         String url =
                 "https://https://team-2-tcss-450-backend.herokuapp.com/contacts/get";
         Request request = new JsonObjectRequest(
@@ -78,12 +79,11 @@ public class ContactsViewModel extends AndroidViewModel {
                 this::handleResult,
                 this::handleError) {
 
-            // TODO add a real jwt to the header
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 // add headers <key,value>
-                headers.put("Authorization", "placeholder for jwt");
+                headers.put("Authorization", jwt);
                 return headers;
             }
         };

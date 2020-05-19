@@ -60,13 +60,13 @@ public class ChatListFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mUserModel = provider.get(UserInfoViewModel.class);
         mChatModel = provider.get(ChatRoomViewModel.class);
-        //mChatModel.getFirstMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
-        mChatModel.getChatIds(124, mUserModel.getmJwt());
-        chatIds = mChatModel.getChatIdList();
+        mChatModel.getFirstMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
+        //mChatModel.getChatIds(124, mUserModel.getmJwt());
+        //chatIds = mChatModel.getChatIdList();
 
-        for(int i = 0; i < chatIds.size(); i++) {
-            mChatModel.getFirstMessages(chatIds.get(i), mUserModel.getmJwt());
-        }
+//        for(int i = 0; i < chatIds.size(); i++) {
+//            mChatModel.getFirstMessages(chatIds.get(i), mUserModel.getmJwt());
+//        }
         //Log.i("CHATLIST", "char map length:" + mChatModel.getChatMap().size());
     }
 

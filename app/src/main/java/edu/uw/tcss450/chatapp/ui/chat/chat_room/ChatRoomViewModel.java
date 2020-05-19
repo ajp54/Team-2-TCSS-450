@@ -184,8 +184,8 @@ public class ChatRoomViewModel extends AndroidViewModel {
 
     public void getChatIds(final int memberId, final String jwt) {
         String url = getApplication().getResources().getString(R.string.base_url) +
-                "chats/" + memberId;
-
+                "chats/";
+        Log.i("JWT", "jwt: " + jwt);
         Request request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
