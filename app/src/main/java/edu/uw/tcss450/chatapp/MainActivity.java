@@ -83,8 +83,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
 
-            case R.id.themeOrange:
-                ThemeChanger.changeTheme(this, ThemeChanger.THEME_ORANGE);
+            case R.id.themeOrangeLight:
+                ThemeChanger.changeTheme(this, ThemeChanger.THEME_ORANGE_LIGHT);
+                return true;
+
+            case R.id.themeOrangeDark:
+                ThemeChanger.changeTheme(this, ThemeChanger.THEME_ORANGE_DARK);
                 return true;
 
             case R.id.themeBlueLight:

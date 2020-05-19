@@ -6,6 +6,12 @@
         <item name="colorAccent">@color/orangeColorAccent</item>
     </style>
 
+    <style name="Theme.App.OrangeDark" parent="Theme.MaterialComponents.Bridge">
+        <item name="colorPrimary">@color/orangeDarkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/orangeDarkColorPrimaryDark</item>
+        <item name="colorAccent">@color/orangeDarkColorAccent</item>
+    </style>
+
     <style name="Theme.App.BlueLight" parent="Base.Theme.App">
         <item name="colorPrimary">@color/blueLightColorPrimary</item>
         <item name="colorPrimaryDark">@color/blueLightColorPrimaryDark</item>-

@@ -41,7 +41,8 @@
     <string name="change_password">Change Password</string>
     <string name="sign_out">Sign Out</string>
 
-    <string name="orange_theme">Orange Theme</string>
+    <string name="orange_theme_light">Orange Theme Light</string>
+    <string name="orange_theme_dark">Orange Theme Dark</string>
     <string name="blue_theme_light">Blue Theme Light</string>
     <string name="blue_theme_dark">Blue Theme Dark</string>
     <string name="keys_shared_prefs">My Auth App Shared Prefs</string>
