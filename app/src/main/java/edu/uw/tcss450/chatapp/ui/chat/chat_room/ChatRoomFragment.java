@@ -26,7 +26,7 @@ import edu.uw.tcss450.chatapp.R;
 public class ChatRoomFragment extends Fragment {
 
     //The chat ID for "global" chat
-    private static final int HARD_CODED_CHAT_ID = 1;
+    //private static final int HARD_CODED_CHAT_ID = 1;
 
     private ChatRoomViewModel mChatModel;
     private UserInfoViewModel mUserModel;
@@ -102,7 +102,7 @@ public class ChatRoomFragment extends Fragment {
 
         //Send button was clicked. Send the message via the SendViewModel
         binding.buttonSend.setOnClickListener(button -> {
-            mSendModel.sendMessage(HARD_CODED_CHAT_ID,
+            mSendModel.sendMessage(chatId,
                     mUserModel.getmJwt(),
                     binding.editMessage.getText().toString());
         });
