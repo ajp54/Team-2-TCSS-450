@@ -4,6 +4,10 @@
     <color name="orangeColorPrimaryDark">#E64A19</color>
     <color name="orangeColorAccent">#607D8B</color>
 
+    <color name="orangeDarkColorPrimary">#FF5722</color>
+    <color name="orangeDarkColorPrimaryDark">#E64A19</color>
+    <color name="orangeDarkColorAccent">#607D8B</color>
+
     <color name="blueLightColorPrimary">#3F51B5</color>
     <color name="blueLightColorPrimaryDark">#303F9F</color>
     <color name="blueLightColorAccent">#E040FB</color>
