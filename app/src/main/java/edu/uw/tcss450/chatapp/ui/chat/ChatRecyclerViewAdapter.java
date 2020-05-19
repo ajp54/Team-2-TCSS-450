@@ -1,141 +1,91 @@
 package edu.uw.tcss450.chatapp.ui.chat;
 
-import android.content.res.Resources;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
-import androidx.core.graphics.ColorUtils;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.shape.CornerFamily;
 
 import java.util.List;
 
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.databinding.FragmentChatMessageBinding;
-//import edu.uw.tcss450.chatapp.databinding.FragmentChatMessageBinding;
+import edu.uw.tcss450.chatapp.databinding.FragmentChatRoomCardBinding;
 
-public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.MessageViewHolder> {
+public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ChatRoomViewHolder> {
+    //Store all of the contacts to present
+    private final List<ChatRoom> mChatRooms;
 
-    private final List<ChatMessage> mMessages;
-    private final String mEmail;
-    public ChatRecyclerViewAdapter(List<ChatMessage> messages, String email) {
-        this.mMessages = messages;
-        mEmail = email;
+    private RecyclerViewClickListener mListener;
+
+    public ChatRecyclerViewAdapter(List<ChatRoom> items, RecyclerViewClickListener listener) {
+        this.mChatRooms = items;
+        mListener = listener;
     }
-
 
     @NonNull
     @Override
-    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MessageViewHolder(LayoutInflater
+    public ChatRecyclerViewAdapter.ChatRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ChatRecyclerViewAdapter.ChatRoomViewHolder(LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.fragment_chat_message, parent, false));
+                .inflate(R.layout.fragment_chat_room_card, parent, false), mListener);
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        holder.setMessage(mMessages.get(position));
+    public void onBindViewHolder(@NonNull ChatRecyclerViewAdapter.ChatRoomViewHolder holder, int position) {
+        holder.setChatRoom(mChatRooms.get(position));
+//        if (holder instanceof ChatRecyclerViewAdapter) {
+//            ChatRecyclerViewAdapter rowHolder = (ChatRecyclerViewAdapter) holder;
+//        }
     }
 
     @Override
     public int getItemCount() {
-        return mMessages.size();
+        return mChatRooms.size();
     }
 
-    class MessageViewHolder extends RecyclerView.ViewHolder {
-        private final View mView;
-        private FragmentChatMessageBinding binding;
+    /**
+     * Objects from this class represent an Individual row View from the List
+     * of rows in the ChatRoom Recycler View.
+     */
+    public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public final View mView;
+        public FragmentChatRoomCardBinding binding;
+        private RecyclerViewClickListener mListener;
 
-        public MessageViewHolder(@NonNull View view) {
+        public ChatRoomViewHolder(View view, RecyclerViewClickListener listener) {
             super(view);
             mView = view;
-            binding = FragmentChatMessageBinding.bind(view);
+            binding = FragmentChatRoomCardBinding.bind(view);
+            mListener = listener;
+            view.setOnClickListener(this);
         }
 
-        void setMessage(final ChatMessage message) {
-            final Resources res = mView.getContext().getResources();
-            final MaterialCardView card = binding.cardRoot;
 
-            int standard = (int) res.getDimension(R.dimen.chat_margin);
-            int extended = (int) res.getDimension(R.dimen.chat_margin_sided);
+        void setChatRoom(final ChatRoom chatRoom) {
+            Log.i("RECYCLER", "getting chat room information");
+            binding.textPeople.setText(chatRoom.getPeople());
+            binding.textMessage.setText(chatRoom.getRecentMessage());
 
-            if (mEmail.equals(message.getSender())) {
-                //This message is from the user. Format it as such
-                binding.textMessage.setText(message.getMessage());
-                ViewGroup.MarginLayoutParams layoutParams =
-                        (ViewGroup.MarginLayoutParams) card.getLayoutParams();
-                //Set the left margin
-                layoutParams.setMargins(extended, standard, standard, standard);
-                // Set this View to the right (end) side
-                ((FrameLayout.LayoutParams) card.getLayoutParams()).gravity =
-                        Gravity.END;
+        }
 
-                card.setCardBackgroundColor(
-                        ColorUtils.setAlphaComponent(
-                            res.getColor(R.color.orangeColorPrimary, null),
-                            16));
-                binding.textMessage.setTextColor(
-                        res.getColor(R.color.secondaryTextColorFade, null));
-
-                card.setStrokeWidth(standard / 5);
-                card.setStrokeColor(ColorUtils.setAlphaComponent(
-                        res.getColor(R.color.orangeColorPrimary, null),
-                        200));
-
-                //Round the corners on the left side
-                card.setShapeAppearanceModel(
-                        card.getShapeAppearanceModel()
-                                .toBuilder()
-                                .setTopLeftCorner(CornerFamily.ROUNDED,standard * 2)
-                                .setBottomLeftCorner(CornerFamily.ROUNDED,standard * 2)
-                                .setBottomRightCornerSize(0)
-                                .setTopRightCornerSize(0)
-                                .build());
-
-                card.requestLayout();
-            } else {
-                //This message is from another user. Format it as such
-                binding.textMessage.setText(message.getSender() +
-                        ": " + message.getMessage());
-                ViewGroup.MarginLayoutParams layoutParams =
-                        (ViewGroup.MarginLayoutParams) card.getLayoutParams();
-
-                //Set the right margin
-                layoutParams.setMargins(standard, standard, extended, standard);
-                // Set this View to the left (start) side
-                ((FrameLayout.LayoutParams) card.getLayoutParams()).gravity =
-                        Gravity.START;
-
-                card.setCardBackgroundColor(
-                        ColorUtils.setAlphaComponent(
-                                res.getColor(R.color.orangeColorAccent, null),
-                                16));
-
-                card.setStrokeWidth(standard / 5);
-                card.setStrokeColor(ColorUtils.setAlphaComponent(
-                        res.getColor(R.color.orangeColorAccent, null),
-                        200));
-
-                binding.textMessage.setTextColor(
-                        res.getColor(R.color.secondaryTextColorFade, null));
-
-                //Round the corners on the right side
-                card.setShapeAppearanceModel(
-                        card.getShapeAppearanceModel()
-                                .toBuilder()
-                                .setTopRightCorner(CornerFamily.ROUNDED,standard * 2)
-                                .setBottomRightCorner(CornerFamily.ROUNDED,standard * 2)
-                                .setBottomLeftCornerSize(0)
-                                .setTopLeftCornerSize(0)
-                                .build());
-                card.requestLayout();
-            }
+        @Override
+        public void onClick(View v) {
+            mListener.onClick(v, getAdapterPosition());
         }
     }
+
+    public interface RecyclerViewClickListener {
+
+        void onClick(View view, int position);
+    }
+
+//    private void navigateToMain(final String email, final String jwt, int chatId) {
+////        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
+//        Navigation.findNavController(getView()).navigate(LoginFragmentDirections
+//                .actionLoginFragmentToMainActivity(email, jwt));
+//    }
 }

@@ -1,4 +1,4 @@
-package edu.uw.tcss450.chatapp.ui.chat.chat_room;
+package edu.uw.tcss450.chatapp.ui.chat;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ public class ChatRoom implements Serializable {
     private final String mRecentMessage;
 
     //TODO  change the people to be a more appropriate data type
-    private ChatRoom(final ChatRoom.Builder builder) {
+    public ChatRoom(final ChatRoom.Builder builder) {
         this.mPeople = builder.mPeople;
         this.mChatID = builder.mChatID;
         this.mRecentMessage = builder.mRecentMessage;

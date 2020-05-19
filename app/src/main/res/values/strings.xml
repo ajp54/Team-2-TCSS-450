@@ -3,6 +3,7 @@
     <!-- Naming convention: (how it will be used)_(description) -->
     <string name="app_name">Chat App</string>
     <string name="base_url">https://team-2-tcss-450-backend.herokuapp.com/</string>
+<!--    <string name="base_url">http://localhost:5000/</string>-->
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

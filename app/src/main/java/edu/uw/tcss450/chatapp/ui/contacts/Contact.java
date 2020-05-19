@@ -7,7 +7,7 @@ public class Contact implements Serializable {
     private final String mFirstName;
     private final String mLastName;
 
-    private Contact(final Builder builder) {
+    public Contact(final Builder builder) {
         this.mUsername = builder.mUsername;
         this.mFirstName = builder.mFirstName;
         this.mLastName = builder.mLastName;

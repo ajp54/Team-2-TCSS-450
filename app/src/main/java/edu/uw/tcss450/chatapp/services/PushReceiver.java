@@ -14,7 +14,7 @@ import org.json.JSONException;
 
 import edu.uw.tcss450.chatapp.AuthActivity;
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.ui.chat.ChatMessage;
+import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatMessage;
 import me.pushy.sdk.Pushy;
 
 import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
