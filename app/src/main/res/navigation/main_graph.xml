@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_success" />
     <fragment
         android:id="@+id/navigation_weather"
-        android:name="edu.uw.tcss450.chatapp.ui.weather.WeatherFragment"
+        android:name="edu.uw.tcss450.chatapp.ui.weather.ForecastFragment"
         android:label="@string/label_weather"
-        tools:layout="@layout/fragment_weather" />
+        tools:layout="@layout/fragment_forecast" />
     <fragment
         android:id="@+id/navigation_contacts"
         android:name="edu.uw.tcss450.chatapp.ui.contacts.ContactsFragment"
