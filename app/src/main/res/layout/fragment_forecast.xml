@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="7dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -86,13 +86,14 @@
 
     </LinearLayout>
 
+
     <LinearLayout
         android:id="@+id/main_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/temp_box"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="97dp"
         android:layout_marginBottom="301dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -118,14 +119,13 @@
 
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/text_wind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/temp_box"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="Wind:" />
 
     <TextView
@@ -152,6 +152,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"/>
+        android:layout_marginBottom="0dp"/>
 
 </RelativeLayout>
