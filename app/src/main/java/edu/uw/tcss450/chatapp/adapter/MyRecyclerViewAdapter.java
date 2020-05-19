@@ -12,19 +12,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import edu.uw.tcss450.chatapp.R;
+import edu.uw.tcss450.chatapp.ui.weather.Day;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
-    private List<Integer> mViewColors;
-    private List<String> mAnimals;
+    private Day[] mDays;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public MyRecyclerViewAdapter(Context context, List<Integer> colors, List<String> animals) {
+    public MyRecyclerViewAdapter(Context context, Day[] days) {
         this.mInflater = LayoutInflater.from(context);
-        this.mViewColors = colors;
-        this.mAnimals = animals;
+        this.mDays = days;
     }
 
     // inflates the row layout from xml when needed
@@ -38,27 +37,26 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int color = mViewColors.get(position);
-        String animal = mAnimals.get(position);
-        holder.myView.setBackgroundColor(color);
-        holder.myTextView.setText(animal);
+        Day day = mDays[position];
+        holder.myDate.setText(day.getmDay());
+        holder.myTemp.setText(day.getmTemp());
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mAnimals.size();
+        return mDays.length;
     }
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        View myView;
-        TextView myTextView;
+        TextView myDate;
+        TextView myTemp;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myView = itemView.findViewById(R.id.txt_date);
-            myTextView = itemView.findViewById(R.id.txt_temperature);
+            myDate = itemView.findViewById(R.id.txt_date);
+            myTemp = itemView.findViewById(R.id.txt_temperature);
             itemView.setOnClickListener(this);
         }
 
@@ -69,8 +67,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
     // convenience method for getting data at click position
-    public String getItem(int id) {
-        return mAnimals.get(id);
+    public Day getItem(int id) {
+        return mDays[id];
     }
 
     // allows clicks events to be caught
