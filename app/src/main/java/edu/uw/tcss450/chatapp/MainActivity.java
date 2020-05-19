@@ -5,10 +5,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,16 +26,21 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import edu.uw.tcss450.chatapp.adapter.MyRecyclerViewAdapter;
 import edu.uw.tcss450.chatapp.ui.home.signin.LoginFragmentDirections;
 import edu.uw.tcss450.chatapp.ui.settings.ChangePasswordFragment;
+import edu.uw.tcss450.chatapp.ui.weather.ForecastFragment;
 import edu.uw.tcss450.chatapp.utils.ThemeChanger;
 
 /**
  * A simple {@link android.app.Activity} subclass.
  */
 public class MainActivity extends AppCompatActivity {
+
+
 
     private AppBarConfiguration mAppBarConfiguration;
 

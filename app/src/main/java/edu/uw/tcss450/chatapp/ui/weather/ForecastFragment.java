@@ -3,6 +3,8 @@ package edu.uw.tcss450.chatapp.ui.weather;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,8 +40,6 @@ public class ForecastFragment extends Fragment {
 //    }
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +47,16 @@ public class ForecastFragment extends Fragment {
 
 
         myView = inflater.inflate(R.layout.fragment_forecast, container, false);
+
+
+
+        return myView;
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         // data to populate the RecyclerView with
         ArrayList<Integer> viewColors = new ArrayList<>();
@@ -67,18 +77,15 @@ public class ForecastFragment extends Fragment {
 
 
 
-//        RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerview);
+//      RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerview);
         RecyclerView recyclerView = myView.findViewById(R.id.recyclerview);
 
 
         LinearLayoutManager horizontalLayoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                = new LinearLayoutManager(myView.getContext());
         recyclerView.setLayoutManager(horizontalLayoutManager);
-        adapter = new MyRecyclerViewAdapter(getActivity(), viewColors, animalNames);
+        adapter = new MyRecyclerViewAdapter(myView.getContext(), viewColors, animalNames);
         //adapter.setClickListener(getActivity());
         recyclerView.setAdapter(adapter);
-
-        return inflater.inflate(R.layout.fragment_forecast, container, false);
-
     }
 }
