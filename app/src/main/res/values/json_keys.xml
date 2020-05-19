@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="keys_json_contacts_username">username</string>
+    <string name="keys_json_contacts_first">first</string>
+    <string name="keys_json_contacts_last">last</string>
+
+    <string name="keys_json_chat_room_response">response</string>
+    <string name="keys_json_chat_room_data">data</string>
+    <string name="keys_json_chat_room_people">people</string>
+    <string name="keys_json_chat_room_chatid">chatid</string>
+    <string name="keys_json_chat_room_message">message</string>
+
+</resources>

@@ -17,4 +17,11 @@
     <color name="blueDarkColorAccent">#536DFE</color>
 
     <color name="colorOffWhite">#E9E9E9</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#000000</color>
+    <color name="secondaryTextColorFade">#222222</color>
+
+    <color name="chatPrimaryColor">#4527a0</color>
+    <color name="chatPrimaryDarkColor">#000070</color>
+    <color name="chatSecondaryColor">#b7a57a</color>
 </resources>
