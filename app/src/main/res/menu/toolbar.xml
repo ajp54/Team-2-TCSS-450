@@ -9,8 +9,11 @@
         app:showAsAction="never">
         <menu>
             <item
-                android:id="@+id/themeOrange"
-                android:title="@string/orange_theme"/>
+                android:id="@+id/themeOrangeLight"
+                android:title="@string/orange_theme_light"/>
+            <item
+                android:id="@+id/themeOrangeDark"
+                android:title="@string/orange_theme_dark"/>
             <item
                 android:id="@+id/themeBlueLight"
                 android:title="@string/blue_theme_light"/>
@@ -27,6 +30,6 @@
     <item
         android:id="@+id/action_signOut"
         android:orderInCategory="100"
-        android:title="Sign Out"
+        android:title="@string/sign_out"
         app:showAsAction="never" />
 </menu>

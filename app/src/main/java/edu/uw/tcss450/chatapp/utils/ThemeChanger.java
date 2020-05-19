@@ -14,9 +14,10 @@ import edu.uw.tcss450.chatapp.R;
 public class ThemeChanger {
 
     private static int mTheme;
-    public final static int THEME_ORANGE = 0;
-    public final static int THEME_BLUE_LIGHT = 1;
-    public final static int THEME_BLUE_DARK = 2;
+    public final static int THEME_ORANGE_LIGHT = 0;
+    public final static int THEME_ORANGE_DARK = 1;
+    public final static int THEME_BLUE_LIGHT = 2;
+    public final static int THEME_BLUE_DARK = 3;
 
     /**
      * Sets the theme to the one passed by the options menu
@@ -38,8 +39,11 @@ public class ThemeChanger {
      */
     public static void onActivityCreateSetTheme(Activity activity) {
         switch(mTheme) {
-            case THEME_ORANGE:
+            case THEME_ORANGE_LIGHT:
                 activity.setTheme(R.style.Base_Theme_App);
+                break;
+            case THEME_ORANGE_DARK:
+                activity.setTheme(R.style.Theme_App_OrangeDark);
                 break;
             case THEME_BLUE_LIGHT:
                 activity.setTheme(R.style.Theme_App_BlueLight);
