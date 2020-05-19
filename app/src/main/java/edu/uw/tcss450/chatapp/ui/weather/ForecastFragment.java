@@ -48,8 +48,6 @@ public class ForecastFragment extends Fragment {
 
         myView = inflater.inflate(R.layout.fragment_forecast, container, false);
 
-
-
         return myView;
 
     }
@@ -69,20 +67,17 @@ public class ForecastFragment extends Fragment {
         ArrayList<String> animalNames = new ArrayList<>();
         animalNames.add("Horse");
         animalNames.add("Cow");
-
         animalNames.add("Camel");
         animalNames.add("Sheep");
         animalNames.add("Goat");
         // set up the RecyclerView
-
-
 
 //      RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerview);
         RecyclerView recyclerView = myView.findViewById(R.id.recyclerview);
 
 
         LinearLayoutManager horizontalLayoutManager
-                = new LinearLayoutManager(myView.getContext());
+                = new LinearLayoutManager(myView.getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManager);
         adapter = new MyRecyclerViewAdapter(myView.getContext(), viewColors, animalNames);
         //adapter.setClickListener(getActivity());
