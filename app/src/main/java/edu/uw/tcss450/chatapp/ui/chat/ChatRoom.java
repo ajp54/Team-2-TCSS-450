@@ -6,7 +6,7 @@ public class ChatRoom implements Serializable {
 
     private final String mPeople;
     private final String mChatID;
-    private final String mRecentMessage;
+    private String mRecentMessage;
 
     //TODO  change the people to be a more appropriate data type
     public ChatRoom(final ChatRoom.Builder builder) {
@@ -57,4 +57,6 @@ public class ChatRoom implements Serializable {
     public String getRecentMessage() {
         return mRecentMessage;
     }
+
+    public void setRecentMessage(String msg) { mRecentMessage = msg; }
 }
