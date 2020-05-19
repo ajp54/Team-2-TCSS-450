@@ -83,9 +83,11 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         void onClick(View view, int position);
     }
 
-//    private void navigateToMain(final String email, final String jwt, int chatId) {
-////        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
-//        Navigation.findNavController(getView()).navigate(LoginFragmentDirections
-//                .actionLoginFragmentToMainActivity(email, jwt));
-//    }
+    public void replaceItem(final ChatRoom newItem, final int pos) {
+        mChatRooms.remove(pos);
+        mChatRooms.add(pos, newItem);
+
+        notifyItemChanged(pos);
+        notifyDataSetChanged();
+    }
 }
