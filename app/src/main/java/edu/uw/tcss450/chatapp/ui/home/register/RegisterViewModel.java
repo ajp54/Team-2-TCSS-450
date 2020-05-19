@@ -21,6 +21,8 @@ import org.json.JSONObject;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
+import edu.uw.tcss450.chatapp.R;
+
 /**
  * a {@link androidx.lifecycle.ViewModel} for the register fragment
  */
@@ -98,7 +100,9 @@ public class RegisterViewModel extends AndroidViewModel {
      */
     public void connect(final String fname, final String lname, final String email,
                         final String password) {
-        String url = "https://team-2-tcss-450-backend.herokuapp.com/auth";
+//        String url = "https://team-2-tcss-450-backend.herokuapp.com/auth";
+        String url = getApplication().getResources().getString(R.string.base_url) +
+                "auth";
         JSONObject body = new JSONObject(); try {
             body.put("first", fname);
             body.put("last", lname);
