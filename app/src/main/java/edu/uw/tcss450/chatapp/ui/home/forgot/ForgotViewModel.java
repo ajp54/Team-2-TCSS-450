@@ -1,4 +1,4 @@
-package edu.uw.tcss450.chatapp.ui.settings;
+package edu.uw.tcss450.chatapp.ui.home.forgot;
 
 import android.app.Application;
 import android.util.Log;
@@ -21,15 +21,10 @@ import org.json.JSONObject;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
-public class ChangePasswordViewModel extends AndroidViewModel {
+public class ForgotViewModel extends AndroidViewModel {
     private MutableLiveData<JSONObject> mResponse;
 
-    /**
-     * Class constructor
-     *
-     * @param application application currently running.
-     */
-    public ChangePasswordViewModel(@NonNull Application application) {
+    public ForgotViewModel(@NonNull Application application) {
         super(application);
         mResponse = new MutableLiveData<>();
         mResponse.setValue(new JSONObject());
@@ -84,16 +79,16 @@ public class ChangePasswordViewModel extends AndroidViewModel {
     /**
      * Attempts to send the user's registration data to the server.
      *
-     * @param password user's password
+     * @param email user's email
      *
      * @author Charles Bryan
      * @version 1.0
      */
-    public void connect(final String password) {
-        String url = "https://team-2-tcss-450-backend.herokuapp.com/change_pass?newpw=" +
-                password;
+    public void connect(final String email) {
+        String url = "https://team-2-tcss-450-backend.herokuapp.com/forgot?email=" +
+                email;
         Request request = new JsonObjectRequest(
-                Request.Method.POST,
+                Request.Method.GET,
                 url,
                 null,
                 mResponse::setValue, this::handleError);

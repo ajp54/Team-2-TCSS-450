@@ -72,6 +72,9 @@ public class LoginFragment extends Fragment {
 
         binding.buttonLoginSignin.setOnClickListener(button -> handleLogin());
 
+        binding.buttonForgotPass.setOnClickListener(button -> Navigation.findNavController(getView())
+                .navigate(LoginFragmentDirections.actionLoginFragmentToForgotFragment()));
+
         mSignInModel.addResponseObserver(
                 getViewLifecycleOwner(),
                 this::observeResponse);

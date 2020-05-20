@@ -1,8 +1,10 @@
-package edu.uw.tcss450.chatapp.ui.settings;
+package edu.uw.tcss450.chatapp.ui.home.forgot;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,54 +12,33 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.auth0.android.jwt.JWT;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.uw.tcss450.chatapp.MainActivityArgs;
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.databinding.FragmentChangePasswordBinding;
-import edu.uw.tcss450.chatapp.databinding.FragmentRegisterBinding;
-import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
-import edu.uw.tcss450.chatapp.ui.home.SuccessFragment;
-import edu.uw.tcss450.chatapp.ui.home.register.RegisterFragmentDirections;
-import edu.uw.tcss450.chatapp.ui.home.register.RegisterViewModel;
+import edu.uw.tcss450.chatapp.databinding.FragmentForgotBinding;
 import edu.uw.tcss450.chatapp.ui.home.signin.LoginFragment;
 import edu.uw.tcss450.chatapp.utils.PasswordValidator;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ChangePasswordFragment extends Fragment {
+public class ForgotFragment extends Fragment {
 
+    private ForgotViewModel mForgotModel;
 
-    private ChangePasswordViewModel mChangePassModel;
+    private FragmentForgotBinding binding;
 
-    private FragmentChangePasswordBinding binding;
-
-    // add more maybe later
-    private PasswordValidator mPasswordValidator = PasswordValidator.checkPwdLength(7)
-            .and(PasswordValidator.checkPwdSpecialChar())
+    private PasswordValidator mEmailValidator = PasswordValidator.checkPwdLength(2)
             .and(PasswordValidator.checkExcludeWhiteSpace())
-            .and(PasswordValidator.checkPwdDigit())
-            .and(PasswordValidator.checkPwdLowerCase().or(PasswordValidator.checkPwdUpperCase()));
+            .and(PasswordValidator.checkPwdSpecialChar("@"));
 
-
-    public ChangePasswordFragment() {
+    public ForgotFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mChangePassModel = new ViewModelProvider(getActivity())
-                .get(ChangePasswordViewModel.class);
+        mForgotModel = new ViewModelProvider(getActivity())
+                .get(ForgotViewModel.class);
 
     }
 
@@ -66,7 +47,7 @@ public class ChangePasswordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentChangePasswordBinding.inflate(inflater, container, false);
+        binding = FragmentForgotBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -78,26 +59,24 @@ public class ChangePasswordFragment extends Fragment {
 
 
 
-        binding.buttonChangePassChangePass.setOnClickListener(button -> attemptChangePass());
+        binding.buttonForgotSendEmail.setOnClickListener(button -> attemptEmailForgot());
 
-        mChangePassModel.addResponseObserver(getViewLifecycleOwner(),
+        mForgotModel.addResponseObserver(getViewLifecycleOwner(),
                 this::observeResponse);
-
-
     }
 
     /**
-     * Pass the password into their corresponding validation methods.
+     * Pass the email into their corresponding validation methods.
      *
      *
      * @author Charles Bryan
      * @version 1.0
      */
-    private void attemptChangePass() {
-        mPasswordValidator.processResult(
-                mPasswordValidator.apply(binding.editPassChangePass.getText().toString().trim()),
+    private void attemptEmailForgot() {
+        mEmailValidator.processResult(
+                mEmailValidator.apply(binding.editForgotPass.getText().toString().trim()),
                 this::verifyAuthWithServer,
-                this::handlePasswordError);
+                this::handleEmailError);
     }
 
     /**
@@ -118,13 +97,13 @@ public class ChangePasswordFragment extends Fragment {
 
         String email = LoginFragment.getEmail();
 
-        mChangePassModel.connect(binding.editPassChangePass.getText().toString());
+        mForgotModel.connect(binding.editForgotPass.getText().toString());
 
     }
 
     private void navigateToConfirm() {
         Navigation.findNavController(getView())
-                .navigate(ChangePasswordFragmentDirections.actionChangePasswordFragmentToChangePassConfirmFragment());
+                .navigate(ForgotFragmentDirections.actionForgotFragmentToForgotConfirmFragment());
     }
 
     /**
@@ -137,35 +116,20 @@ public class ChangePasswordFragment extends Fragment {
      * @author Bayley Cope
      * @version 1.1
      */
-    private void handlePasswordError(PasswordValidator.ValidationResult validationResult) {
+    private void handleEmailError(PasswordValidator.ValidationResult validationResult) {
         String message = getString(R.string.error_general);
         switch (validationResult) {
-            case PWD_CLIENT_ERROR:
-                message = getString(R.string.error_password_match);
+            case PWD_MISSING_SPECIAL:
+                message = getString(R.string.error_email_character);
                 break;
             case PWD_INVALID_LENGTH:
-                message = getString(R.string.error_password_seven_chars);
-                break;
-            case PWD_INCLUDES_WHITESPACE:
-                message = getString(R.string.error_password_whitespace);
-                break;
-            case PWD_MISSING_DIGIT:
-                message = getString(R.string.error_password_digit);
-                break;
-            case PWD_MISSING_SPECIAL:
-                message = getString(R.string.error_password_special);
-                break;
-            case PWD_MISSING_LOWER:
-                message = getString(R.string.error_password_lower);
-                break;
-            case PWD_MISSING_UPPER:
-                message = getString(R.string.error_password_upper);
+                message = getString(R.string.error_email_two_chars);
                 break;
             default:
                 // might need a case
                 break;
         }
-        binding.editPassChangePass.setError(message);
+        binding.editForgotPass.setError(message);
     }
 
     /**
@@ -180,7 +144,7 @@ public class ChangePasswordFragment extends Fragment {
     private void observeResponse(final JSONObject response) {
         if (response.length() > 0) {
             if (response.has("code")) {
-                try { binding.editPassChangePass.setError(
+                try { binding.editForgotPass.setError(
                         "Error Authenticating: " + response.getJSONObject("data").getString("message"));
                 } catch (JSONException e) {
                     Log.e("JSON Parse Error", e.getMessage()); }
@@ -190,6 +154,4 @@ public class ChangePasswordFragment extends Fragment {
             Log.d("JSON Response", "No Response");
         }
     }
-
-
 }
