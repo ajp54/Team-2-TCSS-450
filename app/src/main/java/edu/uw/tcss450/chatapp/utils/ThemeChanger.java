@@ -65,4 +65,8 @@ public class ThemeChanger {
             default:
         }
     }
+
+    public int getTheme() {
+        return mTheme;
+    }
 }
