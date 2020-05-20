@@ -104,7 +104,7 @@ public class ChatListFragment extends Fragment {
         mChatModel.addChatRoomObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), chatList -> {
             if (!chatList.isEmpty()) {
                 rv.setAdapter(
-                        new ChatRecyclerViewAdapter(chatRooms, listener)
+                        new ChatRecyclerViewAdapter(chatList, listener)
                 );
                 rv.getAdapter().notifyDataSetChanged();
                 rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
