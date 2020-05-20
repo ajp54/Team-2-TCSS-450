@@ -19,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.uw.tcss450.chatapp.R;
+import edu.uw.tcss450.chatapp.model.PushyTokenViewModel;
+import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.utils.PasswordValidator;
 import edu.uw.tcss450.chatapp.databinding.FragmentLoginBinding;
 
@@ -32,6 +34,9 @@ public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
     private SignInViewModel mSignInModel;
+    private PushyTokenViewModel mPushyTokenViewModel;
+    private UserInfoViewModel mUserViewModel;
+
 
     private PasswordValidator mEmailValidator = PasswordValidator.checkPwdLength(2)
                     .and(PasswordValidator.checkExcludeWhiteSpace())
@@ -52,6 +57,9 @@ public class LoginFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mSignInModel = new ViewModelProvider(getActivity())
                 .get(SignInViewModel.class);
+        mPushyTokenViewModel = new ViewModelProvider(getActivity())
+                .get(PushyTokenViewModel.class);
+
     }
 
 
@@ -85,7 +93,13 @@ public class LoginFragment extends Fragment {
         binding.editPassLogin.setText(args.getPassword().equals("default") ? "" : args.getPassword());
         //NavDirections directions = LoginFragmentDirections.actionLoginFragmentToRegisterFragment();
 
+        //don't allow sign in until pushy token retrieved
+        mPushyTokenViewModel.addTokenObserver(getViewLifecycleOwner(), token ->
+                binding.buttonLoginSignin.setEnabled(!token.isEmpty()));
 
+        mPushyTokenViewModel.addResponseObserver(
+                getViewLifecycleOwner(),
+                this::observePushyPutResponse);
 
     }
 
@@ -198,7 +212,13 @@ public class LoginFragment extends Fragment {
                 }
             } else {
                 try {
-                    navigateToMain(binding.editEmailLogin.getText().toString(), response.getString("token"));
+                    mUserViewModel = new ViewModelProvider(getActivity(),
+                            new UserInfoViewModel.UserInfoViewModelFactory(
+                                    binding.editEmailLogin.getText().toString(),
+                                    response.getString("token")
+                            )).get(UserInfoViewModel.class);
+
+                    sendPushyToken();
                 } catch (JSONException e) {
                     Log.e("JSON Parse Error", e.getMessage()); }
             }
@@ -207,5 +227,34 @@ public class LoginFragment extends Fragment {
         }
 
     }
+
+    /**
+     * Helper to abstract the request to send the pushy token to the web service
+     */
+    private void sendPushyToken() {
+        mPushyTokenViewModel.sendTokenToWebservice(mUserViewModel.getmJwt());
+    }
+
+    /**
+     * An observer on the HTTP Response from the web server. This observer should be
+     * attached to PushyTokenViewModel.
+     *
+     * @param response the Response from the server
+     */
+    private void observePushyPutResponse(final JSONObject response) {
+        if (response.length() > 0) {
+            if (response.has("code")) {
+                //this error cannot be fixed by the user changing credentials...
+                binding.editEmailLogin.setError(
+                        "Error Authenticating on Push Token. Please contact support");
+            } else {
+                navigateToMain(
+                        binding.editEmailLogin.getText().toString(),
+                        mUserViewModel.getmJwt()
+                );
+            }
+        }
+    }
+
 
 }

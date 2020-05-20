@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.uw.tcss450.chatapp.databinding.FragmentChatRoomBinding;
+import edu.uw.tcss450.chatapp.databinding.FragmentContactsCardBinding;
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.R;
 
@@ -25,13 +26,14 @@ import edu.uw.tcss450.chatapp.R;
 public class ChatRoomFragment extends Fragment {
 
     //The chat ID for "global" chat
-    private static final int HARD_CODED_CHAT_ID = 1;
+    //private static final int HARD_CODED_CHAT_ID = 1;
 
     private ChatRoomViewModel mChatModel;
     private UserInfoViewModel mUserModel;
     private ChatRoomSendViewModel mSendModel;
 
     private List<Integer> ChatIds;
+    private int chatId;
 
     public ChatRoomFragment() {
         // Required empty public constructor
@@ -40,11 +42,15 @@ public class ChatRoomFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        chatId = args.getInt("chatId", 1);
+//        Log.i("CHATROOM", "user selected chatID: " + chatId);
+
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mUserModel = provider.get(UserInfoViewModel.class);
         mChatModel = provider.get(ChatRoomViewModel.class);
         mChatModel.getChatIds(124, mUserModel.getmJwt());
-        mChatModel.getFirstMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
+        mChatModel.getFirstMessages(chatId, mUserModel.getmJwt());
         ChatIds = mChatModel.getChatIdList();
         mSendModel = provider.get(ChatRoomSendViewModel.class);
         Log.i("CHATROOM", "created the chat room");
@@ -70,17 +76,17 @@ public class ChatRoomFragment extends Fragment {
         //Set the Adapter to hold a reference to the list FOR THIS chat ID that the ViewModel
         //holds.
         rv.setAdapter(new ChatRoomRecyclerViewAdapter(
-                        mChatModel.getMessageListByChatId(HARD_CODED_CHAT_ID),
+                        mChatModel.getMessageListByChatId(chatId),
                         mUserModel.getEmail()));
 
 
         //When the user scrolls to the top of the RV, the swiper list will "refresh"
         //The user is out of messages, go out to the service and get more
         binding.swipeContainer.setOnRefreshListener(() -> {
-            mChatModel.getNextMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
+            mChatModel.getNextMessages(chatId, mUserModel.getmJwt());
         });
 
-        mChatModel.addMessageObserver(HARD_CODED_CHAT_ID, getViewLifecycleOwner(),
+        mChatModel.addMessageObserver(chatId, getViewLifecycleOwner(),
                 list -> {
                     /*
                      * This solution needs work on the scroll position. As a group,
@@ -96,7 +102,7 @@ public class ChatRoomFragment extends Fragment {
 
         //Send button was clicked. Send the message via the SendViewModel
         binding.buttonSend.setOnClickListener(button -> {
-            mSendModel.sendMessage(HARD_CODED_CHAT_ID,
+            mSendModel.sendMessage(chatId,
                     mUserModel.getmJwt(),
                     binding.editMessage.getText().toString());
         });
