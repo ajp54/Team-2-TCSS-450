@@ -15,26 +15,30 @@ import java.util.List;
 
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.databinding.FragmentContactsCardBinding;
+import edu.uw.tcss450.chatapp.ui.chat.ChatRecyclerViewAdapter;
 
 public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerViewAdapter.ContactViewHolder>{
     //Store all of the contacts to present
     private final List<Contact> mContacts;
 
-    public ContactRecyclerViewAdapter(List<Contact> items) {
+    private RecyclerViewClickListener mListener;
+
+    public ContactRecyclerViewAdapter(List<Contact> items, RecyclerViewClickListener listener) {
         this.mContacts = items;
+        mListener = listener;
     }
 
     @NonNull
     @Override
-    public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ContactViewHolder(LayoutInflater
+    public ContactRecyclerViewAdapter.ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ContactRecyclerViewAdapter.ContactViewHolder(LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.fragment_contacts_card, parent, false));
+                .inflate(R.layout.fragment_contacts_card, parent, false), mListener);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ContactRecyclerViewAdapter.ContactViewHolder holder, int position) {
         holder.setContact(mContacts.get(position));
     }
 
@@ -47,14 +51,17 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
      * Objects from this class represent an Individual row View from the List
      * of rows in the Contact Recycler View.
      */
-    public class ContactViewHolder extends RecyclerView.ViewHolder {
+    public class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final View mView;
         public FragmentContactsCardBinding binding;
+        private RecyclerViewClickListener mListener;
 
-        public ContactViewHolder(View view) {
+        public ContactViewHolder(View view, RecyclerViewClickListener listener) {
             super(view);
             mView = view;
             binding = FragmentContactsCardBinding.bind(view);
+            mListener = listener;
+            view.setOnClickListener(this);
         }
 
 
@@ -65,5 +72,23 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
 
         }
 
+        @Override
+        public void onClick(View v) {
+            mListener.onClick(v, getAdapterPosition());
+        }
+
+    }
+
+    public interface RecyclerViewClickListener {
+
+        void onClick(View view, int position);
+    }
+
+    public void replaceItem(final Contact newItem, final int pos) {
+        mContacts.remove(pos);
+        mContacts.add(pos, newItem);
+
+        notifyItemChanged(pos);
+        notifyDataSetChanged();
     }
 }
