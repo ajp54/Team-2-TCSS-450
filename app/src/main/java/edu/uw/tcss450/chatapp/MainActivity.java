@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ThemeChanger.onActivityCreateSetTheme(this);
+        ThemeChanger.onActivityCreateSetTheme(this);
 //        setContentView(R.layout.activity_main);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        MainActivityArgs args = MainActivityArgs.fromBundle(getIntent().getExtras());
+
         switch (item.getItemId()) {
             case R.id.action_toggleTheme:
                 return true;
@@ -120,19 +123,19 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.themeOrangeLight:
-                ThemeChanger.changeTheme(this, ThemeChanger.THEME_ORANGE_LIGHT);
+                ThemeChanger.changeTheme(this, ThemeChanger.THEME_ORANGE_LIGHT, args.getEmail(), args.getJwt());
                 return true;
 
             case R.id.themeOrangeDark:
-                ThemeChanger.changeTheme(this, ThemeChanger.THEME_ORANGE_DARK);
+                ThemeChanger.changeTheme(this, ThemeChanger.THEME_ORANGE_DARK, args.getEmail(), args.getJwt());
                 return true;
 
             case R.id.themeBlueLight:
-                ThemeChanger.changeTheme(this, ThemeChanger.THEME_BLUE_LIGHT);
+                ThemeChanger.changeTheme(this, ThemeChanger.THEME_BLUE_LIGHT, args.getEmail(), args.getJwt());
                 return true;
 
             case R.id.themeBlueDark:
-                ThemeChanger.changeTheme(this, ThemeChanger.THEME_BLUE_DARK);
+                ThemeChanger.changeTheme(this, ThemeChanger.THEME_BLUE_DARK, args.getEmail(), args.getJwt());
                 return true;
 
             default:
