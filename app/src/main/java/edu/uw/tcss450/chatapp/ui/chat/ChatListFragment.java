@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,10 +18,12 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.databinding.FragmentChatBinding;
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
+import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatMessage;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomRecyclerViewAdapter;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomSendViewModel;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomViewModel;
@@ -38,6 +41,8 @@ public class ChatListFragment extends Fragment {
     private UserInfoViewModel mUserModel;
 
     private List<Integer> chatIds;
+    List<ChatRoom> chatRooms;
+    private int chatFlag = 0;
 
     /**
      * Class constructor
@@ -50,24 +55,41 @@ public class ChatListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+//        chatIds = mChatModel.getChatIdList();
+
+//        Log.i("CHATLIST", "instantiated chatIds, char map length:" + chatIds.size());
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_chat, container, false);
+
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewModelProvider provider = new ViewModelProvider(getActivity());
-        mUserModel = provider.get(UserInfoViewModel.class);
         mChatModel = provider.get(ChatRoomViewModel.class);
-        mChatModel.getFirstMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
-        //mChatModel.getChatIds(124, mUserModel.getmJwt());
-        //chatIds = mChatModel.getChatIdList();
+        mUserModel = provider.get(UserInfoViewModel.class);
+        chatRooms = mChatModel.getChatIds(1, mUserModel.getmJwt()).getValue();
 
-//        for(int i = 0; i < chatIds.size(); i++) {
-//            mChatModel.getFirstMessages(chatIds.get(i), mUserModel.getmJwt());
+//        mChatModel.getFirstMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
+//        Log.i("CHATLIST", "instantiated chatIds");
+
+    }
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        if(chatIds != null) {
+//            for (int i = 0; i < chatIds.size(); i++) {
+//                mChatModel.getFirstMessages(chatIds.get(i), mUserModel.getmJwt());
+//                //add recent messages to the chat room cards
+//                List<ChatMessage> messages = mChatModel.getMessageListByChatId(chatIds.get(i));
+//                String recentMessage = messages.get(messages.size()-1).getMessage();
+//                binding.recyclerChatRooms
+//            }
 //        }
-        //Log.i("CHATLIST", "char map length:" + mChatModel.getChatMap().size());
     }
 
     @Override
@@ -75,16 +97,36 @@ public class ChatListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         FragmentChatBinding binding = FragmentChatBinding.bind(getView());
 
+        final RecyclerView rv = binding.recyclerChatRooms;
+
         //TODO add correct chatId
         ChatRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position) -> {
-            navigateToChat(1);
+            navigateToChat(chatIds.get(position));
         };
 
-        mChatModel.addChatRoomObserver(1, getViewLifecycleOwner(), chatList -> {
+//        if(chatIds != null) {
+//            List<ChatRoom> newChatRooms = new ArrayList<ChatRoom>();
+//            for (int i = 0; i < chatIds.size(); i++) {
+//                mChatModel.getFirstMessages(chatIds.get(i), mUserModel.getmJwt());
+//                //add recent messages to the chat room cards
+//                List<ChatMessage> messages = mChatModel.getMessageListByChatId(chatIds.get(i));
+//                if(messages.size() > 0) {
+//                    String recentMessage = messages.get(messages.size() - 1).getMessage();
+//                    ChatRoom newRoom = new ChatRoom(new ChatRoom.Builder("people", Integer.toString(chatIds.get(i)), recentMessage));
+//                    newChatRooms.add(newRoom);
+//                }
+//            }
+//            rv.setAdapter(new ChatRecyclerViewAdapter(newChatRooms, listener));
+//        }
+
+
+        mChatModel.addChatRoomObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), chatList -> {
             if (!chatList.isEmpty()) {
-                binding.recyclerChatRooms.setAdapter(
-                        new ChatRecyclerViewAdapter(chatList, listener)
+                rv.setAdapter(
+                        new ChatRecyclerViewAdapter(chatRooms, listener)
                 );
+                rv.getAdapter().notifyDataSetChanged();
+                chatIds = mChatModel.getChatIdList();
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
             }
