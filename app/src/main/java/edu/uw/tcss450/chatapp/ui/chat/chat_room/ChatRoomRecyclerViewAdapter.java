@@ -1,6 +1,12 @@
 package edu.uw.tcss450.chatapp.ui.chat.chat_room;
 
+import android.app.Application;
+import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +24,7 @@ import java.util.List;
 
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.databinding.FragmentChatMessageBinding;
+import edu.uw.tcss450.chatapp.utils.ThemeChanger;
 //import edu.uw.tcss450.chatapp.databinding.FragmentChatMessageBinding;
 
 public class ChatRoomRecyclerViewAdapter extends RecyclerView.Adapter<ChatRoomRecyclerViewAdapter.MessageViewHolder> {
@@ -65,6 +72,46 @@ public class ChatRoomRecyclerViewAdapter extends RecyclerView.Adapter<ChatRoomRe
             int standard = (int) res.getDimension(R.dimen.chat_margin);
             int extended = (int) res.getDimension(R.dimen.chat_margin_sided);
 
+            int primaryColor;
+            int accentColor;
+            ThemeChanger theme = new ThemeChanger();
+            Log.i("RECYCLER", "theme:" + theme.getTheme());
+            switch (theme.getTheme()) {
+                case 0:
+                    primaryColor = ColorUtils.setAlphaComponent(
+                            res.getColor(R.color.orangeColorPrimary, null),
+                            250);
+                    accentColor = ColorUtils.setAlphaComponent(
+                            res.getColor(R.color.orangeColorAccent, null),
+                            250);
+                    break;
+                case 1:
+                    primaryColor = ColorUtils.setAlphaComponent(
+                            res.getColor(R.color.orangeDarkColorPrimary, null),
+                            250);
+                    accentColor = ColorUtils.setAlphaComponent(
+                            res.getColor(R.color.orangeDarkColorAccent, null),
+                            250);
+                    break;
+                case 2:
+                    primaryColor = ColorUtils.setAlphaComponent(
+                            res.getColor(R.color.blueLightColorPrimary, null),
+                            250);
+                    accentColor = ColorUtils.setAlphaComponent(
+                            res.getColor(R.color.blueLightColorAccent, null),
+                            250);
+                    break;
+                default:
+                    primaryColor = ColorUtils.setAlphaComponent(
+                            res.getColor(R.color.blueDarkColorPrimary, null),
+                            250);
+                    accentColor = ColorUtils.setAlphaComponent(
+                            res.getColor(R.color.blueDarkColorAccent, null),
+                            250);
+                    break;
+            }
+            Log.i("RECYCLER", "primary color used:" + primaryColor);
+
             if (mEmail.equals(message.getSender())) {
                 //This message is from the user. Format it as such
                 binding.textMessage.setText(message.getMessage());
@@ -76,17 +123,13 @@ public class ChatRoomRecyclerViewAdapter extends RecyclerView.Adapter<ChatRoomRe
                 ((FrameLayout.LayoutParams) card.getLayoutParams()).gravity =
                         Gravity.END;
 
-                card.setCardBackgroundColor(
-                        ColorUtils.setAlphaComponent(
-                            res.getColor(R.color.orangeColorPrimary, null),
-                            16));
+                card.setCardBackgroundColor(primaryColor);
+
                 binding.textMessage.setTextColor(
-                        res.getColor(R.color.secondaryTextColorFade, null));
+                        res.getColor(R.color.colorOffWhite, null));
 
                 card.setStrokeWidth(standard / 5);
-                card.setStrokeColor(ColorUtils.setAlphaComponent(
-                        res.getColor(R.color.orangeColorPrimary, null),
-                        200));
+                card.setStrokeColor(primaryColor);
 
                 //Round the corners on the left side
                 card.setShapeAppearanceModel(
@@ -112,18 +155,14 @@ public class ChatRoomRecyclerViewAdapter extends RecyclerView.Adapter<ChatRoomRe
                 ((FrameLayout.LayoutParams) card.getLayoutParams()).gravity =
                         Gravity.START;
 
-                card.setCardBackgroundColor(
-                        ColorUtils.setAlphaComponent(
-                                res.getColor(R.color.orangeColorAccent, null),
-                                16));
+
+                card.setCardBackgroundColor(accentColor);
 
                 card.setStrokeWidth(standard / 5);
-                card.setStrokeColor(ColorUtils.setAlphaComponent(
-                        res.getColor(R.color.orangeColorAccent, null),
-                        200));
+                card.setStrokeColor(accentColor);
 
                 binding.textMessage.setTextColor(
-                        res.getColor(R.color.secondaryTextColorFade, null));
+                        res.getColor(R.color.colorOffWhite, null));
 
                 //Round the corners on the right side
                 card.setShapeAppearanceModel(
@@ -139,3 +178,4 @@ public class ChatRoomRecyclerViewAdapter extends RecyclerView.Adapter<ChatRoomRe
         }
     }
 }
+
