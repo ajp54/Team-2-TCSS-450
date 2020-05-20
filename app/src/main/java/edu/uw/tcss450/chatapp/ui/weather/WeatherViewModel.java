@@ -74,7 +74,7 @@ public class WeatherViewModel extends AndroidViewModel {
     }
 
     public void connectGet() {
-        String url = "https://team-2-tcss-450-backend.herokuapp.com/weather";
+        String url = "https://api.worldweatheronline.com/premium/v1/weather.ashx?key=dc96b2428dc140f09a710254201405&q=98402&format=json&num_of_days=7&fx24=yes";
 
         Request request = new JsonObjectRequest(
                 Request.Method.GET,
