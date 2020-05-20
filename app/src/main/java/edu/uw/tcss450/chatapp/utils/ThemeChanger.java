@@ -3,12 +3,8 @@ package edu.uw.tcss450.chatapp.utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-
-import androidx.lifecycle.ViewModelProvider;
 
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 
 /**
  * @author Bayley Cope
