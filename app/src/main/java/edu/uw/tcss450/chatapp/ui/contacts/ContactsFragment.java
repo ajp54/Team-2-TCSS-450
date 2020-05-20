@@ -51,6 +51,7 @@ public class ContactsFragment extends Fragment {
 
         FragmentContactsBinding binding = FragmentContactsBinding.bind(getView());
 
+
     }
 
 }
