@@ -9,53 +9,50 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.ui.weather.WeatherBuilder;
+import edu.uw.tcss450.chatapp.ui.weather.Hour;
 
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+public class MyWeather24RecyclerViewAdapter extends RecyclerView.Adapter<MyWeather24RecyclerViewAdapter.ViewHolder> {
 
+    private Hour[] mHours;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public MyRecyclerViewAdapter(Context context) {
+    public MyWeather24RecyclerViewAdapter(Context context, Hour[] hours) {
         this.mInflater = LayoutInflater.from(context);
+        this.mHours = hours;
     }
 
     // inflates the row layout from xml when needed
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_weather_forecast, parent, false);
+        View view = mInflater.inflate(R.layout.item_weather_forecast24, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        //holder.myDate.setText(day.getmDay());
-        //holder.myTemp.setText(day.getmTemp());
+        Hour hour = mHours[position];
+        //System.out.println(hour.getmHour());
+        holder.myHour.setText(hour.getmHour());
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return 0;
-        //return mDays.length;
+        return mHours.length;
     }
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myDate;
-        TextView myTemp;
+        TextView myHour;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myDate = itemView.findViewById(R.id.txt_date);
-            myTemp = itemView.findViewById(R.id.txt_temperature);
+            myHour = itemView.findViewById(R.id.txt_time);
             itemView.setOnClickListener(this);
         }
 
@@ -63,6 +60,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+    }
+
+    // convenience method for getting data at click position
+    public Hour getItem(int id) {
+        return mHours[id];
     }
 
     // allows clicks events to be caught
