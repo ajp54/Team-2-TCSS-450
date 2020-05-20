@@ -80,34 +80,34 @@ public class ChatRoomRecyclerViewAdapter extends RecyclerView.Adapter<ChatRoomRe
                 case 0:
                     primaryColor = ColorUtils.setAlphaComponent(
                             res.getColor(R.color.orangeColorPrimary, null),
-                            16);
+                            250);
                     accentColor = ColorUtils.setAlphaComponent(
-                            res.getColor(R.color.orangeColorPrimary, null),
-                            16);
+                            res.getColor(R.color.orangeColorAccent, null),
+                            250);
                     break;
                 case 1:
                     primaryColor = ColorUtils.setAlphaComponent(
-                            res.getColor(R.color.orangeDarkColorAccent, null),
-                            16);
+                            res.getColor(R.color.orangeDarkColorPrimary, null),
+                            250);
                     accentColor = ColorUtils.setAlphaComponent(
                             res.getColor(R.color.orangeDarkColorAccent, null),
-                            16);
+                            250);
                     break;
                 case 2:
                     primaryColor = ColorUtils.setAlphaComponent(
-                            res.getColor(R.color.blueLightColorAccent, null),
-                            16);
+                            res.getColor(R.color.blueLightColorPrimary, null),
+                            250);
                     accentColor = ColorUtils.setAlphaComponent(
                             res.getColor(R.color.blueLightColorAccent, null),
-                            16);
+                            250);
                     break;
                 default:
                     primaryColor = ColorUtils.setAlphaComponent(
-                            res.getColor(R.color.blueDarkColorAccent, null),
-                            16);
+                            res.getColor(R.color.blueDarkColorPrimary, null),
+                            250);
                     accentColor = ColorUtils.setAlphaComponent(
                             res.getColor(R.color.blueDarkColorAccent, null),
-                            16);
+                            250);
                     break;
             }
             Log.i("RECYCLER", "primary color used:" + primaryColor);

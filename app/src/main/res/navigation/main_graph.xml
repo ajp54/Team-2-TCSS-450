@@ -32,8 +32,8 @@
     <fragment
         android:id="@+id/navigation_chat_room"
         android:name="edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomFragment"
-        android:label="fragment_chat_room"
-        tools:layout="@layout/fragment_chat_room" >
+        android:label="@string/label_chat"
+        tools:layout="@layout/fragment_chat_room">
         <argument
             android:name="chatId"
             app:argType="integer" />
