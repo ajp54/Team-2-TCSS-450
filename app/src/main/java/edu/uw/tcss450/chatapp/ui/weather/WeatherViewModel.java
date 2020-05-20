@@ -81,15 +81,7 @@ public class WeatherViewModel extends AndroidViewModel {
                 url,
                 null,
                 this::handleResult,
-                this::handleError) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                // add headers <key,value>
-                headers.put("Auth", mJWT);
-                return headers;
-            }
-        };
+                this::handleError);
 
         request.setRetryPolicy(new DefaultRetryPolicy(
                 10_000,

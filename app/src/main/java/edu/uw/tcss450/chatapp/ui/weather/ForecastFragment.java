@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,7 @@ import java.util.LinkedList;
 import edu.uw.tcss450.chatapp.MainActivity;
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.adapter.MyRecyclerViewAdapter;
+import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,8 +30,8 @@ import edu.uw.tcss450.chatapp.adapter.MyRecyclerViewAdapter;
 public class ForecastFragment extends Fragment {
 
     private View myView;
-
     private MyRecyclerViewAdapter adapter;
+    private WeatherViewModel mWeatherModel;
 
 
     public ForecastFragment() {
@@ -41,14 +43,18 @@ public class ForecastFragment extends Fragment {
 //    public void onItemClick(View view, int position) {
 //        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
 //    }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+        mWeatherModel.connectGet();
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-
         myView = inflater.inflate(R.layout.fragment_forecast, container, false);
 
         return myView;
@@ -59,20 +65,13 @@ public class ForecastFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        Day[] days = {new Day("Monday", "55 F"), new Day("Tuesday", "64 F"), new Day("Wednesday", "62 F"),
-                                new Day("Thursday", "53 F"), new Day("Friday", "70 D"),
-                                new Day("Saturday", "71 F"), new Day("Sunday", "73")};
-
-
 //      RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerview);
         RecyclerView recyclerView = myView.findViewById(R.id.recyclerview);
-
 
         LinearLayoutManager horizontalLayoutManager
                 = new LinearLayoutManager(myView.getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManager);
-        adapter = new MyRecyclerViewAdapter(myView.getContext(), days);
+        adapter = new MyRecyclerViewAdapter(myView.getContext());
         //adapter.setClickListener(getActivity());
         recyclerView.setAdapter(adapter);
     }

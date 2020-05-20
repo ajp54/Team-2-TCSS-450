@@ -38,7 +38,7 @@ public class UserInfoViewModel extends ViewModel {
      *
      * @return user's JSON Web Token.
      */
-    public String getJwt() {
+    public String getmJwt() {
 
         return mJwt;
     }

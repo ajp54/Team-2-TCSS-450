@@ -12,18 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.ui.weather.Day;
+import edu.uw.tcss450.chatapp.ui.weather.WeatherBuilder;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
-    private Day[] mDays;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public MyRecyclerViewAdapter(Context context, Day[] days) {
+    public MyRecyclerViewAdapter(Context context) {
         this.mInflater = LayoutInflater.from(context);
-        this.mDays = days;
     }
 
     // inflates the row layout from xml when needed
@@ -37,15 +35,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Day day = mDays[position];
-        holder.myDate.setText(day.getmDay());
-        holder.myTemp.setText(day.getmTemp());
+
+        //holder.myDate.setText(day.getmDay());
+        //holder.myTemp.setText(day.getmTemp());
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mDays.length;
+        return 0;
+        //return mDays.length;
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -64,11 +63,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
-    }
-
-    // convenience method for getting data at click position
-    public Day getItem(int id) {
-        return mDays[id];
     }
 
     // allows clicks events to be caught
