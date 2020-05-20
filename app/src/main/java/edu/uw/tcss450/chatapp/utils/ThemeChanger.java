@@ -2,9 +2,13 @@ package edu.uw.tcss450.chatapp.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import edu.uw.tcss450.chatapp.R;
+import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 
 /**
  * @author Bayley Cope
@@ -19,6 +23,7 @@ public class ThemeChanger {
     public final static int THEME_BLUE_LIGHT = 2;
     public final static int THEME_BLUE_DARK = 3;
 
+
     /**
      * Sets the theme to the one passed by the options menu
      * then restarts the activity to change theme
@@ -26,10 +31,16 @@ public class ThemeChanger {
      * @param activity the activity
      * @param theme the theme
      */
-    public static void changeTheme(Activity activity, int theme) {
+    public static void changeTheme(Activity activity, int theme, String email, String jwt) {
         mTheme = theme;
+
         activity.finish();
-        activity.startActivity(new Intent(activity, activity.getClass()));
+        Intent intent = new Intent(activity, activity.getClass());
+        Bundle b = new Bundle();
+        b.putString("email", email); //Your id
+        b.putString("jwt", jwt);
+        intent.putExtras(b); //Put your id to your next Intent
+        activity.startActivity(intent);
     }
 
     /**
