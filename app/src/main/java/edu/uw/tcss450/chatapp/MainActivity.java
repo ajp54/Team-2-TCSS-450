@@ -1,5 +1,13 @@
 package edu.uw.tcss450.chatapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -7,16 +15,6 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.EditText;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,8 +25,6 @@ import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.services.PushReceiver;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatMessage;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomViewModel;
-import edu.uw.tcss450.chatapp.ui.home.signin.LoginFragmentDirections;
-import edu.uw.tcss450.chatapp.ui.settings.ChangePasswordFragment;
 import edu.uw.tcss450.chatapp.utils.ThemeChanger;
 
 /**
