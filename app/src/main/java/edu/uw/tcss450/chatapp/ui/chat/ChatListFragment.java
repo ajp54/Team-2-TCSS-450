@@ -33,10 +33,6 @@ import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomViewModel;
  * A simple {@link Fragment} subclass.
  */
 public class ChatListFragment extends Fragment {
-
-    //The chat ID for "global" chat
-    private static final int HARD_CODED_CHAT_ID = 1;
-
     private ChatRoomViewModel mChatModel;
     private UserInfoViewModel mUserModel;
 
@@ -104,22 +100,6 @@ public class ChatListFragment extends Fragment {
             navigateToChat(chatIds.get(position));
         };
 
-//        if(chatIds != null) {
-//            List<ChatRoom> newChatRooms = new ArrayList<ChatRoom>();
-//            for (int i = 0; i < chatIds.size(); i++) {
-//                mChatModel.getFirstMessages(chatIds.get(i), mUserModel.getmJwt());
-//                //add recent messages to the chat room cards
-//                List<ChatMessage> messages = mChatModel.getMessageListByChatId(chatIds.get(i));
-//                if(messages.size() > 0) {
-//                    String recentMessage = messages.get(messages.size() - 1).getMessage();
-//                    ChatRoom newRoom = new ChatRoom(new ChatRoom.Builder("people", Integer.toString(chatIds.get(i)), recentMessage));
-//                    newChatRooms.add(newRoom);
-//                }
-//            }
-//            rv.setAdapter(new ChatRecyclerViewAdapter(newChatRooms, listener));
-//        }
-
-
         mChatModel.addChatRoomObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), chatList -> {
             if (!chatList.isEmpty()) {
                 rv.setAdapter(
@@ -131,8 +111,6 @@ public class ChatListFragment extends Fragment {
                 //binding.layoutWait.setVisibility(View.GONE);
             }
         });
-
-
     }
 
     private void navigateToChat(final int chatId) {
