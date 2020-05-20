@@ -37,9 +37,6 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     @Override
     public void onBindViewHolder(@NonNull ChatRecyclerViewAdapter.ChatRoomViewHolder holder, int position) {
         holder.setChatRoom(mChatRooms.get(position));
-//        if (holder instanceof ChatRecyclerViewAdapter) {
-//            ChatRecyclerViewAdapter rowHolder = (ChatRecyclerViewAdapter) holder;
-//        }
     }
 
     @Override
