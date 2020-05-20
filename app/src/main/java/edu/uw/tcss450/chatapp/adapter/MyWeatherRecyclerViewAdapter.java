@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.ui.weather.WeatherBuilder;
+import edu.uw.tcss450.chatapp.ui.weather.Day;
 
 public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeatherRecyclerViewAdapter.ViewHolder> {
 
@@ -44,8 +44,7 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
     // total number of rows
     @Override
     public int getItemCount() {
-        return 0;
-        //return mDays.length;
+        return mDays.length;
     }
 
     // stores and recycles views as they are scrolled off screen

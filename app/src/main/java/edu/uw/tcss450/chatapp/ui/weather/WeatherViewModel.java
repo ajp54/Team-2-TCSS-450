@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
@@ -12,37 +13,43 @@ import androidx.lifecycle.Observer;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.IntFunction;
 
-import edu.uw.tcss450.chatapp.AuthActivity;
-import edu.uw.tcss450.chatapp.MainActivity;
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 
 public class WeatherViewModel extends AndroidViewModel {
 
-    private MutableLiveData<List<WeatherBuilder>> mWeatherList;
+    private MutableLiveData<List<CurrentWeatherBuilder>> mCurrentWeatherList;
+    private MutableLiveData<List<DailyForecastWeatherBuilder>> mDailyWeatherList;
+    private MutableLiveData<List<WeeklyForecastWeatherBuilder>> mWeeklyWeatherList;
 
     public WeatherViewModel(@NonNull Application application) {
         super(application);
-        mWeatherList = new MutableLiveData<>();
-        mWeatherList.setValue(new ArrayList<>());
+        mCurrentWeatherList = new MutableLiveData<>();
+        mDailyWeatherList = new MutableLiveData<>();
+        mWeeklyWeatherList = new MutableLiveData<>();
+
+        mCurrentWeatherList.setValue(new ArrayList<>());
+        mDailyWeatherList.setValue(new ArrayList<>());
+        mWeeklyWeatherList.setValue(new ArrayList<>());
     }
 
     public void addWeatherListObserver(@NonNull LifecycleOwner owner,
-                                       @NonNull Observer<? super List<WeatherBuilder>> observer) {
-        mWeatherList.observe(owner, observer);
+                                       @NonNull Observer<? super List<CurrentWeatherBuilder>> currentObserver,
+                                       @NonNull Observer<? super List<DailyForecastWeatherBuilder>> dailyObserver,
+                                       @NonNull Observer<? super List<WeeklyForecastWeatherBuilder>> weeklyObserver) {
+        mCurrentWeatherList.observe(owner, currentObserver);
+        mDailyWeatherList.observe(owner, dailyObserver);
+        mWeeklyWeatherList.observe(owner, weeklyObserver);
     }
 
     private void handleResult(final JSONObject result) {
@@ -50,27 +57,64 @@ public class WeatherViewModel extends AndroidViewModel {
                 getApplication().getResources()::getString;
         try {
             JSONObject root = result;
+
             if (root.has(getString.apply(R.string.keys_json_weather_data))) {
-                JSONArray data = root.getJSONArray(getString.apply(R.string.keys_json_weather_data));
+                JSONObject data =
+                        root.getJSONObject(getString.apply(
+                                R.string.keys_json_weather_data));
+                // CURRENT WEATHER
+                if (data.has(getString.apply(R.string.keys_json_weather_current_condition))) {
+                        JSONArray current_condition = data.getJSONArray(
+                                getString.apply(R.string.keys_json_weather_current_condition));
 
-                for (int i = 0; i < data.length(); i++) {
-                    JSONObject jsonWeather = data.getJSONObject(i);
-                    mWeatherList.getValue().add(new WeatherBuilder.Builder(
-                            jsonWeather.getString(getString.apply(R.string.keys_json_weather_temp_F)),
-                            jsonWeather.getString(getString.apply(R.string.keys_json_weather_windSpeedMiles)),
-                            jsonWeather.getString(getString.apply(R.string.keys_json_weather_humidity)),
-                            jsonWeather.getString(getString.apply(R.string.keys_json_weather_precipMM)),
-                            jsonWeather.getString(getString.apply(R.string.keys_json_weather_weather)),
-                            jsonWeather.getString(getString.apply(R.string.keys_json_weather_avgtempF))).build());
-
+                    for (int i = 0; i < current_condition.length(); i++) {
+                        JSONObject jsonCurrentWeather = current_condition.getJSONObject(i);
+                        mCurrentWeatherList.getValue().add(new CurrentWeatherBuilder.Builder(
+                                jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_temp_F)),
+                                jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_windspeedMiles)),
+                                jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_humidity)),
+                                jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_precipMM))).build());
+                    }
                 }
+                // DAILY WEATHER
+                if (data.has(getString.apply(R.string.keys_json_weather_weather))) {
+                    JSONArray forecast =
+                            data.getJSONArray(getString.apply(
+                                    R.string.keys_json_weather_weather));
+                    if (forecast.get(0) != null) {
+                        Log.e("IM HERE", "ERROR");
+                        JSONObject daily_weather =
+                                forecast.getJSONObject(1);
+                        for (int j = 0; j < daily_weather.length(); j++) {
+                            JSONObject jsonDailyWeather = daily_weather.getJSONObject(String.valueOf(j));
+                            mDailyWeatherList.getValue().add(new DailyForecastWeatherBuilder.Builder(
+                                    jsonDailyWeather.getString(getString.apply(R.string.keys_json_weather_date)),
+                                    jsonDailyWeather.getString(getString.apply(R.string.keys_json_weather_avgtempF))).build());
+                        }
+                    }
+                }
+                // WEEKLY WEATHER
+                if (data.has(getString.apply(R.string.keys_json_weather_weather))) {
+                    JSONArray weekly_condition = data.getJSONArray(
+                            getString.apply(R.string.keys_json_weather_weather));
+
+                    for (int k = 0; k < weekly_condition.length(); k++) {
+                        JSONObject jsonWeeklyWeather = weekly_condition.getJSONObject(k);
+                        mWeeklyWeatherList.getValue().add(new WeeklyForecastWeatherBuilder.Builder(
+                                jsonWeeklyWeather.getString(getString.apply(R.string.keys_json_weather_date)),
+                                jsonWeeklyWeather.getString(getString.apply(R.string.keys_json_weather_avgtempF))).build());
+                    }
+                }
+
+
             } else {
-                Log.e("ERROR IN WEAHERVIEWMODEL", "No data array");
+                Log.e("ERROR IN WEATHERVIEWMODEL", "No data array");
             }
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("ERROR IN WEATHERVIEWMODEL", e.getMessage());
         }
+        mCurrentWeatherList.setValue(mCurrentWeatherList.getValue());
     }
 
     public void connectGet() {

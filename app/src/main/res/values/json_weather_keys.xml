@@ -4,18 +4,18 @@
     <string name="keys_json_weather_data">data</string>
     <string name="keys_json_weather_current_condition">current_condition</string>
     <string name="keys_json_weather_temp_F">temp_F</string>
-    <string name="keys_json_weather_windSpeedMiles">windSpeedMiles</string>
+    <string name="keys_json_weather_windspeedMiles">windspeedMiles</string>
     <string name="keys_json_weather_humidity">humidity</string>
     <string name="keys_json_weather_precipMM">precipMM</string>
 
     <string name="keys_json_weather_weather">weather</string>
-    <string name="keys_json_weather_0">day0</string>
-    <string name="keys_json_weather_1">day1</string>
-    <string name="keys_json_weather_2">day2</string>
-    <string name="keys_json_weather_3">day3</string>
-    <string name="keys_json_weather_4">day4</string>
-    <string name="keys_json_weather_5">day5</string>
-    <string name="keys_json_weather_6">day6</string>
+    <string name="keys_json_weather_0">0</string>
+    <string name="keys_json_weather_1">1</string>
+    <string name="keys_json_weather_2">2</string>
+    <string name="keys_json_weather_3">3</string>
+    <string name="keys_json_weather_4">4</string>
+    <string name="keys_json_weather_5">5</string>
+    <string name="keys_json_weather_6">6</string>
     <string name="keys_json_weather_date">date</string>
     <string name="keys_json_weather_avgtempF">avgtempF</string>
 
