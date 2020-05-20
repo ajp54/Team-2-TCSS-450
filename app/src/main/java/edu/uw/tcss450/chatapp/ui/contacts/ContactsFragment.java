@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -74,6 +75,7 @@ public class ContactsFragment extends Fragment {
                         new ContactRecyclerViewAdapter(contactList, listener)
                 );
                 rv.getAdapter().notifyDataSetChanged();
+                rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 mContactsModel.connectGet(mUserModel.getmJwt());
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);

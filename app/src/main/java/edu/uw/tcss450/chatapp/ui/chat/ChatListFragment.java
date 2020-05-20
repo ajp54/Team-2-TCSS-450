@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -106,6 +107,7 @@ public class ChatListFragment extends Fragment {
                         new ChatRecyclerViewAdapter(chatRooms, listener)
                 );
                 rv.getAdapter().notifyDataSetChanged();
+                rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 chatIds = mChatModel.getChatIdList();
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
