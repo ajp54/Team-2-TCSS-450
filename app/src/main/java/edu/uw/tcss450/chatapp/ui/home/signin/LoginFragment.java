@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.auth0.android.jwt.JWT;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +63,30 @@ public class LoginFragment extends Fragment {
                 .get(PushyTokenViewModel.class);
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        SharedPreferences prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+
+        if (prefs.contains(getString(R.string.keys_prefs_jwt))) {
+            String token = prefs.getString(getString(R.string.keys_prefs_jwt), "");
+            JWT jwt = new JWT(token);
+            // Check to see if the web token is still valid or not. To make a JWT expire after a
+            // longer or shorter time period, change the expiration time when the JWT is
+            // created on the web service.
+            if(!jwt.isExpired(0)) {
+                String email = jwt.getClaim("email").asString();
+                navigateToMain(email, token);
+                return;
+            }
+        }
+    }
+
 
 
     @Override
@@ -181,12 +207,20 @@ public class LoginFragment extends Fragment {
      * @version 1.0
      */
     private void navigateToMain(final String email, final String jwt) {
+        SharedPreferences prefs =
+            getActivity().getSharedPreferences(
+                    getString(R.string.keys_shared_prefs),
+                    Context.MODE_PRIVATE);
+        //Store the credentials in SharedPrefs
+        prefs.edit().putString(getString(R.string.keys_prefs_jwt), jwt).apply();
 
         mEmail = email;
 
         Navigation.findNavController(getView()).navigate(LoginFragmentDirections
                 .actionLoginFragmentToMainActivity(email, jwt));
 
+        //Remove THIS activity from the Task list. Pops off the backstack
+        getActivity().finish();
     }
 
     public static String getEmail() {
