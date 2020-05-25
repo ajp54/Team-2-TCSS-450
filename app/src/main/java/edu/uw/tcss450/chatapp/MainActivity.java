@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import edu.uw.tcss450.chatapp.databinding.ActivityMainBinding;
 import edu.uw.tcss450.chatapp.model.NewMessageCountViewModel;
+import edu.uw.tcss450.chatapp.model.PushyTokenViewModel;
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.services.PushReceiver;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatMessage;
@@ -114,8 +116,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_signOut:
-                Intent intent = new Intent(this, AuthActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(this, AuthActivity.class);
+//                startActivity(intent);
+                signOut();
                 return true;
 
             case R.id.themeOrangeLight:
@@ -187,6 +190,31 @@ public class MainActivity extends AppCompatActivity {
         if (mPushMessageReceiver != null){
             unregisterReceiver(mPushMessageReceiver);
         }
+    }
+
+    private void signOut() {
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+
+        prefs.edit().remove(getString(R.string.keys_prefs_jwt)).apply();
+        //End the app completely
+        PushyTokenViewModel model = new ViewModelProvider(this)
+                .get(PushyTokenViewModel.class);
+
+        //when we hear back from the web service quit
+//        model.addResponseObserver(this, result -> finishAndRemoveTask());
+
+        model.deleteTokenFromWebservice(
+                new ViewModelProvider(this)
+                        .get(UserInfoViewModel.class)
+                        .getmJwt()
+        );
+
+        Intent intent = new Intent(this, AuthActivity.class);
+                startActivity(intent);
+
     }
 
 
