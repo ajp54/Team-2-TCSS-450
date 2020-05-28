@@ -1,6 +1,7 @@
 package edu.uw.tcss450.chatapp.ui.weather;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,9 @@ public class ForecastFragment extends Fragment {
 
     private FragmentForecastBinding binding;
     private View myView;
-    private WeatherViewModel mWeatherModel;
+    private WeatherViewModel mCurrentWeatherModel;
+    private WeatherViewModel mDailyWeatherModel;
+    private WeatherViewModel mWeeklyWeatherModel;
 
 
 
@@ -32,8 +35,12 @@ public class ForecastFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
-        mWeatherModel.connectGet();
+        mCurrentWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+        mDailyWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+        mWeeklyWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+        mCurrentWeatherModel.connectGet();
+        mDailyWeatherModel.connectGet();
+        mWeeklyWeatherModel.connectGet();
     }
 
 
@@ -48,28 +55,29 @@ public class ForecastFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FragmentForecastBinding binding = FragmentForecastBinding.bind((getView()));
+        binding = FragmentForecastBinding.bind((getView()));
 
-        mWeatherModel.addWeatherListObserver(getViewLifecycleOwner(),
-                (weatherList -> {
-                    if (!weatherList.isEmpty()) {
-                        binding.tempF.setText(CurrentWeatherBuilder.getTemp_F());
+        mCurrentWeatherModel.addWeatherListObserver(getViewLifecycleOwner(), currentWeatherList -> {
+                    if (!currentWeatherList.isEmpty()) {
+                        /*binding.tempF.setText(CurrentWeatherBuilder.getTemp_F());
                         binding.windspeedMiles.setText(CurrentWeatherBuilder.getWindSpeedMiles());
                         binding.humidity.setText(CurrentWeatherBuilder.getHumidity());
-                        binding.precipMM.setText(CurrentWeatherBuilder.getPrecipMM());
+                        binding.precipMM.setText(CurrentWeatherBuilder.getPrecipMM());*/
                     }
-                }),
-                (dailyWeatherList -> {
+                });
+
+        mDailyWeatherModel.addDailyWeatherListObserver(getViewLifecycleOwner(), dailyWeatherList -> {
                     if (!dailyWeatherList.isEmpty()) {
-                        binding.date.setText(DailyForecastWeatherBuilder.getDate());
-                        binding.avgtempF.setText(DailyForecastWeatherBuilder.getAvgTempF());
+                        /*binding.date.setText(DailyForecastWeatherBuilder.getAvgTempF());
+                        binding.avgtempF.setText(DailyForecastWeatherBuilder.getIconUrl());*/
                     }
-                }),
-                (weeklyWeatherList -> {
+                });
+
+        mWeeklyWeatherModel.addWeeklyWeatherListObserver(getViewLifecycleOwner(), weeklyWeatherList -> {
                     if (!weeklyWeatherList.isEmpty()) {
-                        binding.date0.setText(WeeklyForecastWeatherBuilder.getDate());
-                        binding.avgtempF0.setText(WeeklyForecastWeatherBuilder.getAvgTempF());
+                        /*binding.date.setText(WeeklyForecastWeatherBuilder.getDate());
+                        binding.avgtempF.setText(WeeklyForecastWeatherBuilder.getAvgTempF());*/
                     }
-                }));
+                });
     }
 }

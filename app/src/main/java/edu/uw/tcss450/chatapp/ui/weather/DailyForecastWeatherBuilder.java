@@ -3,17 +3,17 @@ package edu.uw.tcss450.chatapp.ui.weather;
 import java.io.Serializable;
 
 public class DailyForecastWeatherBuilder implements Serializable {
-    private static String mDate;
-    private static String mAvgTempF;
+    private final String mAvgTempF;
+    private final String mIconUrl;
 
 
     public static class Builder {
-        private final String mDate;
         private final String mAvgTempF;
+        private final String mIconUrl;
 
-        public Builder(String date, String avgTempF) {
-            this.mDate = date;
-            this.mAvgTempF = avgTempF;
+        public Builder(String avgtempF, String iconUrl) {
+            this.mAvgTempF = avgtempF;
+            this.mIconUrl = iconUrl;
         }
 
         public DailyForecastWeatherBuilder build() {
@@ -22,15 +22,16 @@ public class DailyForecastWeatherBuilder implements Serializable {
     }
 
     private DailyForecastWeatherBuilder(final Builder builder) {
-        this.mDate = builder.mDate;
         this.mAvgTempF = builder.mAvgTempF;
+        this.mIconUrl = builder.mIconUrl;
     }
 
-    public static String getDate() {
-        return mDate;
-    }
 
-    public static String getAvgTempF() {
+    public String getAvgTempF() {
         return mAvgTempF;
+    }
+
+    public String getIconUrl() {
+        return mIconUrl;
     }
 }
