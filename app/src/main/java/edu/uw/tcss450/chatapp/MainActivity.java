@@ -35,6 +35,8 @@ import edu.uw.tcss450.chatapp.utils.ThemeChanger;
 public class MainActivity extends AppCompatActivity {
     private MainPushMessageReceiver mPushMessageReceiver;
 
+    private NavController navController;
+
     private NewMessageCountViewModel mNewMessageModel;
 
     private ActivityMainBinding binding;
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view); // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder( R.id.navigation_home, R.id.navigation_weather, R.id.navigation_contacts, R.id.navigation_chat) .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
@@ -111,8 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_changePassword:
-                Intent intent1 = new Intent(this, SettingsActivity.class);
-                startActivity(intent1);
+                navController.navigate(R.id.changePasswordFragment);
                 return true;
 
             case R.id.action_signOut:
