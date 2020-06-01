@@ -10,8 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import edu.uw.tcss450.chatapp.R;
+import edu.uw.tcss450.chatapp.adapter.MyWeather24RecyclerViewAdapter;
+import edu.uw.tcss450.chatapp.adapter.MyWeatherRecyclerViewAdapter;
 import edu.uw.tcss450.chatapp.databinding.FragmentForecastBinding;
 
 /**
@@ -39,8 +43,6 @@ public class ForecastFragment extends Fragment {
         mDailyWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         mWeeklyWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         mCurrentWeatherModel.connectGet();
-        mDailyWeatherModel.connectGet();
-        mWeeklyWeatherModel.connectGet();
     }
 
 
@@ -56,6 +58,19 @@ public class ForecastFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding = FragmentForecastBinding.bind((getView()));
+
+        RecyclerView recyclerView24 = myView.findViewById(R.id.recyclerview);
+        RecyclerView recyclerView = myView.findViewById(R.id.recyclerview);
+
+
+        LinearLayoutManager horizontalLayoutManager
+                = new LinearLayoutManager(myView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        //LinearLayoutManager horizontalLayoutManager24
+        //        = new LinearLayoutManager(myView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        //recyclerView24.setLayoutManager(horizontalLayoutManager24);
+        recyclerView.setLayoutManager(horizontalLayoutManager);
 
         mCurrentWeatherModel.addWeatherListObserver(getViewLifecycleOwner(), currentWeatherList -> {
                     if (!currentWeatherList.isEmpty()) {
@@ -77,6 +92,8 @@ public class ForecastFragment extends Fragment {
                     if (!weeklyWeatherList.isEmpty()) {
                         /*binding.date.setText(WeeklyForecastWeatherBuilder.getDate());
                         binding.avgtempF.setText(WeeklyForecastWeatherBuilder.getAvgTempF());*/
+                        binding.recyclerview.setAdapter(
+                                new MyWeatherRecyclerViewAdapter(weeklyWeatherList));
                     }
                 });
     }

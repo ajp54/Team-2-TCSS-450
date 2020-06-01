@@ -9,53 +9,73 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import edu.uw.tcss450.chatapp.R;
+import edu.uw.tcss450.chatapp.databinding.FragmentForecastBinding;
+import edu.uw.tcss450.chatapp.databinding.ItemWeatherForecastBinding;
 import edu.uw.tcss450.chatapp.ui.weather.Day;
+import edu.uw.tcss450.chatapp.ui.weather.WeeklyForecastWeatherBuilder;
 
 public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeatherRecyclerViewAdapter.ViewHolder> {
 
-    private Day[] mDays;
+    private final List<WeeklyForecastWeatherBuilder> mDays;
+
+    public MyWeatherRecyclerViewAdapter(List<WeeklyForecastWeatherBuilder> items) {
+        this.mDays = items;
+    }
+
+    //private Day[] mDays;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-    // data is passed into the constructor
-    public MyWeatherRecyclerViewAdapter(Context context, Day[] days) {
-        this.mInflater = LayoutInflater.from(context);
-        this.mDays = days;
-    }
+//    // data is passed into the constructor
+//    public MyWeatherRecyclerViewAdapter(Context context, Day[] days) {
+//        this.mInflater = LayoutInflater.from(context);
+//        this.mDays = days;
+//    }
 
     // inflates the row layout from xml when needed
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_weather_forecast, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.item_weather_forecast, parent, false));
+//        View view = mInflater.inflate(R.layout.item_weather_forecast, parent, false);
+//        return new ViewHolder(view);
     }
 
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Day day = mDays[position];
-        holder.myDate.setText(day.getmDay());
-        holder.myTemp.setText(day.getmTemp());
+        WeeklyForecastWeatherBuilder day = mDays.get(position);
+        holder.setDay(day);
+//        holder.myDate.setText(day.getmDay());
+//        holder.myTemp.setText(day.getmTemp());
 
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mDays.length;
+        return mDays.size();
     }
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myDate;
-        TextView myTemp;
+        public final View mView;
+        public ItemWeatherForecastBinding binding;
+
+//        TextView myDate;
+//        TextView myTemp;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myDate = itemView.findViewById(R.id.txt_date);
-            myTemp = itemView.findViewById(R.id.txt_temperature);
+            mView = itemView;
+//            myDate = itemView.findViewById(R.id.txt_date);
+//            myTemp = itemView.findViewById(R.id.txt_temperature);
+            binding= ItemWeatherForecastBinding.bind(itemView);
             itemView.setOnClickListener(this);
         }
 
@@ -63,12 +83,17 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+
+        public void setDay(final WeeklyForecastWeatherBuilder day) {
+            binding.txtDate.setText(day.getDate());
+            binding.txtTemperature.setText(day.getAvgTempF());
+        }
     }
 
     // convenience method for getting data at click position
-    public Day getItem(int id) {
-        return mDays[id];
-    }
+    /*public Day getItem(int id) {
+        return mDays.get(id);
+    }*/
 
     // allows clicks events to be caught
     public void setClickListener(ItemClickListener itemClickListener) {
