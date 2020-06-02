@@ -3,6 +3,7 @@
     <!-- Naming convention: (how it will be used)_(description) -->
     <string name="app_name">Shoot The Breeze</string>
     <string name="base_url">https://team-2-tcss-450-backend.herokuapp.com/</string>
+
 <!--    <string name="base_url">http://localhost:5000/</string>-->
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -51,6 +52,10 @@
     <string name="keys_shared_prefs">My Auth App Shared Prefs</string>
     <string name="keys_prefs_jwt">Sharded Prefs JWT</string>
 
-
+    <string name="text_current_weather">CURRENT WEATHER</string>
+    <string name="text_five_day_forecast">5 DAY WEATHER FORECAST</string>
+    <string name="text_weather_wind">Wind:</string>
+    <string name="text_weather_humidity">Humidity:</string>
+    <string name="text_weather_precipitation">Precipitation:</string>
 
 </resources>

@@ -4,7 +4,6 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
@@ -13,7 +12,6 @@ import androidx.lifecycle.Observer;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -134,10 +132,10 @@ public class WeatherViewModel extends AndroidViewModel {
         mWeeklyWeatherList.setValue(mWeeklyWeatherList.getValue());
     }
 
-    public void connectGet() {
-        String url = "https://api.worldweatheronline.com/premium/v1/weather.ashx?key=dc96b2428dc140f09a710254201405&q=98402&format=json&num_of_days=7&fx24=no";
-        //String url = getApplication().getResources().getString(R.string.base_url) +
-        //        "weather/?zipcode=98402";
+    public void connectGet(List<String> locationInfo) {
+        Log.e("THE ZIP", locationInfo.get(1));
+        String url = "https://api.worldweatheronline.com/premium/v1/weather.ashx?key=dc96b2428dc140f09a710254201405&q="
+                + locationInfo.get(1) + "&format=json&num_of_days=7&fx24=no";
         Request request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -172,7 +170,6 @@ public class WeatherViewModel extends AndroidViewModel {
         JSONArray weatherIconUrl = theHour.getJSONArray("weatherIconUrl");
         JSONObject innerObject = weatherIconUrl.getJSONObject(0);
         String iconUrl = innerObject.getString("value");
-        //Log.d("the  weather icon", iconUrl);
         return iconUrl;
     }
 

@@ -86,7 +86,7 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
 
         public void setDay(final WeeklyForecastWeatherBuilder day) {
             binding.txtDate.setText(day.getDate());
-            binding.txtTemperature.setText(day.getAvgTempF());
+            binding.textTemperature.setText(day.getAvgTempF());
         }
     }
 

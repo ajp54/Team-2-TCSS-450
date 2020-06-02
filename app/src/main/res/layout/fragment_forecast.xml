@@ -18,19 +18,19 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/text_current_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TODAY, Wednesday"
+            android:text="@string/text_current_weather"
             android:textSize="24sp"
             android:textStyle="bold">
 
         </TextView>
 
         <TextView
-            android:id="@+id/txt_city_name_today"
+            android:id="@+id/text_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Seattle, WA"
             android:textSize="20sp"
             android:textStyle="bold">
 
@@ -70,7 +70,7 @@
             </ImageView>
 
             <TextView
-                android:id="@+id/txt_temperature"
+                android:id="@+id/text_temperature"
                 android:layout_width="140dp"
                 android:layout_height="80dp"
                 android:layout_marginLeft="8dp"
@@ -98,20 +98,11 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/text_five_day_forecast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5 DAY WEATHER FORECAST"
+            android:text="@string/text_five_day_forecast"
             android:textSize="24sp"
-            android:textStyle="bold">
-
-        </TextView>
-
-        <TextView
-            android:id="@+id/txt_city_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="for Seattle, WA"
-            android:textSize="20sp"
             android:textStyle="bold">
 
         </TextView>
@@ -125,7 +116,7 @@
         android:layout_below="@+id/temp_box"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Wind:" />
+        android:text="@string/text_weather_wind" />
 
     <TextView
         android:id="@+id/text_humidity"
@@ -134,16 +125,16 @@
         android:layout_below="@+id/text_wind"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Humidity:" />
+        android:text="@string/text_weather_humidity" />
 
     <TextView
-        android:id="@+id/Precipitation"
+        android:id="@+id/text_precipitation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_humidity"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Precipitation:" />
+        android:text="@string/text_weather_precipitation" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"

@@ -40,7 +40,7 @@
             </ImageView>
 
             <TextView
-                android:id="@+id/txt_temperature"
+                android:id="@+id/text_temperature"
                 android:layout_marginLeft="8dp"
                 android:textSize="50sp"
                 android:textStyle="bold"
