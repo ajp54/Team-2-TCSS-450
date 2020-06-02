@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_navigation_chat_to_chatRoomFragment2"
             app:destination="@id/navigation_chat_room" />
+        <action
+            android:id="@+id/action_navigation_chat_to_contactJoinFragment"
+            app:destination="@id/navigation_join_fragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_chat_room"
@@ -38,4 +41,9 @@
             android:name="chatId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_join_fragment"
+        android:name="edu.uw.tcss450.chatapp.ui.chat.contact_join.ContactJoinFragment"
+        android:label="Add Contacts"
+        tools:layout="@layout/fragment_contact_join" />
 </navigation>

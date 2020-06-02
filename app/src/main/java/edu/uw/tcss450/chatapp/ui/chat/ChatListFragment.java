@@ -96,7 +96,6 @@ public class ChatListFragment extends Fragment {
 
         final RecyclerView rv = binding.recyclerChatRooms;
 
-        //TODO add correct chatId
         ChatRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position) -> {
             navigateToChat(chatIds.get(position));
         };
@@ -114,7 +113,7 @@ public class ChatListFragment extends Fragment {
             }
         });
 
-        binding.buttonNewChat.setOnClickListener(button -> makeNewRoom(view, savedInstanceState));
+        binding.buttonNewChat.setOnClickListener(button -> navigateToContactJoin());
     }
 
     private void makeNewRoom(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -126,5 +125,11 @@ public class ChatListFragment extends Fragment {
 //        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
         Navigation.findNavController(getView()).navigate(ChatListFragmentDirections
                 .actionNavigationChatToChatRoomFragment2(chatId));
+    }
+
+    private void navigateToContactJoin() {
+//        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
+        Navigation.findNavController(getView()).navigate(ChatListFragmentDirections
+                .actionNavigationChatToContactJoinFragment());
     }
 }
