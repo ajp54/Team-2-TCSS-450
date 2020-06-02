@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    android:id="@+id/item_notification_request"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    app:cardUseCompatPadding="true"
+
+    >
+
+    <LinearLayout
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_date"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="New Request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+
+            <ImageView
+                android:id="@+id/img_message"
+                android:src="@drawable/ic_contacts_black_24dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/txt_request_name"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="Request from Robert"
+                android:layout_width="190dp"
+                android:layout_height="25dp">
+            </TextView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageButton android:id="@+id/button_accept"
+                    android:layout_width="30dp"
+                    android:layout_height="33dp"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/ic_check_black_24dp" />
+
+                <ImageButton android:id="@+id/button_reject"
+                    android:layout_width="30dp"
+                    android:layout_height="33dp"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/ic_close_black_24dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

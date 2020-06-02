@@ -12,11 +12,12 @@ public class DailyForecastWeatherBuilder implements Serializable {
         private final String mIconUrl;
 
         public Builder(String avgtempF, String iconUrl) {
-            this.mAvgTempF = avgtempF;
+            this.mAvgTempF = avgtempF + " F";
             this.mIconUrl = iconUrl;
         }
 
         public DailyForecastWeatherBuilder build() {
+
             return new DailyForecastWeatherBuilder(this);
         }
     }

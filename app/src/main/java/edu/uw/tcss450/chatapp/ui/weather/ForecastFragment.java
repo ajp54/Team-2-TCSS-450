@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Locale;
 
 import edu.uw.tcss450.chatapp.R;
+import edu.uw.tcss450.chatapp.adapter.MyWeather24RecyclerViewAdapter;
 import edu.uw.tcss450.chatapp.adapter.MyWeatherRecyclerViewAdapter;
 import edu.uw.tcss450.chatapp.databinding.FragmentForecastBinding;
 
@@ -84,12 +85,13 @@ public class ForecastFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding = FragmentForecastBinding.bind((getView()));
 
-
-        RecyclerView recyclerView24 = myView.findViewById(R.id.recyclerview);
+        RecyclerView recyclerView24 = myView.findViewById(R.id.recyclerview24);
         RecyclerView recyclerView = myView.findViewById(R.id.recyclerview);
 
 
         LinearLayoutManager horizontalLayoutManager
+                = new LinearLayoutManager(myView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager horizontalLayoutManager24
                 = new LinearLayoutManager(myView.getContext(), LinearLayoutManager.HORIZONTAL, false);
 
         //LinearLayoutManager horizontalLayoutManager24
@@ -97,28 +99,26 @@ public class ForecastFragment extends Fragment {
 
         //recyclerView24.setLayoutManager(horizontalLayoutManager24);
         recyclerView.setLayoutManager(horizontalLayoutManager);
+        recyclerView24.setLayoutManager(horizontalLayoutManager24);
 
         mCurrentWeatherModel.addWeatherListObserver(getViewLifecycleOwner(), currentWeatherList -> {
                     if (!currentWeatherList.isEmpty()) {
                         binding.textCity.setText(locationInfo.get(0));
-                        binding.textTemperature.setText(CurrentWeatherBuilder.getTemp_F());
-                        binding.textWind.setText(CurrentWeatherBuilder.getWindSpeedMiles());
-                        binding.textHumidity.setText(CurrentWeatherBuilder.getHumidity());
-                        binding.textPrecipitation.setText(CurrentWeatherBuilder.getPrecipMM());
+                        binding.txtTemperature.setText(CurrentWeatherBuilder.getTemp_F() + " F");
+                        binding.textWind.setText("Wind: " + CurrentWeatherBuilder.getWindSpeedMiles() + " MPH");
+                        binding.textHumidity.setText("Humidity: " +CurrentWeatherBuilder.getHumidity() + " %");
+                        binding.Precipitation.setText("Precipitation: " +CurrentWeatherBuilder.getPrecipMM() + " mm");
                     }
                 });
 
         mDailyWeatherModel.addDailyWeatherListObserver(getViewLifecycleOwner(), dailyWeatherList -> {
                     if (!dailyWeatherList.isEmpty()) {
-                        /*binding.date.setText(DailyForecastWeatherBuilder.getAvgTempF());
-                        binding.avgtempF.setText(DailyForecastWeatherBuilder.getIconUrl());*/
+                        binding.recyclerview24.setAdapter(new MyWeather24RecyclerViewAdapter(dailyWeatherList));
                     }
                 });
 
         mWeeklyWeatherModel.addWeeklyWeatherListObserver(getViewLifecycleOwner(), weeklyWeatherList -> {
                     if (!weeklyWeatherList.isEmpty()) {
-                        /*binding.date.setText(WeeklyForecastWeatherBuilder.getDate());
-                        binding.avgtempF.setText(WeeklyForecastWeatherBuilder.getAvgTempF());*/
                         binding.recyclerview.setAdapter(
                                 new MyWeatherRecyclerViewAdapter(weeklyWeatherList));
                     }
