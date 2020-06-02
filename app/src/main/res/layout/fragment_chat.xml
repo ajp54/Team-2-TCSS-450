@@ -21,7 +21,17 @@
         tools:context="edu.uw.tcss450.chatapp.ui.chat.ChatListFragment"
         tools:listitem="@layout/fragment_chat_room_card" />
 
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <Button
+        android:id="@+id/button_new_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="New Chat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
 <!--        android:id="@+id/layout_wait"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="match_parent"-->

@@ -66,7 +66,7 @@ public class ChatListFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mChatModel = provider.get(ChatRoomViewModel.class);
         mUserModel = provider.get(UserInfoViewModel.class);
-        chatRooms = mChatModel.getChatIds(1, mUserModel.getmJwt()).getValue();
+        chatRooms = mChatModel.getChatIds(mUserModel.getEmail(), mUserModel.getmJwt()).getValue();
 
 //        mChatModel.getFirstMessages(HARD_CODED_CHAT_ID, mUserModel.getmJwt());
 //        Log.i("CHATLIST", "instantiated chatIds");
@@ -101,7 +101,7 @@ public class ChatListFragment extends Fragment {
             navigateToChat(chatIds.get(position));
         };
 
-        mChatModel.addChatRoomObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), chatList -> {
+        mChatModel.addChatRoomObserver(mUserModel.getmJwt(), mUserModel.getEmail(), getViewLifecycleOwner(), chatList -> {
             if (!chatList.isEmpty()) {
                 rv.setAdapter(
                         new ChatRecyclerViewAdapter(chatList, listener)
@@ -113,6 +113,13 @@ public class ChatListFragment extends Fragment {
                 //binding.layoutWait.setVisibility(View.GONE);
             }
         });
+
+        binding.buttonNewChat.setOnClickListener(button -> makeNewRoom(view, savedInstanceState));
+    }
+
+    private void makeNewRoom(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mChatModel.createChatRoom(mUserModel.getmJwt());
+        onViewCreated(view, savedInstanceState);
     }
 
     private void navigateToChat(final int chatId) {
