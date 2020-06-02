@@ -17,6 +17,7 @@ public class DailyForecastWeatherBuilder implements Serializable {
         }
 
         public DailyForecastWeatherBuilder build() {
+
             return new DailyForecastWeatherBuilder(this);
         }
     }

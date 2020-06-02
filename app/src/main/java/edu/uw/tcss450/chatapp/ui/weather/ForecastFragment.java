@@ -59,7 +59,7 @@ public class ForecastFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding = FragmentForecastBinding.bind((getView()));
 
-        RecyclerView recyclerView24 = myView.findViewById(R.id.recyclerview);
+        //RecyclerView recyclerView24 = myView.findViewById(R.id.recyclerview);
         RecyclerView recyclerView = myView.findViewById(R.id.recyclerview);
 
 

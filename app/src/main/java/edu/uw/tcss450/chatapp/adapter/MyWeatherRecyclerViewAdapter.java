@@ -29,12 +29,6 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-//    // data is passed into the constructor
-//    public MyWeatherRecyclerViewAdapter(Context context, Day[] days) {
-//        this.mInflater = LayoutInflater.from(context);
-//        this.mDays = days;
-//    }
-
     // inflates the row layout from xml when needed
     @Override
     @NonNull
