@@ -58,7 +58,7 @@ public class ContactsViewModel extends AndroidViewModel {
     private void handelChatIdSuccess(final JSONObject response) {
         List<Contact> list = new ArrayList<Contact>();
         if (!response.has("memberId")) {
-            throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
+            throw new IllegalStateException("Unexpected response in ContactsViewModel: " + response);
         }
         try {
             Log.i("CONTACTS", "recieved a response");
@@ -122,10 +122,12 @@ public class ContactsViewModel extends AndroidViewModel {
             for(int i = 0; i < myContacts.length(); i++) {
                 JSONObject contact = myContacts.getJSONObject(i);
                 String username = contact.getString("username");
+                String first = contact.getString("firstname");
+                String last = contact.getString("lastname");
                 Log.i("CONTACTS", "username: " + username);
 //                chatIds.add(id);
                 //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
-                list.add(new Contact(new Contact.Builder(username, "First", "Last")));
+                list.add(new Contact(new Contact.Builder(username, first, last)));
             }
             mContactList.setValue(list);
 
@@ -136,7 +138,7 @@ public class ContactsViewModel extends AndroidViewModel {
             //inform observers of the change (setValue)
             //getOrCreateMapEntry(response.getInt("chatId")).setValue(list);
         }catch (JSONException e) {
-            Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
+            Log.e("JSON PARSE ERROR", "Found in handle Success ContactsViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
     }

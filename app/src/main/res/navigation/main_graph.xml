@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="edu.uw.tcss450.chatapp.ui.home.SuccessFragment"
-        android:label="@string/label_home"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_success" />
     <fragment
         android:id="@+id/navigation_weather"
@@ -19,7 +19,11 @@
         android:id="@+id/navigation_contacts"
         android:name="edu.uw.tcss450.chatapp.ui.contacts.ContactsFragment"
         android:label="@string/label_contacts"
-        tools:layout="@layout/fragment_contacts" />
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_navigation_contacts_to_editContactsFragment"
+            app:destination="@id/editContactsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_chat"
         android:name="edu.uw.tcss450.chatapp.ui.chat.ChatListFragment"
@@ -38,4 +42,9 @@
             android:name="chatId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/editContactsFragment"
+        android:name="edu.uw.tcss450.chatapp.ui.contacts.EditContactsFragment"
+        android:label="Edit Contacts"
+        tools:layout="@layout/fragment_contacts_edit"/>
 </navigation>

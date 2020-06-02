@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Naming convention: (how it will be used)_(description) -->
-    <string name="app_name">Chat App</string>
+    <string name="app_name">Shoot The Breeze</string>
     <string name="base_url">https://team-2-tcss-450-backend.herokuapp.com/</string>
 <!--    <string name="base_url">http://localhost:5000/</string>-->
 
@@ -30,6 +30,7 @@
     <string name="hint_last">Last Name</string>
     <string name="hint_user">Username</string>
     <string name="hint_forgot">Email</string>
+    <string name="hint_contacts">Edit Contacts</string>
 
     <string name="label_register">Register</string>
     <string name="label_sign_in">Sign In</string>
