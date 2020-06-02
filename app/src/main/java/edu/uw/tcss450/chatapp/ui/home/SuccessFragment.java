@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.adapter.MyNotificationRecyclerViewAdapter;
 import edu.uw.tcss450.chatapp.databinding.FragmentSuccessBinding;
+import edu.uw.tcss450.chatapp.ui.weather.CurrentWeatherBuilder;
+import edu.uw.tcss450.chatapp.ui.weather.WeatherViewModel;
 
 
 /**
@@ -31,6 +34,7 @@ public class SuccessFragment extends Fragment {
 
     private FragmentSuccessBinding binding;
     private View myView;
+    private WeatherViewModel mCurrentWeatherModel;
 
     public SuccessFragment() {
         // Required empty public constructor
@@ -41,11 +45,14 @@ public class SuccessFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mCurrentWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+
+        mCurrentWeatherModel.connectGet();
+
         // This callback will only be called when MyFragment is at least Started.
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
-//                System.exit(0);
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -72,6 +79,15 @@ public class SuccessFragment extends Fragment {
 
         binding = FragmentSuccessBinding.bind((getView()));
 
+        mCurrentWeatherModel.addWeatherListObserver(getViewLifecycleOwner(), currentWeatherList -> {
+            if (!currentWeatherList.isEmpty()) {
+                binding.txtTemperature.setText(CurrentWeatherBuilder.getTemp_F() + " F");
+                binding.textWind.setText("Wind: " + CurrentWeatherBuilder.getWindSpeedMiles() + " MPH");
+                binding.textHumidity.setText("Humidity: " +CurrentWeatherBuilder.getHumidity() + " %");
+                binding.Precipitation.setText("Precipitation: " +CurrentWeatherBuilder.getPrecipMM() + " mm");
+            }
+        });
+
 
         RecyclerView recyclerView = myView.findViewById(R.id.notifications_recyclerview);
 
@@ -84,7 +100,6 @@ public class SuccessFragment extends Fragment {
         notifications.add(new Notification("user4", ""));
         notifications.add(new Notification("user5", "this is my message 5"));
 
-        //Log.e("notifications", String.valueOf(notifications.size()));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(myView.getContext());
 

@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -41,8 +40,6 @@ public class MyNotificationRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         this.onItemClickListener = itemClickListener;
     }
 
-//    private LayoutInflater mInflater;
-////    private ItemClickListener mClickListener;
 
     @NonNull
     @Override
@@ -144,12 +141,10 @@ public class MyNotificationRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         void onItemClick(View view, int position);
     }
 
-    //region Interface Details listener
     public interface DetailsAdapterListener {
 
         void acceptOnClick(View v, int position);
 
         void rejectOnClick(View v, int position);
     }
-    //endregion
 }

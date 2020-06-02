@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class CurrentWeatherBuilder implements Serializable {
 
-    private final String mTemp_F;
-    private final String mWindSpeedMiles;
-    private final String mHumidity;
-    private final String mPrecipMM;
+    private static String mTemp_F;
+    private static String mWindSpeedMiles;
+    private static String mHumidity;
+    private static String mPrecipMM;
 
 
     public static class Builder {
@@ -35,19 +35,19 @@ public class CurrentWeatherBuilder implements Serializable {
         this.mPrecipMM = builder.mPrecipMM;
     }
 
-    public String getTemp_F() {
+    public static String getTemp_F() {
         return mTemp_F;
     }
 
-    public String getWindSpeedMiles() {
+    public static String getWindSpeedMiles() {
         return mWindSpeedMiles;
     }
 
-    public String getHumidity() {
+    public static String getHumidity() {
         return mHumidity;
     }
 
-    public String getPrecipMM() {
+    public static String getPrecipMM() {
         return mPrecipMM;
     }
 }

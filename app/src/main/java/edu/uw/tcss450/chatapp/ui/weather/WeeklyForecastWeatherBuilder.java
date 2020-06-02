@@ -13,7 +13,7 @@ public class WeeklyForecastWeatherBuilder implements Serializable {
 
         public Builder(String date, String avgTempF) {
             this.mDate = date;
-            this.mAvgTempF = avgTempF;
+            this.mAvgTempF = avgTempF + " F";
         }
 
         public WeeklyForecastWeatherBuilder build() {

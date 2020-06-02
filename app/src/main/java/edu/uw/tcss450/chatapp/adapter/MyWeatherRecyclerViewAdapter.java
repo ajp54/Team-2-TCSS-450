@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.databinding.FragmentForecastBinding;
 import edu.uw.tcss450.chatapp.databinding.ItemWeatherForecastBinding;
-import edu.uw.tcss450.chatapp.ui.weather.Day;
 import edu.uw.tcss450.chatapp.ui.weather.WeeklyForecastWeatherBuilder;
 
 public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeatherRecyclerViewAdapter.ViewHolder> {
@@ -25,7 +23,6 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
         this.mDays = items;
     }
 
-    //private Day[] mDays;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
@@ -36,8 +33,6 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
         return new ViewHolder(LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.item_weather_forecast, parent, false));
-//        View view = mInflater.inflate(R.layout.item_weather_forecast, parent, false);
-//        return new ViewHolder(view);
     }
 
     // binds the data to the view and textview in each row
@@ -45,8 +40,6 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         WeeklyForecastWeatherBuilder day = mDays.get(position);
         holder.setDay(day);
-//        holder.myDate.setText(day.getmDay());
-//        holder.myTemp.setText(day.getmTemp());
 
     }
 
@@ -61,14 +54,10 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
         public final View mView;
         public ItemWeatherForecastBinding binding;
 
-//        TextView myDate;
-//        TextView myTemp;
 
         ViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
-//            myDate = itemView.findViewById(R.id.txt_date);
-//            myTemp = itemView.findViewById(R.id.txt_temperature);
             binding= ItemWeatherForecastBinding.bind(itemView);
             itemView.setOnClickListener(this);
         }
@@ -84,10 +73,6 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
         }
     }
 
-    // convenience method for getting data at click position
-    /*public Day getItem(int id) {
-        return mDays.get(id);
-    }*/
 
     // allows clicks events to be caught
     public void setClickListener(ItemClickListener itemClickListener) {
