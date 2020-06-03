@@ -15,7 +15,6 @@ import java.util.List;
 
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.databinding.FragmentContactsCardBinding;
-import edu.uw.tcss450.chatapp.ui.chat.ChatRecyclerViewAdapter;
 
 public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerViewAdapter.ContactViewHolder>{
     //Store all of the contacts to present

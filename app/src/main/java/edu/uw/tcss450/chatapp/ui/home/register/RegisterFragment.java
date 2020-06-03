@@ -30,7 +30,6 @@ public class RegisterFragment extends Fragment {
 
     private RegisterViewModel mRegisterModel;
 
-
     private FragmentRegisterBinding binding;
 
     private PasswordValidator mEmailValidator = PasswordValidator.checkPwdLength(2)
