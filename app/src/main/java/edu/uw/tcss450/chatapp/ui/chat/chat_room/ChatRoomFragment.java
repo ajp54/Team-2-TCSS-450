@@ -49,7 +49,7 @@ public class ChatRoomFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mUserModel = provider.get(UserInfoViewModel.class);
         mChatModel = provider.get(ChatRoomViewModel.class);
-        mChatModel.getChatIds(124, mUserModel.getmJwt());
+        mChatModel.getChatIds(mUserModel.getEmail(), mUserModel.getmJwt());
         mChatModel.getFirstMessages(chatId, mUserModel.getmJwt());
         ChatIds = mChatModel.getChatIdList();
         mSendModel = provider.get(ChatRoomSendViewModel.class);

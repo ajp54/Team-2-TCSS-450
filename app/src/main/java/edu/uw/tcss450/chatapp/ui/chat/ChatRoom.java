@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class ChatRoom implements Serializable {
 
-    private final String mPeople;
+    private String mPeople;
     private final String mChatID;
     private String mRecentMessage;
 
@@ -59,4 +59,7 @@ public class ChatRoom implements Serializable {
     }
 
     public void setRecentMessage(String msg) { mRecentMessage = msg; }
+
+    public void setPeople(String msg) { mPeople = msg; }
+
 }

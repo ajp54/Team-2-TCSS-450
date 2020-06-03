@@ -28,12 +28,26 @@
         <action
             android:id="@+id/action_navigation_chat_to_chatRoomFragment2"
             app:destination="@id/navigation_chat_room" />
+        <action
+            android:id="@+id/action_navigation_chat_to_contactJoinFragment"
+            app:destination="@id/contactJoinFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_chat_room"
         android:name="edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomFragment"
         android:label="@string/label_chat"
         tools:layout="@layout/fragment_chat_room">
+        <argument
+            android:name="chatId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/contactJoinFragment"
+        android:name="edu.uw.tcss450.chatapp.ui.chat.contact_join.ContactJoinFragment"
+        android:label="Add Contacts" >
+        <argument
+            android:name="creatingRoom"
+            app:argType="boolean" />
         <argument
             android:name="chatId"
             app:argType="integer" />
