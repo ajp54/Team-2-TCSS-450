@@ -18,13 +18,14 @@ import edu.uw.tcss450.chatapp.ui.weather.WeeklyForecastWeatherBuilder;
 public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeatherRecyclerViewAdapter.ViewHolder> {
 
     private final List<WeeklyForecastWeatherBuilder> mDays;
+    private LayoutInflater mInflater;
+    private ItemClickListener mClickListener;
+    private final int limit = 7;
+
 
     public MyWeatherRecyclerViewAdapter(List<WeeklyForecastWeatherBuilder> items) {
         this.mDays = items;
     }
-
-    private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
 
     // inflates the row layout from xml when needed
     @Override
@@ -46,7 +47,11 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
     // total number of rows
     @Override
     public int getItemCount() {
-        return mDays.size();
+        if (mDays.size() > limit) {
+            return limit;
+        } else {
+            return mDays.size();
+        }
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -71,12 +76,6 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
             binding.txtDate.setText(day.getDate());
             binding.textTemperature.setText(day.getAvgTempF());
         }
-    }
-
-
-    // allows clicks events to be caught
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
     }
 
     // parent activity will implement this method to respond to click events

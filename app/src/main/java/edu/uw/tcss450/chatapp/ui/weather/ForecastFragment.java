@@ -11,9 +11,12 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,6 +53,7 @@ public class ForecastFragment extends Fragment {
     private WeatherViewModel mCurrentWeatherModel;
     private WeatherViewModel mDailyWeatherModel;
     private WeatherViewModel mWeeklyWeatherModel;
+
     private static List<String> locationInfo;
     private FusedLocationProviderClient mFusedLocationClient;
     private static final int MY_PERMISSIONS_LOCATIONS = 8414;
@@ -84,30 +88,25 @@ public class ForecastFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding = FragmentForecastBinding.bind((getView()));
+        binding.buttonZip.setOnClickListener(button -> getUserZipcode(view));
 
         RecyclerView recyclerView24 = myView.findViewById(R.id.recyclerview24);
         RecyclerView recyclerView = myView.findViewById(R.id.recyclerview);
-
 
         LinearLayoutManager horizontalLayoutManager
                 = new LinearLayoutManager(myView.getContext(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager horizontalLayoutManager24
                 = new LinearLayoutManager(myView.getContext(), LinearLayoutManager.HORIZONTAL, false);
 
-        //LinearLayoutManager horizontalLayoutManager24
-        //        = new LinearLayoutManager(myView.getContext(), LinearLayoutManager.HORIZONTAL, false);
-
-        //recyclerView24.setLayoutManager(horizontalLayoutManager24);
         recyclerView.setLayoutManager(horizontalLayoutManager);
         recyclerView24.setLayoutManager(horizontalLayoutManager24);
 
         mCurrentWeatherModel.addWeatherListObserver(getViewLifecycleOwner(), currentWeatherList -> {
                     if (!currentWeatherList.isEmpty()) {
-                        binding.textCity.setText(locationInfo.get(0));
-                        binding.txtTemperature.setText(CurrentWeatherBuilder.getTemp_F() + " F");
+                        binding.textTemperature.setText(CurrentWeatherBuilder.getTemp_F() + " F");
                         binding.textWind.setText("Wind: " + CurrentWeatherBuilder.getWindSpeedMiles() + " MPH");
-                        binding.textHumidity.setText("Humidity: " +CurrentWeatherBuilder.getHumidity() + " %");
-                        binding.Precipitation.setText("Precipitation: " +CurrentWeatherBuilder.getPrecipMM() + " mm");
+                        binding.textHumidity.setText("Humidity: " +CurrentWeatherBuilder.getHumidity() + "%");
+                        binding.textPrecipitation.setText("Precipitation: " +CurrentWeatherBuilder.getPrecipMM() + "mm");
                     }
                 });
 
@@ -139,12 +138,10 @@ public class ForecastFragment extends Fragment {
                             } else {
                                 longitude = location.getLongitude();
                                 latitude = location.getLatitude();
-                                //Log.e("LONGITUDE:", String.valueOf(longitude));
-                                //Log.e("Latitude", String.valueOf(latitude));
                                 try {
                                     locationInfo = getZipCode(longitude, latitude);
+                                    binding.textCity.setText(locationInfo.get(0));
                                     mCurrentWeatherModel.connectGet(locationInfo);
-                                    //Log.e("CITY", locationInfo.get(0));
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -253,11 +250,9 @@ public class ForecastFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        if (checkPermissions()) {
-            getLastLocation();
-        }
+    public void getUserZipcode(View view) {
+        EditText edit = view.findViewById(R.id.edit_zip);
+        String zipcode = edit.getText().toString();
+        Log.i("User Zipcode", zipcode);
     }
 }

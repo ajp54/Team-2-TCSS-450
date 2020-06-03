@@ -40,6 +40,7 @@
     <string name="label_weather">Weather</string>
     <string name="label_verify_email">Please Verify Your Email</string>
     <string name="label_continue">Continue</string>
+    <string name="label_notifications">Notifications</string>
 
     <string name="toggle_theme">Toggle Theme</string>
     <string name="change_password">Change Password</string>
@@ -52,8 +53,13 @@
     <string name="keys_shared_prefs">My Auth App Shared Prefs</string>
     <string name="keys_prefs_jwt">Sharded Prefs JWT</string>
 
+    <string name="text_city">city</string>
+    <string name="text_date">date</string>
+    <string name="text_zip">zip:</string>
+    <string name="enter_zip">Enter Zipcode</string>
+    <string name="button_go">Go</string>
     <string name="text_current_weather">CURRENT WEATHER</string>
-    <string name="text_five_day_forecast">5 DAY WEATHER FORECAST</string>
+    <string name="text_seven_day_forecast">7 DAY WEATHER FORECAST</string>
     <string name="text_weather_wind">Wind:</string>
     <string name="text_weather_humidity">Humidity:</string>
     <string name="text_weather_precipitation">Precipitation:</string>

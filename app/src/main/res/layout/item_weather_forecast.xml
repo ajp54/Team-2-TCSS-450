@@ -19,11 +19,11 @@
 
         <TextView
             android:id="@+id/txt_date"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="Wednesday"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="@string/text_date"
+            android:textSize="20sp"
+            android:textStyle="bold">
 
         </TextView>
 
@@ -34,20 +34,18 @@
 
             <ImageView
                 android:id="@+id/img_weather"
-                android:src="@mipmap/ic_launcher"
-                android:layout_width="80dp"
-                android:layout_height="80dp">
-            </ImageView>
+                android:layout_width="60dp"
+                android:layout_height="55dp"
+                android:src="@mipmap/ic_launcher"></ImageView>
 
             <TextView
                 android:id="@+id/text_temperature"
+                android:layout_width="110dp"
+                android:layout_height="55dp"
                 android:layout_marginLeft="8dp"
-                android:textSize="50sp"
-                android:textStyle="bold"
                 android:text="14 C"
-                android:layout_width="140dp"
-                android:layout_height="80dp">
-            </TextView>
+                android:textSize="50sp"
+                android:textStyle="bold"></TextView>
 
         </LinearLayout>
 

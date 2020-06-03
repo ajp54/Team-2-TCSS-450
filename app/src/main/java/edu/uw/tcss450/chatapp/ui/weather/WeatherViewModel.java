@@ -133,7 +133,6 @@ public class WeatherViewModel extends AndroidViewModel {
     }
 
     public void connectGet(List<String> locationInfo) {
-        Log.e("THE ZIP", locationInfo.get(1));
         String url = "https://api.worldweatheronline.com/premium/v1/weather.ashx?key=dc96b2428dc140f09a710254201405&q="
                 + locationInfo.get(1) + "&format=json&num_of_days=7&fx24=no";
         Request request = new JsonObjectRequest(

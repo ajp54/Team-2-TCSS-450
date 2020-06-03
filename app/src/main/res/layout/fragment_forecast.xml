@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="0dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_current_weather"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold">
 
         </TextView>
@@ -31,11 +31,43 @@
             android:id="@+id/text_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/text_city"
             android:textSize="20sp"
             android:textStyle="bold">
 
         </TextView>
 
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/zip_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/today_info"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_zip"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="15dp"
+            android:ems="10"
+            android:hint="@string/enter_zip"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="5"
+            android:text="@string/text_zip" />
+
+        <Button
+            android:id="@+id/button_zip"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:text="@string/button_go" />
     </LinearLayout>
 
     <LinearLayout
@@ -44,17 +76,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/today_info"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="55dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview24"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="0dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -82,6 +106,14 @@
 
         </LinearLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp" />
+
 
     </LinearLayout>
 
@@ -98,11 +130,11 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/text_five_day_forecast"
+            android:id="@+id/text_seven_day_forecast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_five_day_forecast"
-            android:textSize="24sp"
+            android:text="@string/text_seven_day_forecast"
+            android:textSize="20sp"
             android:textStyle="bold">
 
         </TextView>
