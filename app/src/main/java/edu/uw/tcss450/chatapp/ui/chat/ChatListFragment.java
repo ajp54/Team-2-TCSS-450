@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.databinding.FragmentChatBinding;
+import edu.uw.tcss450.chatapp.databinding.FragmentChatRoomCardBinding;
+import edu.uw.tcss450.chatapp.databinding.FragmentContactsCardBinding;
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatMessage;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomRecyclerViewAdapter;
@@ -39,7 +41,9 @@ public class ChatListFragment extends Fragment {
 
     private List<Integer> chatIds;
     List<ChatRoom> chatRooms;
-    private int chatFlag = 0;
+    private boolean editMode = false;
+//    private ChatRoom roomBeingEdited;
+    private View roomBeingEdited;
 
     /**
      * Class constructor
@@ -97,7 +101,42 @@ public class ChatListFragment extends Fragment {
         final RecyclerView rv = binding.recyclerChatRooms;
 
         ChatRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position) -> {
-            navigateToChat(chatIds.get(position));
+            if (!editMode) {
+                Log.i("CHATLIST", "Entering room at position " + position);
+                navigateToChat(chatIds.get(position));
+            } else {
+                FragmentChatRoomCardBinding cardBinding = FragmentChatRoomCardBinding.bind(v);
+                if (roomBeingEdited == null) {
+                    if (cardBinding.imageSelected.getVisibility() == View.VISIBLE) {
+                        Log.i("CHATLIST", "remove the marker");
+                        cardBinding.imageSelected.setVisibility(View.INVISIBLE);
+                        roomBeingEdited = null;
+                        binding.buttonDeleteChat.setVisibility(View.GONE);
+                        binding.buttonEditChat.setEnabled(false);
+                    } else {
+                        cardBinding.imageSelected.setVisibility(View.VISIBLE);
+                        roomBeingEdited = v;
+                        binding.buttonDeleteChat.setVisibility(View.VISIBLE);
+                        binding.buttonEditChat.setEnabled(true);
+                    }
+                } else {
+                    if (cardBinding.imageSelected.getVisibility() == View.VISIBLE) {
+                        Log.i("CHATLIST", "remove the marker");
+                        cardBinding.imageSelected.setVisibility(View.INVISIBLE);
+                        roomBeingEdited = null;
+                        binding.buttonDeleteChat.setVisibility(View.GONE);
+                        binding.buttonEditChat.setEnabled(false);
+                    } else {
+                        FragmentChatRoomCardBinding oldCardBinding = FragmentChatRoomCardBinding.bind(roomBeingEdited);
+                        oldCardBinding.imageSelected.setVisibility(View.INVISIBLE);
+                        cardBinding.imageSelected.setVisibility(View.VISIBLE);
+                        roomBeingEdited = v;
+                        binding.buttonDeleteChat.setVisibility(View.VISIBLE);
+                        binding.buttonEditChat.setEnabled(true);
+                    }
+                }
+
+            }
         };
 
         mChatModel.addChatRoomObserver(mUserModel.getmJwt(), mUserModel.getEmail(), getViewLifecycleOwner(), chatList -> {
@@ -107,13 +146,45 @@ public class ChatListFragment extends Fragment {
                 );
                 rv.getAdapter().notifyDataSetChanged();
                 rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
-                mChatModel.getChatIdList();
+                chatIds = mChatModel.getChatIdList();
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
             }
         });
 
-        binding.buttonNewChat.setOnClickListener(button -> navigateToContactJoin());
+        //also the 'add people' button
+        binding.buttonNewChat.setOnClickListener(button -> {
+            if(!editMode) {
+                navigateToContactJoin();
+            } else {
+
+            }
+        });
+
+        //also the cancel button
+        binding.buttonEditChat.setOnClickListener(button -> {
+            if (!editMode) {
+                editMode = true;
+                binding.buttonEditChat.setText("Cancel");
+                binding.buttonNewChat.setText("Add People");
+                binding.textEditRoom.setVisibility(View.VISIBLE);
+
+            } else {
+                editMode = false;
+                binding.buttonEditChat.setText("Edit Chat");
+                binding.buttonNewChat.setText("New Chat");
+                binding.textEditRoom.setVisibility(View.GONE);
+                binding.buttonDeleteChat.setVisibility(View.INVISIBLE);
+                if (roomBeingEdited != null) {
+                    FragmentChatRoomCardBinding oldCardBinding = FragmentChatRoomCardBinding.bind(roomBeingEdited);
+                    oldCardBinding.imageSelected.setVisibility(View.INVISIBLE);
+                }
+                roomBeingEdited = null;
+
+            }
+        });
+
+
     }
 
     private void makeNewRoom(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -132,4 +203,5 @@ public class ChatListFragment extends Fragment {
         Navigation.findNavController(getView()).navigate(ChatListFragmentDirections
                 .actionNavigationChatToContactJoinFragment());
     }
+
 }

@@ -288,19 +288,19 @@ public class ChatRoomViewModel extends AndroidViewModel {
         getOrCreateMapEntry(chatId).setValue(list);
     }
 
-    public void addRecentMessages() {
-        if (mRoomList != null && mRoomList.getValue().size() > 0) {
-            for (int i = 0; i < mRoomList.getValue().size(); i++) {
-                ChatRoom curRoom = mRoomList.getValue().get(i);
-                if (mMessages != null && mMessages.size() > 0) {
-                    List<ChatMessage> messages = mMessages.get(curRoom.getChatID()).getValue();
-                    String message = messages.get(messages.size() - 1).getMessage();
-                    Log.i("CHATROOM", "recent message: " + message);
-                    curRoom.setRecentMessage(messages.get(messages.size() - 1).getMessage());
-                }
-            }
-        }
-    }
+//    public void addRecentMessages() {
+//        if (mRoomList != null && mRoomList.getValue().size() > 0) {
+//            for (int i = 0; i < mRoomList.getValue().size(); i++) {
+//                ChatRoom curRoom = mRoomList.getValue().get(i);
+//                if (mMessages != null && mMessages.size() > 0) {
+//                    List<ChatMessage> messages = mMessages.get(curRoom.getChatID()).getValue();
+//                    String message = messages.get(messages.size() - 1).getMessage();
+//                    Log.i("CHATROOM", "recent message: " + message);
+//                    curRoom.setRecentMessage(messages.get(messages.size() - 1).getMessage());
+//                }
+//            }
+//        }
+//    }
 
     public void createChatRoom(String jwt) {
         mJwt = jwt;
@@ -457,7 +457,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
         for(int i = 0; i < chatIds.size(); i++) {
             addChatMembers(chatIds.get(i), mJwt);
         }
-        addRecentMessages();
+//        addRecentMessages();
     }
 
     /**
