@@ -17,9 +17,9 @@ public class ContactPendingRecyclerViewAdapter extends RecyclerView.Adapter<Cont
 
     private final List<ContactPending> mContactsPending;
 
-    private ContactRecyclerViewAdapter.RecyclerViewClickListener mListener;
+    private RecyclerViewClickListener mListener;
 
-    public ContactPendingRecyclerViewAdapter(List<ContactPending> items, ContactRecyclerViewAdapter.RecyclerViewClickListener listener) {
+    public ContactPendingRecyclerViewAdapter(List<ContactPending> items, RecyclerViewClickListener listener) {
         this.mContactsPending = items;
         mListener = listener;
     }
@@ -27,12 +27,14 @@ public class ContactPendingRecyclerViewAdapter extends RecyclerView.Adapter<Cont
     @NonNull
     @Override
     public ContactPendingRecyclerViewAdapter.ContactPendingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        return new ContactPendingRecyclerViewAdapter.ContactPendingViewHolder(LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.fragment_contacts_pending_card, parent, false), mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ContactPendingRecyclerViewAdapter.ContactPendingViewHolder holder, int position) {
-
+        holder.setContact(mContactsPending.get(position));
     }
 
     @Override
@@ -56,9 +58,9 @@ public class ContactPendingRecyclerViewAdapter extends RecyclerView.Adapter<Cont
         }
 
 
-        void setContact(final Contact contact) {
+        void setContact(final ContactPending contactPending) {
             Log.i("RECYCLER", "getting Contact information");
-            binding.textName.setText(contact.getUsername());
+            binding.textName.setText(contactPending.getUsername());
         }
 
         @Override

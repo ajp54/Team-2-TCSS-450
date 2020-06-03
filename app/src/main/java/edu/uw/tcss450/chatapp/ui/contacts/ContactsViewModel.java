@@ -79,7 +79,7 @@ public class ContactsViewModel extends AndroidViewModel {
 
     public MutableLiveData<List<Contact>> connectGet(String jwt) {
         String url = getApplication().getResources().getString(R.string.base_url) +
-                "contacts/";
+                "contacts?pending=false";
         Request request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -138,7 +138,7 @@ public class ContactsViewModel extends AndroidViewModel {
             //inform observers of the change (setValue)
             //getOrCreateMapEntry(response.getInt("chatId")).setValue(list);
         }catch (JSONException e) {
-            Log.e("JSON PARSE ERROR", "Found in handle Success ContactsViewModel");
+            Log.e("JSON PARSE ERROR", "Found in handle Result ContactsViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
     }

@@ -77,8 +77,9 @@ public class ContactPendingViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<List<ContactPending>> connectGet(String jwt) {
+        System.out.println("thishishishishishishishishishishis");
         String url = getApplication().getResources().getString(R.string.base_url) +
-                "contacts/";
+                "contacts?pending=true";
         Request request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -121,8 +122,6 @@ public class ContactPendingViewModel extends AndroidViewModel {
             for(int i = 0; i < myContacts.length(); i++) {
                 JSONObject contact = myContacts.getJSONObject(i);
                 String username = contact.getString("username");
-                String first = contact.getString("firstname");
-                String last = contact.getString("lastname");
                 Log.i("CONTACTS", "username: " + username);
 //                chatIds.add(id);
                 //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
@@ -137,7 +136,7 @@ public class ContactPendingViewModel extends AndroidViewModel {
             //inform observers of the change (setValue)
             //getOrCreateMapEntry(response.getInt("chatId")).setValue(list);
         }catch (JSONException e) {
-            Log.e("JSON PARSE ERROR", "Found in handle Success ContactsViewModel");
+            Log.e("JSON PARSE ERROR", "Found in handle Success ContactsPendingViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
     }
