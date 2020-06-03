@@ -114,12 +114,14 @@ public class ChatListFragment extends Fragment {
                         cardBinding.imageSelected.setVisibility(View.INVISIBLE);
                         roomBeingEdited = null;
                         binding.buttonDeleteChat.setVisibility(View.GONE);
-                        binding.buttonEditChat.setEnabled(false);
+                        binding.buttonNewChat.setEnabled(false);
+                        binding.buttonEditChat.setEnabled(true);
                     } else {
                         cardBinding.imageSelected.setVisibility(View.VISIBLE);
                         roomBeingEdited = v;
                         positionBeingEdited = position;
                         binding.buttonDeleteChat.setVisibility(View.VISIBLE);
+                        binding.buttonNewChat.setEnabled(true);
                         binding.buttonEditChat.setEnabled(true);
                     }
                 } else {
@@ -128,7 +130,8 @@ public class ChatListFragment extends Fragment {
                         cardBinding.imageSelected.setVisibility(View.INVISIBLE);
                         roomBeingEdited = null;
                         binding.buttonDeleteChat.setVisibility(View.GONE);
-                        binding.buttonEditChat.setEnabled(false);
+                        binding.buttonNewChat.setEnabled(false);
+                        binding.buttonEditChat.setEnabled(true);
                     } else {
                         FragmentChatRoomCardBinding oldCardBinding = FragmentChatRoomCardBinding.bind(roomBeingEdited);
                         oldCardBinding.imageSelected.setVisibility(View.INVISIBLE);
@@ -136,6 +139,7 @@ public class ChatListFragment extends Fragment {
                         roomBeingEdited = v;
                         positionBeingEdited = position;
                         binding.buttonDeleteChat.setVisibility(View.VISIBLE);
+                        binding.buttonNewChat.setEnabled(true);
                         binding.buttonEditChat.setEnabled(true);
                     }
                 }
@@ -159,9 +163,9 @@ public class ChatListFragment extends Fragment {
         //also the 'add people' button
         binding.buttonNewChat.setOnClickListener(button -> {
             if(!editMode) {
-                navigateToContactJoin();
+                navigateToContactJoin(true, 0);
             } else {
-
+                navigateToContactJoin(false, chatIds.get(positionBeingEdited));
             }
         });
 
@@ -171,6 +175,7 @@ public class ChatListFragment extends Fragment {
                 editMode = true;
                 binding.buttonEditChat.setText("Cancel");
                 binding.buttonNewChat.setText("Add People");
+                binding.buttonNewChat.setEnabled(false);
                 binding.textEditRoom.setVisibility(View.VISIBLE);
 
             } else {
@@ -179,6 +184,7 @@ public class ChatListFragment extends Fragment {
                 binding.buttonNewChat.setText("New Chat");
                 binding.textEditRoom.setVisibility(View.GONE);
                 binding.buttonDeleteChat.setVisibility(View.INVISIBLE);
+                binding.buttonNewChat.setEnabled(true);
                 if (roomBeingEdited != null) {
                     FragmentChatRoomCardBinding oldCardBinding = FragmentChatRoomCardBinding.bind(roomBeingEdited);
                     oldCardBinding.imageSelected.setVisibility(View.INVISIBLE);
@@ -206,10 +212,10 @@ public class ChatListFragment extends Fragment {
                 .actionNavigationChatToChatRoomFragment2(chatId));
     }
 
-    private void navigateToContactJoin() {
+    private void navigateToContactJoin(boolean creatingRoom, int chatId) {
 //        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
         Navigation.findNavController(getView()).navigate(ChatListFragmentDirections
-                .actionNavigationChatToContactJoinFragment());
+                .actionNavigationChatToContactJoinFragment(creatingRoom, chatId));
     }
 
     private void deleteRoom() {

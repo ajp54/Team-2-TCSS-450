@@ -44,5 +44,12 @@
     <fragment
         android:id="@+id/contactJoinFragment"
         android:name="edu.uw.tcss450.chatapp.ui.chat.contact_join.ContactJoinFragment"
-        android:label="Add Contacts" />
+        android:label="Add Contacts" >
+        <argument
+            android:name="creatingRoom"
+            app:argType="boolean" />
+        <argument
+            android:name="chatId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

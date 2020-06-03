@@ -37,6 +37,9 @@ public class ContactJoinFragment extends Fragment {
     private ChatRoomViewModel mChatModel;
     private UserInfoViewModel mUserModel;
 
+    private boolean creatingRoom;
+    private int chatId;
+
     List<Contact> userContacts;
     List<String> contactsBeingAdded;
 
@@ -55,6 +58,9 @@ public class ContactJoinFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        creatingRoom = args.getBoolean("creatingRoom");
+        chatId = args.getInt("chatId");
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mContactsModel = provider.get(ContactsViewModel.class);
         mUserModel = provider.get(UserInfoViewModel.class);
@@ -70,6 +76,12 @@ public class ContactJoinFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         FragmentContactJoinBinding binding = FragmentContactJoinBinding.bind(getView());
+
+        if(!creatingRoom) {
+            binding.buttonCreateRoom.setText("Add People");
+        } else {
+            binding.buttonCreateRoom.setText("Create Room");
+        }
 
 
         final RecyclerView rv = binding.recyclerContacts;
@@ -112,7 +124,14 @@ public class ContactJoinFragment extends Fragment {
                     }
                 })  ;
 
-        binding.buttonCreateRoom.setOnClickListener(button -> createNewRoom());
+        binding.buttonCreateRoom.setOnClickListener(button -> {
+            if(creatingRoom){
+                createNewRoom();
+            } else {
+                addMembersToRoom(chatId);
+            }
+
+        });
 
     }
 
