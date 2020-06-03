@@ -107,7 +107,7 @@ public class ChatListFragment extends Fragment {
                 );
                 rv.getAdapter().notifyDataSetChanged();
                 rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
-                chatIds = mChatModel.getChatIdList();
+                mChatModel.getChatIdList();
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
             }

@@ -1,9 +1,7 @@
 package edu.uw.tcss450.chatapp.ui.chat.contact_join;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,13 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.databinding.FragmentContactsBinding;
+import edu.uw.tcss450.chatapp.databinding.FragmentContactJoinBinding;
 import edu.uw.tcss450.chatapp.databinding.FragmentContactsCardBinding;
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
+import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomViewModel;
 import edu.uw.tcss450.chatapp.ui.contacts.Contact;
 import edu.uw.tcss450.chatapp.ui.contacts.ContactRecyclerViewAdapter;
 import edu.uw.tcss450.chatapp.ui.contacts.ContactsViewModel;
@@ -33,6 +34,7 @@ import edu.uw.tcss450.chatapp.ui.contacts.ContactsViewModel;
  */
 public class ContactJoinFragment extends Fragment {
     private ContactsViewModel mContactsModel;
+    private ChatRoomViewModel mChatModel;
     private UserInfoViewModel mUserModel;
 
     List<Contact> userContacts;
@@ -47,7 +49,7 @@ public class ContactJoinFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        return inflater.inflate(R.layout.fragment_contact_join, container, false);
     }
 
     @Override
@@ -56,6 +58,7 @@ public class ContactJoinFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mContactsModel = provider.get(ContactsViewModel.class);
         mUserModel = provider.get(UserInfoViewModel.class);
+        mChatModel = provider.get(ChatRoomViewModel.class);
         userContacts = mContactsModel.connectGet(mUserModel.getmJwt()).getValue();
         contactsBeingAdded = new ArrayList<String>();
 
@@ -66,7 +69,7 @@ public class ContactJoinFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FragmentContactsBinding binding = FragmentContactsBinding.bind(getView());
+        FragmentContactJoinBinding binding = FragmentContactJoinBinding.bind(getView());
 
 
         final RecyclerView rv = binding.recyclerContacts;
@@ -76,14 +79,16 @@ public class ContactJoinFragment extends Fragment {
             FragmentContactsCardBinding cardBinding = FragmentContactsCardBinding.bind(v);
             if(cardBinding.imageSelected.getVisibility() == View.INVISIBLE) {
                 cardBinding.imageSelected.setVisibility(View.VISIBLE);
+//                String name = cardBinding.textUsername.getText().toString();
                 contactsBeingAdded.add(cardBinding.textUsername.getText().toString());
             } else {
                 cardBinding.imageSelected.setVisibility(View.INVISIBLE);
+//                String name = cardBinding.textUsername.getText().toString();
                 contactsBeingAdded.remove(cardBinding.textUsername.getText().toString());
             }
 
 //            binding.recyclerContacts.getAdapter().getItemId(position);
-            Log.i("COLOR", "user clicked on a contact, v: " + v.getId());
+            Log.i("COLOR", "number of people to be added: " + contactsBeingAdded.size());
         };
 
         mContactsModel.addContactObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
@@ -99,12 +104,29 @@ public class ContactJoinFragment extends Fragment {
             }
         });
 
-//        binding..setOnClickListener(button -> navigateToContactJoin());
+        mChatModel.addChatCreateResponseObserver(getViewLifecycleOwner(), result -> {
+                    try {
+                        addMembersToRoom(result.getInt("chatID"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                })  ;
+
+        binding.buttonCreateRoom.setOnClickListener(button -> createNewRoom());
 
     }
 
-        private void selectContact(final int contactId) {
+        private void createNewRoom() {
+            mChatModel.createChatRoom(mUserModel.getmJwt()); //user is automatically added
+            //int chatId = mChatModel.getRecentRoom();
 
         }
+
+    private void addMembersToRoom(int chatId) {
+        for(int i = 0; i < contactsBeingAdded.size(); i++) {
+            Log.i("ADDCONTACT", "adding " + contactsBeingAdded.get(i) + " to chat room " + chatId);
+            mChatModel.joinChatRoom(chatId, contactsBeingAdded.get(i), mUserModel.getmJwt());
+        }
+    }
 
 }

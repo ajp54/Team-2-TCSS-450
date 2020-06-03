@@ -38,15 +38,22 @@ public class ChatRoomViewModel extends AndroidViewModel {
      */
     private Map<Integer, MutableLiveData<List<ChatMessage>>> mMessages;
     private MutableLiveData<List<ChatRoom>> mRoomList;
+
+    private MutableLiveData<JSONObject> mChatCreateResponse;
+
     private List<Integer> chatIds;
     private String mJwt;
     private String mEmail;
+    private int recentRoom;
 
     public ChatRoomViewModel(@NonNull Application application) {
         super(application);
         mMessages = new HashMap<>();
         mRoomList = new MutableLiveData<>();
         mRoomList.setValue(new ArrayList<>());
+
+        mChatCreateResponse = new MutableLiveData<>();
+        mChatCreateResponse.setValue(new JSONObject());
     }
 
     /**
@@ -61,10 +68,22 @@ public class ChatRoomViewModel extends AndroidViewModel {
         getOrCreateMapEntry(chatId).observe(owner, observer);
     }
 
+    /**
+     * Register as an observer to listen to a specific chat room's list of messages.
+     * @param jwt the user's jwt
+     * @param email the user's email
+     * @param owner the fragments lifecycle owner
+     * @param observer the observer
+     */
     public void addChatRoomObserver(String jwt, String email,
                                    @NonNull LifecycleOwner owner,
                                    @NonNull Observer<? super List<ChatRoom>> observer) {
         getChatIds(email, jwt).observe(owner, observer);
+    }
+
+    public void addChatCreateResponseObserver(@NonNull LifecycleOwner owner,
+                                    @NonNull Observer<? super JSONObject> observer) {
+        mChatCreateResponse.observe(owner, observer);
     }
 
     /**
@@ -224,7 +243,9 @@ public class ChatRoomViewModel extends AndroidViewModel {
         //code here will run
     }
 
+
     public void addChatMembers(final int chatId, final String jwt) {
+
         mJwt = jwt;
         String url = getApplication().getResources().getString(R.string.base_url) +
                 "chats/" + chatId;
@@ -295,7 +316,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
         Request request = new JsonObjectRequest(
                 Request.Method.POST,
                 url,
-                params, //no body for this get request
+                params,
                 this::handelChatCreateSuccess,
                 this::handleError) {
 
@@ -316,10 +337,12 @@ public class ChatRoomViewModel extends AndroidViewModel {
         RequestQueueSingleton.getInstance(getApplication().getApplicationContext())
                 .addToRequestQueue(request);
 
+
     }
 
     //the user's email will work in place of the username
     public void joinChatRoom(int chatId, String username, String jwt) {
+        Log.i("CHATROOM", "user " + username +  " joining room " + chatId);
         mEmail = username;
         mJwt = jwt;
         JSONObject params = new JSONObject();
@@ -334,7 +357,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
         Request request = new JsonObjectRequest(
                 Request.Method.PUT,
                 url,
-                null, //no body for this get request
+                params,
                 this::handelJoinChatSuccess,
                 this::handleError) {
 
@@ -410,7 +433,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
                 //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
                 list.add(new ChatRoom(new ChatRoom.Builder("people", Integer.toString(id), "message")));
             }
-            if (mRoomList.getValue().size() == 0) {
+            if (mRoomList.getValue().size() == 0 || chatIds.size() != mRoomList.getValue().size()) {
                 mRoomList.setValue(list);
             }
 //            else {
@@ -497,6 +520,8 @@ public class ChatRoomViewModel extends AndroidViewModel {
             else {
                 Log.i("CHATROOM", "created a new chat room successfully");
                 chatId = response.getInt("chatID");
+                recentRoom = chatId;
+                joinChatRoom(chatId, mEmail, mJwt);
             }
             //Log.i("CHATROOM", "getting names from charRoom object: " + mRoomList.getValue().get(0).getPeople());
 
@@ -504,11 +529,15 @@ public class ChatRoomViewModel extends AndroidViewModel {
             Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
-        joinChatRoom(chatId, mJwt, mEmail);
+        mChatCreateResponse.setValue(response);
     }
 
     private void handelJoinChatSuccess(final JSONObject response) {
-
+        if (!response.has("sucess")) {
+            throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
+        } else {
+            Log.i("CHATROOM", "User has been added successfully");
+        }
     }
 
     private void handleError(final VolleyError error) {
@@ -526,5 +555,9 @@ public class ChatRoomViewModel extends AndroidViewModel {
 
     public List<Integer> getChatIdList() {
         return chatIds;
+    }
+
+    public int getRecentRoom() {
+        return recentRoom;
     }
 }
