@@ -78,7 +78,7 @@ public class ContactPendingViewModel extends AndroidViewModel {
 
     public MutableLiveData<List<ContactPending>> connectGet(String jwt) {
         String url = getApplication().getResources().getString(R.string.base_url) +
-                "contacts/";
+                "contacts?pending=true";
         Request request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
