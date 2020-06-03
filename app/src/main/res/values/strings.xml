@@ -38,6 +38,7 @@
     <string name="label_chat">Chat</string>
     <string name="label_contacts">Contacts</string>
     <string name="label_weather">Weather</string>
+    <string name="label_notifications">Notifications</string>
     <string name="label_verify_email">Please Verify Your Email</string>
     <string name="label_continue">Continue</string>
 
