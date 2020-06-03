@@ -44,6 +44,7 @@ public class ChatListFragment extends Fragment {
     private boolean editMode = false;
 //    private ChatRoom roomBeingEdited;
     private View roomBeingEdited;
+    private int positionBeingEdited;
 
     /**
      * Class constructor
@@ -100,6 +101,7 @@ public class ChatListFragment extends Fragment {
 
         final RecyclerView rv = binding.recyclerChatRooms;
 
+        //if the user taps a chat room
         ChatRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position) -> {
             if (!editMode) {
                 Log.i("CHATLIST", "Entering room at position " + position);
@@ -116,6 +118,7 @@ public class ChatListFragment extends Fragment {
                     } else {
                         cardBinding.imageSelected.setVisibility(View.VISIBLE);
                         roomBeingEdited = v;
+                        positionBeingEdited = position;
                         binding.buttonDeleteChat.setVisibility(View.VISIBLE);
                         binding.buttonEditChat.setEnabled(true);
                     }
@@ -131,6 +134,7 @@ public class ChatListFragment extends Fragment {
                         oldCardBinding.imageSelected.setVisibility(View.INVISIBLE);
                         cardBinding.imageSelected.setVisibility(View.VISIBLE);
                         roomBeingEdited = v;
+                        positionBeingEdited = position;
                         binding.buttonDeleteChat.setVisibility(View.VISIBLE);
                         binding.buttonEditChat.setEnabled(true);
                     }
@@ -184,6 +188,10 @@ public class ChatListFragment extends Fragment {
             }
         });
 
+        binding.buttonDeleteChat.setOnClickListener(button -> {
+            deleteRoom();
+        });
+
 
     }
 
@@ -202,6 +210,10 @@ public class ChatListFragment extends Fragment {
 //        Navigation.findNavController(getView()).navigate(LoginFragmentDirections.actionLoginFragmentToMainActivity());
         Navigation.findNavController(getView()).navigate(ChatListFragmentDirections
                 .actionNavigationChatToContactJoinFragment());
+    }
+
+    private void deleteRoom() {
+        mChatModel.deleteChatMember(chatIds.get(positionBeingEdited), mUserModel.getEmail(), mUserModel.getmJwt());
     }
 
 }

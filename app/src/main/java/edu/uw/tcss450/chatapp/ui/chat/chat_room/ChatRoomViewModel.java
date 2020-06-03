@@ -379,6 +379,36 @@ public class ChatRoomViewModel extends AndroidViewModel {
                 .addToRequestQueue(request);
     }
 
+    public void deleteChatMember(int chatId, String email, String jwt) {
+        Log.i("CHATROOM", "user " + email +  " leaving room " + chatId);
+        mJwt = jwt;
+        String url = getApplication().getResources().getString(R.string.base_url) +
+                "chats/" + chatId + "/" + email;
+        Request request = new JsonObjectRequest(
+                Request.Method.DELETE,
+                url,
+                null,
+                this::handelDeleteMemberSuccess,
+                this::handleError) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                // add headers <key,value>
+                headers.put("Authorization", jwt);
+                return headers;
+            }
+        };
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                10_000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //Instantiate the RequestQueue and add the request to the queue
+        RequestQueueSingleton.getInstance(getApplication().getApplicationContext())
+                .addToRequestQueue(request);
+    }
+
     private void handelMessageSuccess(final JSONObject response) {
         List<ChatMessage> list;
         if (!response.has("chatId")) {
@@ -536,7 +566,33 @@ public class ChatRoomViewModel extends AndroidViewModel {
         if (!response.has("sucess")) {
             throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
         } else {
-            Log.i("CHATROOM", "User has been added successfully");
+            try {
+                boolean result = response.getBoolean("sucess");
+                if (result)
+                    Log.i("CHATROOM", "User has been added successfully");
+                else
+                    Log.e("CHATROOM", "failed to add user");
+            } catch (JSONException e) {
+                Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
+                Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
+            }
+        }
+    }
+
+    private void handelDeleteMemberSuccess(final JSONObject response) {
+        if (!response.has("sucess")) {
+            throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
+        } else {
+            try {
+                boolean result = response.getBoolean("sucess");
+                if (result)
+                    Log.i("CHATROOM", "User has been deleted successfully");
+                else
+                    Log.e("CHATROOM", "failed to delete user");
+            } catch (JSONException e) {
+                Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
+                Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
+            }
         }
     }
 
