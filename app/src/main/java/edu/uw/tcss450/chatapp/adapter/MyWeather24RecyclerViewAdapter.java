@@ -9,50 +9,61 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import edu.uw.tcss450.chatapp.R;
+import edu.uw.tcss450.chatapp.databinding.ItemWeatherForecast24Binding;
+import edu.uw.tcss450.chatapp.ui.weather.DailyForecastWeatherBuilder;
 import edu.uw.tcss450.chatapp.ui.weather.Hour;
 
 public class MyWeather24RecyclerViewAdapter extends RecyclerView.Adapter<MyWeather24RecyclerViewAdapter.ViewHolder> {
 
-    private Hour[] mHours;
+    private final List<DailyForecastWeatherBuilder> mHours;
+
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private final int limit = 8;
 
     // data is passed into the constructor
-    public MyWeather24RecyclerViewAdapter(Context context, Hour[] hours) {
-        this.mInflater = LayoutInflater.from(context);
-        this.mHours = hours;
+    public MyWeather24RecyclerViewAdapter(List<DailyForecastWeatherBuilder> items) {
+        this.mHours = items;
     }
 
     // inflates the row layout from xml when needed
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_weather_forecast24, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.item_weather_forecast24, parent, false));
     }
 
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Hour hour = mHours[position];
-        //System.out.println(hour.getmHour());
-        holder.myHour.setText(hour.getmHour());
+        DailyForecastWeatherBuilder day = mHours.get(position);
+        holder.setHour(day);
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mHours.length;
+        if (mHours.size() > limit) {
+            return limit;
+        } else {
+            return mHours.size();
+        }
     }
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myHour;
+        public final View mView;
+        public ItemWeatherForecast24Binding binding;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myHour = itemView.findViewById(R.id.txt_time);
+            mView = itemView;
+            binding= ItemWeatherForecast24Binding.bind(itemView);
             itemView.setOnClickListener(this);
         }
 
@@ -60,12 +71,13 @@ public class MyWeather24RecyclerViewAdapter extends RecyclerView.Adapter<MyWeath
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+
+        public void setHour(final DailyForecastWeatherBuilder hour) {
+            binding.txtTime.setText(hour.getAvgTempF());
+
+        }
     }
 
-    // convenience method for getting data at click position
-    public Hour getItem(int id) {
-        return mHours[id];
-    }
 
     // allows clicks events to be caught
     public void setClickListener(ItemClickListener itemClickListener) {

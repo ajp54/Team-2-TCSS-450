@@ -6,19 +6,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import edu.uw.tcss450.chatapp.MainActivity;
-import edu.uw.tcss450.chatapp.R;
-import edu.uw.tcss450.chatapp.SettingsActivity;
 import edu.uw.tcss450.chatapp.databinding.FragmentChangePassConfirmBinding;
-import edu.uw.tcss450.chatapp.databinding.FragmentLoginBinding;
-import edu.uw.tcss450.chatapp.databinding.FragmentRegisterConfirmBinding;
-import edu.uw.tcss450.chatapp.ui.home.signin.LoginFragmentDirections;
 
 /**
  * A simple {@link Fragment} subclass.

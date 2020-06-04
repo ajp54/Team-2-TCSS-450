@@ -34,6 +34,7 @@ public class ContactsViewModel extends AndroidViewModel {
     }
 
     private MutableLiveData<List<Contact>> mContactList;
+    List<String> people;
 
 
     public ContactsViewModel(@NonNull Application application) {
@@ -41,13 +42,14 @@ public class ContactsViewModel extends AndroidViewModel {
         if (mContactList == null) {
             mContactList = new MutableLiveData<>();
             mContactList.setValue(new ArrayList<>());
+            people = new ArrayList<String>();
         }
     }
 
     public void addContactObserver(String jwt,
                                    @NonNull LifecycleOwner owner,
                                     @NonNull Observer<? super List<Contact>> observer) {
-        connectGet(jwt).observe(owner, observer);
+        mContactList.observe(owner, observer);
     }
 
     private void handleError(final VolleyError error) {
@@ -110,6 +112,7 @@ public class ContactsViewModel extends AndroidViewModel {
     private void handleResult(final JSONObject response) {
         List<Contact> list = new ArrayList<Contact>();
 //        chatIds = new ArrayList<Integer>();
+        boolean hasNewInfo = false;
         if (!response.has("rows")) {
             throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
         }
@@ -127,9 +130,16 @@ public class ContactsViewModel extends AndroidViewModel {
                 Log.i("CONTACTS", "username: " + username);
 //                chatIds.add(id);
                 //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
+                //list.add(new Contact(new Contact.Builder(username, "First", "Last")));
+                if(!people.contains(username)){
+                    people.add(username);
+                    hasNewInfo = true;
+                }
                 list.add(new Contact(new Contact.Builder(username, first, last)));
             }
-            mContactList.setValue(list);
+            if(hasNewInfo) {
+                mContactList.setValue(list);
+            }
 
 //            for(int i = 0; i < myIds.size(); i++) {
 //                chatIds.add(myIds.getInt(i));
