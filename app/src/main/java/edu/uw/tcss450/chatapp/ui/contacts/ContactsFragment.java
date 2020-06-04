@@ -82,7 +82,6 @@ public class ContactsFragment extends Fragment {
         };
 
         mContactsPendingModel.addContactPendingObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
-            System.out.println("therhehrehriahdfoaih;lekrjawhtoiwahjg;oahjg");
             if (!contactList.isEmpty()) {
                 rvPend.setAdapter(
                         new ContactPendingRecyclerViewAdapter(contactList, pendListener)
