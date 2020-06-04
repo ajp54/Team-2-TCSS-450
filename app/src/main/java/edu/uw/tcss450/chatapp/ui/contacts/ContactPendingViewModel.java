@@ -13,7 +13,6 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,33 +22,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.IntFunction;
 
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.io.RequestQueueSingleton;
 
-public class ContactsViewModel extends AndroidViewModel {
-    public MutableLiveData<List<Contact>> getmContactList() {
-        return mContactList;
+public class ContactPendingViewModel extends AndroidViewModel {
+
+    public MutableLiveData<List<ContactPending>> getmContactPendingList() {
+        return mContactPendingList;
     }
 
-    private MutableLiveData<List<Contact>> mContactList;
-    List<String> people;
+    private MutableLiveData<List<ContactPending>> mContactPendingList;
 
 
-    public ContactsViewModel(@NonNull Application application) {
+    public ContactPendingViewModel(@NonNull Application application) {
         super(application);
-        if (mContactList == null) {
-            mContactList = new MutableLiveData<>();
-            mContactList.setValue(new ArrayList<>());
-            people = new ArrayList<String>();
+        if (mContactPendingList == null) {
+            mContactPendingList = new MutableLiveData<>();
+            mContactPendingList.setValue(new ArrayList<>());
         }
     }
 
-    public void addContactObserver(String jwt,
+    public void addContactPendingObserver(String jwt,
                                    @NonNull LifecycleOwner owner,
-                                    @NonNull Observer<? super List<Contact>> observer) {
-        mContactList.observe(owner, observer);
+                                   @NonNull Observer<? super List<ContactPending>> observer) {
+        connectGet(jwt).observe(owner, observer);
     }
 
     private void handleError(final VolleyError error) {
@@ -57,18 +54,18 @@ public class ContactsViewModel extends AndroidViewModel {
         throw new IllegalStateException(error.getMessage());
     }
 
-    private void handelChatIdSuccess(final JSONObject response) {
-        List<Contact> list = new ArrayList<Contact>();
+    private void handleContactPendingSuccess(final JSONObject response) {
+        List<ContactPending> list = new ArrayList<ContactPending>();
         if (!response.has("memberId")) {
             throw new IllegalStateException("Unexpected response in ContactsViewModel: " + response);
         }
         try {
-            Log.i("CONTACTS", "recieved a response");
+            Log.i("CONTACTS PENDING", "recieved a response");
             JSONArray memberIds = response.getJSONArray("rows");
             JSONArray myIds = new JSONArray();
             for(int i = 0; i < memberIds.length(); i++) {
                 JSONObject contact = memberIds.getJSONObject(i);
-                list.add(new Contact(new Contact.Builder("username", "first", "last")));
+                list.add(new ContactPending(new ContactPending.Builder("username")));
             }
 
             //inform observers of the change (setValue)
@@ -76,12 +73,12 @@ public class ContactsViewModel extends AndroidViewModel {
             Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
-            mContactList.setValue(list);
+        mContactPendingList.setValue(list);
     }
 
-    public MutableLiveData<List<Contact>> connectGet(String jwt) {
+    public MutableLiveData<List<ContactPending>> connectGet(String jwt) {
         String url = getApplication().getResources().getString(R.string.base_url) +
-                "contacts?pending=false";
+                "contacts?pending=true";
         Request request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -106,13 +103,12 @@ public class ContactsViewModel extends AndroidViewModel {
         RequestQueueSingleton.getInstance(getApplication().getApplicationContext())
                 .addToRequestQueue(request);
 
-        return mContactList;
+        return mContactPendingList;
     }
 
     private void handleResult(final JSONObject response) {
-        List<Contact> list = new ArrayList<Contact>();
+        List<ContactPending> list = new ArrayList<ContactPending>();
 //        chatIds = new ArrayList<Integer>();
-        boolean hasNewInfo = false;
         if (!response.has("rows")) {
             throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
         }
@@ -130,16 +126,9 @@ public class ContactsViewModel extends AndroidViewModel {
                 Log.i("CONTACTS", "username: " + username);
 //                chatIds.add(id);
                 //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
-                //list.add(new Contact(new Contact.Builder(username, "First", "Last")));
-                if(!people.contains(username)){
-                    people.add(username);
-                    hasNewInfo = true;
-                }
-                list.add(new Contact(new Contact.Builder(username, first, last)));
+                list.add(new ContactPending(new ContactPending.Builder(username)));
             }
-            if(hasNewInfo) {
-                mContactList.setValue(list);
-            }
+            mContactPendingList.setValue(list);
 
 //            for(int i = 0; i < myIds.size(); i++) {
 //                chatIds.add(myIds.getInt(i));

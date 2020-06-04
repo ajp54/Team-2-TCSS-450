@@ -31,6 +31,7 @@
     <string name="hint_last">Last Name</string>
     <string name="hint_user">Username</string>
     <string name="hint_forgot">Email</string>
+    <string name="hint_contacts">Edit Contacts</string>
 
     <string name="label_register">Register</string>
     <string name="label_sign_in">Sign In</string>

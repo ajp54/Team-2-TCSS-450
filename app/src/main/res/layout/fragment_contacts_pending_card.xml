@@ -33,21 +33,6 @@
             tools:text="Name" />
 
         <TextView
-            android:id="@+id/text_username"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/hint_user"
-            android:textAppearance="?attr/textAppearanceListItem"
-            android:textColor="@color/colorOffWhite"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_name" />
-
-        <TextView
             android:id="@+id/text_preview"
             android:layout_width="13dp"
             android:layout_height="28dp"
@@ -63,30 +48,27 @@
 
         <!--            app:srcCompat="@drawable/ic_more_grey_24dp" />-->
 
-        <!--<Button
+        <Button
             android:id="@+id/button_pending_contact_accept"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="Send Message"
+            android:text="Accept"
             android:textColor="@color/colorOffWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_preview"
-            tools:visibility="invisible" />&ndash;&gt;-->
+            tools:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/image_selected"
-            android:layout_width="37dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="5dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_name"
-            app:srcCompat="@drawable/ic_check_circle_black_24dp" />
+        <Button
+            android:id="@+id/button_pending_contact_reject"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Reject"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

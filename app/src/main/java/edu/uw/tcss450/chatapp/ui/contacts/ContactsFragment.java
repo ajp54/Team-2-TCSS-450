@@ -20,6 +20,8 @@ import java.util.List;
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.databinding.FragmentContactsBinding;
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
+import edu.uw.tcss450.chatapp.ui.home.signin.LoginFragmentDirections;
+import edu.uw.tcss450.chatapp.utils.PasswordValidator;
 
 
 /**
@@ -31,6 +33,9 @@ public class ContactsFragment extends Fragment {
     private UserInfoViewModel mUserModel;
 
     List<Contact> userContacts;
+
+    private PasswordValidator mUsernameValidator = PasswordValidator.checkPwdLength(2)
+            .and(PasswordValidator.checkExcludeWhiteSpace());
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -62,6 +67,9 @@ public class ContactsFragment extends Fragment {
         FragmentContactsBinding binding = FragmentContactsBinding.bind(getView());
 
         final RecyclerView rv = binding.recyclerContacts;
+
+        binding.buttonContactsEdit.setOnClickListener(button -> Navigation.findNavController(getView())
+                .navigate(ContactsFragmentDirections.actionNavigationContactsToEditContactsFragment()));
 
         //this is for navigating somewhere when the card is tapped
         ContactRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position) -> {
