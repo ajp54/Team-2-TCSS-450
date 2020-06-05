@@ -17,6 +17,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -157,6 +159,13 @@ public class ChatListFragment extends Fragment {
                 chatIds = mChatModel.getChatIdList();
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
+            }
+        });
+
+
+        mChatModel.addFillNamesResponseObserver(getViewLifecycleOwner(), result -> {
+            if (rv.getAdapter() != null) {
+                rv.getAdapter().notifyDataSetChanged();
             }
         });
 

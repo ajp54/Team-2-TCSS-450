@@ -40,6 +40,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
     private MutableLiveData<List<ChatRoom>> mRoomList;
 
     private MutableLiveData<JSONObject> mChatCreateResponse;
+    private MutableLiveData<JSONObject> mFillNamesResponse;
 
     private List<Integer> chatIds;
     private String mJwt;
@@ -54,6 +55,8 @@ public class ChatRoomViewModel extends AndroidViewModel {
 
         mChatCreateResponse = new MutableLiveData<>();
         mChatCreateResponse.setValue(new JSONObject());
+        mFillNamesResponse = new MutableLiveData<>();
+        mFillNamesResponse.setValue(new JSONObject());
     }
 
     /**
@@ -86,6 +89,10 @@ public class ChatRoomViewModel extends AndroidViewModel {
         mChatCreateResponse.observe(owner, observer);
     }
 
+    public void addFillNamesResponseObserver(@NonNull LifecycleOwner owner,
+                                              @NonNull Observer<? super JSONObject> observer) {
+        mFillNamesResponse.observe(owner, observer);
+    }
     /**
      * Return a reference to the List<> associated with the chat room. If the View Model does
      * not have a mapping for this chatID, it will be created.
@@ -572,6 +579,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
             Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
+        mFillNamesResponse.setValue(response);
     }
 
     private void handelChatCreateSuccess(final JSONObject response) {
