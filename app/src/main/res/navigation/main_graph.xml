@@ -34,7 +34,8 @@
             app:destination="@id/navigation_chat_room" />
         <action
             android:id="@+id/action_navigation_chat_to_contactJoinFragment"
-            app:destination="@id/contactJoinFragment" />
+            app:destination="@id/navigation_contacts_join"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/navigation_chat_room"
@@ -46,7 +47,7 @@
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/contactJoinFragment"
+        android:id="@+id/navigation_contacts_join"
         android:name="edu.uw.tcss450.chatapp.ui.chat.contact_join.ContactJoinFragment"
         android:label="Add Contacts" >
         <argument
