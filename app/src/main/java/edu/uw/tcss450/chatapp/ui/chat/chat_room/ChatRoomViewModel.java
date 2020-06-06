@@ -82,6 +82,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
                                    @NonNull LifecycleOwner owner,
                                    @NonNull Observer<? super List<ChatRoom>> observer) {
         getChatIds(email, jwt).observe(owner, observer);
+//        mRoomList.observe(owner, observer);
     }
 
     public void addChatCreateResponseObserver(@NonNull LifecycleOwner owner,

@@ -123,20 +123,24 @@ public class ContactJoinFragment extends Fragment {
         });
 
         mChatModel.addChatCreateResponseObserver(getViewLifecycleOwner(), result -> {
+            Log.i("ADDCONTACT", "room created");
                     try {
+
                         addMembersToRoom(result.getInt("chatID"));
                     } catch (JSONException e) {
+                        Log.i("ADDCONTACT", "failed to add members to room");
                         e.printStackTrace();
                     }
-                })  ;
+                });
 
         binding.buttonCreateRoom.setOnClickListener(button -> {
             if(creatingRoom){
                 createNewRoom();
+                Log.i("ADDCONTACT", "user clicked 'create room' button");
             } else {
                 addMembersToRoom(chatId);
             }
-            navigateBackToChat();
+
 
         });
 
@@ -144,7 +148,8 @@ public class ContactJoinFragment extends Fragment {
 
         private void createNewRoom() {
             mChatModel.createChatRoom(mUserModel.getmJwt()); //user is automatically added
-            //int chatId = mChatModel.getRecentRoom();
+            //int newChatId = mChatModel.getRecentRoom();
+//            addMembersToRoom(chatId);
 
         }
 
@@ -153,6 +158,7 @@ public class ContactJoinFragment extends Fragment {
             Log.i("ADDCONTACT", "adding " + contactsBeingAdded.get(i) + " to chat room " + chatId);
             mChatModel.joinChatRoom(chatId, contactsBeingAdded.get(i), mUserModel.getmJwt());
         }
+        navigateBackToChat();
     }
 
     private void navigateBackToChat() {
