@@ -33,6 +33,7 @@ import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.services.PushReceiver;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatMessage;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomViewModel;
+import edu.uw.tcss450.chatapp.ui.home.signin.HomeViewModel;
 import edu.uw.tcss450.chatapp.utils.ThemeChanger;
 
 /**
@@ -154,10 +155,9 @@ public class MainActivity extends AppCompatActivity {
      * A BroadcastReceiver that listens for messages sent from PushReceiver
      */
     private class MainPushMessageReceiver extends BroadcastReceiver {
-
-        private ChatRoomViewModel mModel =
-                new ViewModelProvider(MainActivity.this)
-                        .get(ChatRoomViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(MainActivity.this);
+        private ChatRoomViewModel mChatModel = provider.get(ChatRoomViewModel.class);
+        private HomeViewModel mHomeModel = provider.get(HomeViewModel.class);
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -177,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 //Inform the view model holding chatroom messages of the new
                 //message.
-                mModel.addMessage(intent.getIntExtra("chatid", -1), cm);
+                mChatModel.addMessage(intent.getIntExtra("chatid", -1), cm);
+                mHomeModel.addNotification(cm.getSender(), cm.getMessage());
             }
         }
     }
