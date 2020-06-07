@@ -33,6 +33,8 @@ public class ContactsViewModel extends AndroidViewModel {
         return mContactList;
     }
 
+    private MutableLiveData<JSONObject> mUpdateContactsResponse;
+
     private MutableLiveData<List<Contact>> mContactList;
     List<String> people;
 
@@ -42,6 +44,8 @@ public class ContactsViewModel extends AndroidViewModel {
         if (mContactList == null) {
             mContactList = new MutableLiveData<>();
             mContactList.setValue(new ArrayList<>());
+            mUpdateContactsResponse = new MutableLiveData<>();
+            mUpdateContactsResponse.setValue(new JSONObject());
             people = new ArrayList<String>();
         }
     }
@@ -50,6 +54,11 @@ public class ContactsViewModel extends AndroidViewModel {
                                    @NonNull LifecycleOwner owner,
                                     @NonNull Observer<? super List<Contact>> observer) {
         mContactList.observe(owner, observer);
+    }
+
+    public void addUpdateContactsResponseObserver(@NonNull LifecycleOwner owner,
+                                                  @NonNull Observer<? super JSONObject> observer) {
+        mUpdateContactsResponse.observe(owner, observer);
     }
 
     private void handleError(final VolleyError error) {
@@ -148,9 +157,10 @@ public class ContactsViewModel extends AndroidViewModel {
             //inform observers of the change (setValue)
             //getOrCreateMapEntry(response.getInt("chatId")).setValue(list);
         }catch (JSONException e) {
-            Log.e("JSON PARSE ERROR", "Found in handle Success ContactsViewModel");
+            Log.e("JSON PARSE ERROR", "Found in handle Result ContactsViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
+        mUpdateContactsResponse.setValue(response);
     }
 
 }

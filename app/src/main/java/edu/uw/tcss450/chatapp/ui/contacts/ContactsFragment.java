@@ -30,9 +30,11 @@ import edu.uw.tcss450.chatapp.utils.PasswordValidator;
 public class ContactsFragment extends Fragment {
 
     private ContactsViewModel mContactsModel;
+    private ContactPendingViewModel mContactsPendingModel;
     private UserInfoViewModel mUserModel;
 
     List<Contact> userContacts;
+    List<ContactPending> userContactsPending;
 
     private PasswordValidator mUsernameValidator = PasswordValidator.checkPwdLength(2)
             .and(PasswordValidator.checkExcludeWhiteSpace());
@@ -54,8 +56,10 @@ public class ContactsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mContactsModel = provider.get(ContactsViewModel.class);
+        mContactsPendingModel = provider.get(ContactPendingViewModel.class);
         mUserModel = provider.get(UserInfoViewModel.class);
         userContacts = mContactsModel.connectGet(mUserModel.getmJwt()).getValue();
+        userContactsPending = mContactsPendingModel.connectGet(mUserModel.getmJwt()).getValue();
 
         //TODO: add the method that populates the contacts list
 //        usersContacts = mContactsModel.getChatIds(1, mUserModel.getmJwt()).getValue();
@@ -67,9 +71,55 @@ public class ContactsFragment extends Fragment {
         FragmentContactsBinding binding = FragmentContactsBinding.bind(getView());
 
         final RecyclerView rv = binding.recyclerContacts;
+        final RecyclerView rvPend = binding.recyclerContactsPending;
 
         binding.buttonContactsEdit.setOnClickListener(button -> Navigation.findNavController(getView())
                 .navigate(ContactsFragmentDirections.actionNavigationContactsToEditContactsFragment()));
+
+        ContactPendingRecyclerViewAdapter.RecyclerViewClickListener pendListener = (v, position, pending) -> {
+            if(pending == "accept") {
+                mContactsPendingModel.connectAccept(mUserModel.getmJwt(), position);
+                //mContactsPendingModel.connectGet(mUserModel.getmJwt());
+//                rvPend.getAdapter().notifyDataSetChanged();
+//                rv.getAdapter().notifyDataSetChanged();
+//                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            } else if(pending == "reject") {
+                mContactsPendingModel.connectReject(mUserModel.getmJwt(), position);
+                //mContactsPendingModel.connectGet(mUserModel.getmJwt());
+//                rvPend.getAdapter().notifyDataSetChanged();
+//                rv.getAdapter().notifyDataSetChanged();
+//                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            }
+            Log.i("CONTACTS PENDING", "user clicked on a contact");
+        };
+
+        mContactsPendingModel.addContactPendingObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
+            if (!contactList.isEmpty()) {
+                rvPend.setAdapter(
+                        new ContactPendingRecyclerViewAdapter(contactList, pendListener)
+                );
+                mContactsPendingModel.connectGet(mUserModel.getmJwt());
+//                rvPend.getAdapter().notifyDataSetChanged();
+                rvPend.getAdapter().notifyDataSetChanged();
+                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                //TODO add wait capabilities
+                //binding.layoutWait.setVisibility(View.GONE);
+            }
+        });
+
+        mContactsModel.addUpdateContactsResponseObserver(getViewLifecycleOwner(), contactList -> {
+            if (rv.getAdapter() != null) {
+                rv.getAdapter().notifyDataSetChanged();
+            }
+        });
+
+        mContactsPendingModel.addPendingRequestResponseObserver(getViewLifecycleOwner(), contactList -> {
+            if (rvPend.getAdapter() != null) {
+                rvPend.getAdapter().notifyDataSetChanged();
+                mContactsModel.connectGet(mUserModel.getmJwt());
+                Log.i("PENDING", "accepted a contact request");
+            }
+        });
 
         //this is for navigating somewhere when the card is tapped
         ContactRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position) -> {
