@@ -107,8 +107,9 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
         private void deleteRoom() {
             int chatId = Integer.parseInt(mChatRooms.get(this.getAdapterPosition()).getChatID());
-            Log.i("CHAT RECYCLER", "removing " + mUserModel.getEmail() + " from chat room " + chatId);
+            Log.i("CHATRECYCLER", "removing " + mUserModel.getEmail() + " from chat room " + chatId);
             mChatModel.deleteChatMember(chatId, mUserModel.getEmail(), mUserModel.getmJwt());
+
         }
 
         private void navigateToContactJoin() {

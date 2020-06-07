@@ -41,6 +41,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
 
     private MutableLiveData<JSONObject> mChatCreateResponse;
     private MutableLiveData<JSONObject> mFillNamesResponse;
+    private MutableLiveData<JSONObject> mDeleteRoomResponse;
 
     private List<Integer> chatIds;
     private String mJwt;
@@ -57,6 +58,8 @@ public class ChatRoomViewModel extends AndroidViewModel {
         mChatCreateResponse.setValue(new JSONObject());
         mFillNamesResponse = new MutableLiveData<>();
         mFillNamesResponse.setValue(new JSONObject());
+        mDeleteRoomResponse = new MutableLiveData<>();
+        mDeleteRoomResponse.setValue(new JSONObject());
     }
 
     /**
@@ -93,6 +96,11 @@ public class ChatRoomViewModel extends AndroidViewModel {
     public void addFillNamesResponseObserver(@NonNull LifecycleOwner owner,
                                               @NonNull Observer<? super JSONObject> observer) {
         mFillNamesResponse.observe(owner, observer);
+    }
+
+    public void addDeleteRoomResponseObserver(@NonNull LifecycleOwner owner,
+                                             @NonNull Observer<? super JSONObject> observer) {
+        mDeleteRoomResponse.observe(owner, observer);
     }
     /**
      * Return a reference to the List<> associated with the chat room. If the View Model does
@@ -638,11 +646,13 @@ public class ChatRoomViewModel extends AndroidViewModel {
                     Log.i("CHATROOM", "User has been deleted successfully");
                 else
                     Log.e("CHATROOM", "failed to delete user");
+
             } catch (JSONException e) {
                 Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
                 Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
             }
         }
+        mDeleteRoomResponse.setValue(response);
     }
 
     private void handleError(final VolleyError error) {

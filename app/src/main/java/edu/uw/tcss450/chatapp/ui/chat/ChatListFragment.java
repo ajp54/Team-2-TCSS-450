@@ -162,18 +162,31 @@ public class ChatListFragment extends Fragment {
             }
         });
 
+        //update the recycler vew when a chat gets deleted
+        mChatModel.addDeleteRoomResponseObserver(getViewLifecycleOwner(), result -> {
+            Log.i("CHATLIST", "Room created. Updating recycler view");
+            if (rv.getAdapter() != null) {
+                rv.getAdapter().notifyDataSetChanged();
+                mChatModel.getChatIds(mUserModel.getEmail(), mUserModel.getmJwt());
+            }
+        });
+
         //also the 'Delete' button
         binding.buttonNewChat.setOnClickListener(button -> {
+            Log.i("CHATLIST", "Clicked create/delete button");
             if(!editMode) {
 //                int chatId
+                Log.i("CHATLIST", "navigating to chat create...");
                 navigateToContactJoin(true, 0);
             } else {
+                Log.i("CHATLIST", "trying to delete rooms...");
                 deleteRooms();
             }
         });
 
         //also the cancel button
         binding.buttonEditChat.setOnClickListener(button -> {
+            Log.i("CHATLIST", "Clicked edit/cancel button");
             if (!editMode) {
                 editMode = true;
                 binding.buttonEditChat.setText(getString(R.string.label_cancel));
