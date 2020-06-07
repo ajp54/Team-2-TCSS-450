@@ -29,6 +29,9 @@ import edu.uw.tcss450.chatapp.utils.PasswordValidator;
  */
 public class ContactsFragment extends Fragment {
 
+    LinearLayoutManager manager;
+    LinearLayoutManager pendManager;
+
     private ContactsViewModel mContactsModel;
     private ContactPendingViewModel mContactsPendingModel;
     private UserInfoViewModel mUserModel;
@@ -70,6 +73,9 @@ public class ContactsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         FragmentContactsBinding binding = FragmentContactsBinding.bind(getView());
 
+        final ContactPendingRecyclerViewAdapter[] mPendAdapter = new ContactPendingRecyclerViewAdapter[1];
+        final ContactRecyclerViewAdapter[] mAdapter = new ContactRecyclerViewAdapter[1];
+
         final RecyclerView rv = binding.recyclerContacts;
         final RecyclerView rvPend = binding.recyclerContactsPending;
 
@@ -79,26 +85,37 @@ public class ContactsFragment extends Fragment {
         ContactPendingRecyclerViewAdapter.RecyclerViewClickListener pendListener = (v, position, pending) -> {
             if(pending == "accept") {
                 mContactsPendingModel.connectAccept(mUserModel.getmJwt(), position);
-                //mContactsPendingModel.connectGet(mUserModel.getmJwt());
-                rvPend.getAdapter().notifyDataSetChanged();
-                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                mContactsPendingModel.connectGet(mUserModel.getmJwt());
+                rvPend.setAdapter(null);
+                rvPend.setLayoutManager(null);
+                rvPend.getRecycledViewPool().clear();
+                rvPend.swapAdapter(mPendAdapter[0], false);
+                rvPend.setLayoutManager(pendManager);
+                mPendAdapter[0].notifyDataSetChanged();
+//                rv.setAdapter(null);
+//                rv.setLayoutManager(null);
+//                rv.setAdapter(mAdapter[0]);
+//                rv.setLayoutManager(manager);
+//                mAdapter[0].notifyDataSetChanged();
             } else if(pending == "reject") {
                 mContactsPendingModel.connectReject(mUserModel.getmJwt(), position);
-                //mContactsPendingModel.connectGet(mUserModel.getmJwt());
-                rvPend.getAdapter().notifyDataSetChanged();
-                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
+//                mContactsPendingModel.connectGet(mUserModel.getmJwt());
+//                rvPend.getAdapter().notifyDataSetChanged();
+//                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
             }
             Log.i("CONTACTS PENDING", "user clicked on a contact");
         };
 
         mContactsPendingModel.addContactPendingObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
+            mPendAdapter[0] = new ContactPendingRecyclerViewAdapter(contactList, pendListener);
+            pendManager = new LinearLayoutManager(this.getContext());
             //f (!contactList.isEmpty()) {
                 rvPend.setAdapter(
-                        new ContactPendingRecyclerViewAdapter(contactList, pendListener)
+                        mPendAdapter[0]
                 );
                 mContactsPendingModel.connectGet(mUserModel.getmJwt());
                 rvPend.getAdapter().notifyDataSetChanged();
-                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                rvPend.setLayoutManager(pendManager);
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
             //}
@@ -111,12 +128,14 @@ public class ContactsFragment extends Fragment {
         };
 
         mContactsModel.addContactObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
+            mAdapter[0] = new ContactRecyclerViewAdapter(contactList, listener);
+            manager = new LinearLayoutManager(this.getContext());
             if (!contactList.isEmpty()) {
                 rv.setAdapter(
-                        new ContactRecyclerViewAdapter(contactList, listener)
+                        mAdapter[0]
                 );
                 rv.getAdapter().notifyDataSetChanged();
-                rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                rv.setLayoutManager(manager);
                 mContactsModel.connectGet(mUserModel.getmJwt());
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);

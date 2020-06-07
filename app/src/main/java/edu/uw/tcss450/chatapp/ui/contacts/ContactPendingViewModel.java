@@ -174,38 +174,33 @@ public class ContactPendingViewModel extends AndroidViewModel {
 
     private void handleResult(final JSONObject response) {
         list.clear();
-//        chatIds = new ArrayList<Integer>();
+
         boolean hasNewInfo = false;
         if (!response.has("rows")) {
             throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
         }
         try {
-            Log.i("CONTACTS", "recieved a response");
+            Log.i("CONTACTS PENDING", "recieved a response");
             //list = getMessageListByChatId(response.getInt("chatId"));
             JSONArray myContacts = response.getJSONArray("rows");
-            Log.i("CONTACTS", "rows length: " + myContacts.length());
+            Log.i("CONTACTS PENDING", "rows length: " + myContacts.length());
             //List<Integer> myIds = new ArrayList<Integer>();
             for(int i = 0; i < myContacts.length(); i++) {
                 JSONObject contact = myContacts.getJSONObject(i);
                 String username = contact.getString("username");
-                Log.i("CONTACTS", "username: " + username);
-//                chatIds.add(id);
-                //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
+                Log.i("CONTACTS PENDING", "username: " + username);
+
                 if(!people.contains(username)){
                     people.add(username);
                     hasNewInfo = true;
                 }
+
                 list.add(new ContactPending(new ContactPending.Builder(username)));
             }
             if(hasNewInfo) {
                 mContactPendingList.setValue(list);
             }
-//            for(int i = 0; i < myIds.size(); i++) {
-//                chatIds.add(myIds.getInt(i));
-//                Log.i("CHATROOM", "ID added: " + chatIds.get(i));
-//            }
-            //inform observers of the change (setValue)
-            //getOrCreateMapEntry(response.getInt("chatId")).setValue(list);
+
         }catch (JSONException e) {
             Log.e("JSON PARSE ERROR", "Found in handle Success ContactsPendingViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
@@ -213,32 +208,28 @@ public class ContactPendingViewModel extends AndroidViewModel {
     }
 
     private void handleAcceptResult(final JSONObject response) {
+        people.clear();
         List<ContactPending> tempList = list;
         list.clear();
-//        chatIds = new ArrayList<Integer>();
+
         boolean hasNewInfo = false;
         if (!response.has("rows")) {
             throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
         }
         try {
-            Log.i("CONTACTS", "recieved a response");
-            //list = getMessageListByChatId(response.getInt("chatId"));
+            Log.i("CONTACTS ACCEPT", "recieved a response");
+
             JSONArray myContact = response.getJSONArray("rows");
-            Log.i("CONTACTS", "rows length: " + myContact.length());
+            Log.i("CONTACTS ACCEPT", "rows length: " + myContact.length());
             JSONObject contact = myContact.getJSONObject(0);
             String username = contact.getString("username");
-            //List<Integer> myIds = new ArrayList<Integer>();
+
             for(int i = 0; i < tempList.size(); i++) {
                 String tempUsername = tempList.get(i).getUsername();
-                Log.i("CONTACTS", "username: " + tempUsername);
-//                chatIds.add(id);
-                //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
-                if(!people.contains(tempUsername)){
-                    people.add(tempUsername);
-                    hasNewInfo = true;
-                }
+                Log.i("CONTACTS ACCEPT", "username: " + tempUsername);
+
                 if(tempUsername == username) {
-                    //do nothing
+                    tempList.remove(i);
                 } else {
                     list.add(new ContactPending(new ContactPending.Builder(username)));
                 }
@@ -247,36 +238,52 @@ public class ContactPendingViewModel extends AndroidViewModel {
             if(hasNewInfo) {
                 mContactPendingList.setValue(list);
             }
-//            for(int i = 0; i < myIds.size(); i++) {
-//                chatIds.add(myIds.getInt(i));
-//                Log.i("CHATROOM", "ID added: " + chatIds.get(i));
-//            }
-            //inform observers of the change (setValue)
-            //getOrCreateMapEntry(response.getInt("chatId")).setValue(list);
+            list = tempList;
+
         }catch (JSONException e) {
             Log.e("JSON PARSE ERROR", "Found in handle Success ContactsPendingViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
 
-
-
-
-
-
-        try {
-            JSONArray myContact = response.getJSONArray("rows");
-            JSONObject contact = myContact.getJSONObject(0);
-            String username = contact.getString("username");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < list.size(); i++) {
-
-        }
     }
 
     private void handleRejectResult(final JSONObject response) {
+        people.clear();
+        List<ContactPending> tempList = list;
+        list.clear();
 
+        boolean hasNewInfo = false;
+        if (!response.has("rows")) {
+            throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
+        }
+        try {
+            Log.i("CONTACTS REJECT", "recieved a response");
+
+            JSONArray myContact = response.getJSONArray("rows");
+            Log.i("CONTACTS REJECT", "rows length: " + myContact.length());
+            JSONObject contact = myContact.getJSONObject(0);
+            String username = contact.getString("username");
+
+            for(int i = 0; i < tempList.size(); i++) {
+                String tempUsername = tempList.get(i).getUsername();
+                Log.i("CONTACTS REJECT", "username: " + tempUsername);
+
+                if(tempUsername == username) {
+                    tempList.remove(i);
+                } else {
+                    list.add(new ContactPending(new ContactPending.Builder(username)));
+                }
+
+            }
+            if(hasNewInfo) {
+                mContactPendingList.setValue(list);
+            }
+            list = tempList;
+
+        }catch (JSONException e) {
+            Log.e("JSON PARSE ERROR", "Found in handle Success ContactsPendingViewModel");
+            Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
+        }
     }
 
 }
