@@ -40,6 +40,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
     private MutableLiveData<List<ChatRoom>> mRoomList;
 
     private MutableLiveData<JSONObject> mChatCreateResponse;
+    private MutableLiveData<JSONObject> mFillNamesResponse;
 
     private List<Integer> chatIds;
     private String mJwt;
@@ -54,6 +55,8 @@ public class ChatRoomViewModel extends AndroidViewModel {
 
         mChatCreateResponse = new MutableLiveData<>();
         mChatCreateResponse.setValue(new JSONObject());
+        mFillNamesResponse = new MutableLiveData<>();
+        mFillNamesResponse.setValue(new JSONObject());
     }
 
     /**
@@ -86,6 +89,10 @@ public class ChatRoomViewModel extends AndroidViewModel {
         mChatCreateResponse.observe(owner, observer);
     }
 
+    public void addFillNamesResponseObserver(@NonNull LifecycleOwner owner,
+                                              @NonNull Observer<? super JSONObject> observer) {
+        mFillNamesResponse.observe(owner, observer);
+    }
     /**
      * Return a reference to the List<> associated with the chat room. If the View Model does
      * not have a mapping for this chatID, it will be created.
@@ -243,7 +250,12 @@ public class ChatRoomViewModel extends AndroidViewModel {
         //code here will run
     }
 
-
+    /**
+     * Get the usernames of all the people in a given chat.
+     *
+     * @param chatId the ID of the chat room you want the names of.
+     * @param jwt user's jwt
+     */
     public void addChatMembers(final int chatId, final String jwt) {
 
         mJwt = jwt;
@@ -286,6 +298,17 @@ public class ChatRoomViewModel extends AndroidViewModel {
         List<ChatMessage> list = getMessageListByChatId(chatId);
         list.add(message);
         getOrCreateMapEntry(chatId).setValue(list);
+
+        //add massage to the chat card in the chat recycler view
+//        if (chatIds != null) {
+//            int index = chatIds.indexOf(chatId);
+//
+//            if (mRoomList.getValue() != null && mRoomList.getValue().get(index) != null) {
+//                mRoomList.getValue().get(index).setRecentMessage(message.getMessage());
+//            }
+//        }
+
+
     }
 
 //    public void addRecentMessages() {
@@ -302,6 +325,10 @@ public class ChatRoomViewModel extends AndroidViewModel {
 //        }
 //    }
 
+    /**
+     * Create a new chat room.
+     * @param jwt the user's jwt
+     */
     public void createChatRoom(String jwt) {
         mJwt = jwt;
         JSONObject params = new JSONObject();
@@ -340,6 +367,12 @@ public class ChatRoomViewModel extends AndroidViewModel {
 
     }
 
+    /**
+     * add someone to an existing chat room.
+     * @param chatId the ID of the room you want to add the person to.
+     * @param username the username or the email of the user.
+     * @param jwt the user's jwt
+     */
     //the user's email will work in place of the username
     public void joinChatRoom(int chatId, String username, String jwt) {
         Log.i("CHATROOM", "user " + username +  " joining room " + chatId);
@@ -379,6 +412,12 @@ public class ChatRoomViewModel extends AndroidViewModel {
                 .addToRequestQueue(request);
     }
 
+    /**
+     * Delete a user from a chat room.
+     * @param chatId the ID of the room the user will be deleted from
+     * @param email the email of the person you want to remove
+     * @param jwt the user's jwt
+     */
     public void deleteChatMember(int chatId, String email, String jwt) {
         Log.i("CHATROOM", "user " + email +  " leaving room " + chatId);
         mJwt = jwt;
@@ -409,6 +448,10 @@ public class ChatRoomViewModel extends AndroidViewModel {
                 .addToRequestQueue(request);
     }
 
+    /**
+     * Creates a message
+     * @param response The JSON object containing the response from the backend.
+     */
     private void handelMessageSuccess(final JSONObject response) {
         List<ChatMessage> list;
         if (!response.has("chatId")) {
@@ -444,6 +487,10 @@ public class ChatRoomViewModel extends AndroidViewModel {
         }
     }
 
+    /**
+     * add the chat rooms to the mRoomList so it can get added to the recycler view
+     * @param response The JSON object containing the response from the backend.
+     */
     private void handelChatIdSuccess(final JSONObject response) {
         List<ChatRoom> list = new ArrayList<ChatRoom>();
         chatIds = new ArrayList<Integer>();
@@ -532,6 +579,7 @@ public class ChatRoomViewModel extends AndroidViewModel {
             Log.e("JSON PARSE ERROR", "Found in handle Success ChatViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
+        mFillNamesResponse.setValue(response);
     }
 
     private void handelChatCreateSuccess(final JSONObject response) {
