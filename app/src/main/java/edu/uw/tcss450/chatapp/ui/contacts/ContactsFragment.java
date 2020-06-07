@@ -29,9 +29,6 @@ import edu.uw.tcss450.chatapp.utils.PasswordValidator;
  */
 public class ContactsFragment extends Fragment {
 
-    LinearLayoutManager manager;
-    LinearLayoutManager pendManager;
-
     private ContactsViewModel mContactsModel;
     private ContactPendingViewModel mContactsPendingModel;
     private UserInfoViewModel mUserModel;
@@ -73,9 +70,6 @@ public class ContactsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         FragmentContactsBinding binding = FragmentContactsBinding.bind(getView());
 
-        final ContactPendingRecyclerViewAdapter[] mPendAdapter = new ContactPendingRecyclerViewAdapter[1];
-        final ContactRecyclerViewAdapter[] mAdapter = new ContactRecyclerViewAdapter[1];
-
         final RecyclerView rv = binding.recyclerContacts;
         final RecyclerView rvPend = binding.recyclerContactsPending;
 
@@ -85,40 +79,46 @@ public class ContactsFragment extends Fragment {
         ContactPendingRecyclerViewAdapter.RecyclerViewClickListener pendListener = (v, position, pending) -> {
             if(pending == "accept") {
                 mContactsPendingModel.connectAccept(mUserModel.getmJwt(), position);
-                mContactsPendingModel.connectGet(mUserModel.getmJwt());
-                rvPend.setAdapter(null);
-                rvPend.setLayoutManager(null);
-                rvPend.getRecycledViewPool().clear();
-                rvPend.swapAdapter(mPendAdapter[0], false);
-                rvPend.setLayoutManager(pendManager);
-                mPendAdapter[0].notifyDataSetChanged();
-//                rv.setAdapter(null);
-//                rv.setLayoutManager(null);
-//                rv.setAdapter(mAdapter[0]);
-//                rv.setLayoutManager(manager);
-//                mAdapter[0].notifyDataSetChanged();
+                //mContactsPendingModel.connectGet(mUserModel.getmJwt());
+//                rvPend.getAdapter().notifyDataSetChanged();
+//                rv.getAdapter().notifyDataSetChanged();
+//                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
             } else if(pending == "reject") {
                 mContactsPendingModel.connectReject(mUserModel.getmJwt(), position);
-//                mContactsPendingModel.connectGet(mUserModel.getmJwt());
+                //mContactsPendingModel.connectGet(mUserModel.getmJwt());
 //                rvPend.getAdapter().notifyDataSetChanged();
+//                rv.getAdapter().notifyDataSetChanged();
 //                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
             }
             Log.i("CONTACTS PENDING", "user clicked on a contact");
         };
 
         mContactsPendingModel.addContactPendingObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
-            mPendAdapter[0] = new ContactPendingRecyclerViewAdapter(contactList, pendListener);
-            pendManager = new LinearLayoutManager(this.getContext());
-            //f (!contactList.isEmpty()) {
+            if (!contactList.isEmpty()) {
                 rvPend.setAdapter(
-                        mPendAdapter[0]
+                        new ContactPendingRecyclerViewAdapter(contactList, pendListener)
                 );
                 mContactsPendingModel.connectGet(mUserModel.getmJwt());
+//                rvPend.getAdapter().notifyDataSetChanged();
                 rvPend.getAdapter().notifyDataSetChanged();
-                rvPend.setLayoutManager(pendManager);
+                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
-            //}
+            }
+        });
+
+        mContactsModel.addUpdateContactsResponseObserver(getViewLifecycleOwner(), contactList -> {
+            if (rv.getAdapter() != null) {
+                rv.getAdapter().notifyDataSetChanged();
+            }
+        });
+
+        mContactsPendingModel.addPendingRequestResponseObserver(getViewLifecycleOwner(), contactList -> {
+            if (rvPend.getAdapter() != null) {
+                rvPend.getAdapter().notifyDataSetChanged();
+                mContactsModel.connectGet(mUserModel.getmJwt());
+                Log.i("PENDING", "accepted a contact request");
+            }
         });
 
         //this is for navigating somewhere when the card is tapped
@@ -128,14 +128,12 @@ public class ContactsFragment extends Fragment {
         };
 
         mContactsModel.addContactObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
-            mAdapter[0] = new ContactRecyclerViewAdapter(contactList, listener);
-            manager = new LinearLayoutManager(this.getContext());
             if (!contactList.isEmpty()) {
                 rv.setAdapter(
-                        mAdapter[0]
+                        new ContactRecyclerViewAdapter(contactList, listener)
                 );
                 rv.getAdapter().notifyDataSetChanged();
-                rv.setLayoutManager(manager);
+                rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 mContactsModel.connectGet(mUserModel.getmJwt());
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
