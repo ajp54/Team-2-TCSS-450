@@ -76,22 +76,32 @@ public class ContactsFragment extends Fragment {
         binding.buttonContactsEdit.setOnClickListener(button -> Navigation.findNavController(getView())
                 .navigate(ContactsFragmentDirections.actionNavigationContactsToEditContactsFragment()));
 
-        ContactPendingRecyclerViewAdapter.RecyclerViewClickListener pendListener = (v, position) -> {
-//            navigateToChat(chatIds.get(position));
+        ContactPendingRecyclerViewAdapter.RecyclerViewClickListener pendListener = (v, position, pending) -> {
+            if(pending == "accept") {
+                mContactsPendingModel.connectAccept(mUserModel.getmJwt(), position);
+                //mContactsPendingModel.connectGet(mUserModel.getmJwt());
+                rvPend.getAdapter().notifyDataSetChanged();
+                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            } else if(pending == "reject") {
+                mContactsPendingModel.connectReject(mUserModel.getmJwt(), position);
+                //mContactsPendingModel.connectGet(mUserModel.getmJwt());
+                rvPend.getAdapter().notifyDataSetChanged();
+                rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
+            }
             Log.i("CONTACTS PENDING", "user clicked on a contact");
         };
 
         mContactsPendingModel.addContactPendingObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
-            if (!contactList.isEmpty()) {
+            //f (!contactList.isEmpty()) {
                 rvPend.setAdapter(
                         new ContactPendingRecyclerViewAdapter(contactList, pendListener)
                 );
+                mContactsPendingModel.connectGet(mUserModel.getmJwt());
                 rvPend.getAdapter().notifyDataSetChanged();
                 rvPend.setLayoutManager(new LinearLayoutManager(this.getContext()));
-                mContactsPendingModel.connectGet(mUserModel.getmJwt());
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
-            }
+            //}
         });
 
         //this is for navigating somewhere when the card is tapped

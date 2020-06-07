@@ -28,11 +28,14 @@ import edu.uw.tcss450.chatapp.io.RequestQueueSingleton;
 
 public class ContactPendingViewModel extends AndroidViewModel {
 
+    List<ContactPending> list = new ArrayList<ContactPending>();
+
     public MutableLiveData<List<ContactPending>> getmContactPendingList() {
         return mContactPendingList;
     }
 
-    private MutableLiveData<List<ContactPending>> mContactPendingList;
+    public MutableLiveData<List<ContactPending>> mContactPendingList;
+    List<String> people;
 
 
     public ContactPendingViewModel(@NonNull Application application) {
@@ -40,13 +43,14 @@ public class ContactPendingViewModel extends AndroidViewModel {
         if (mContactPendingList == null) {
             mContactPendingList = new MutableLiveData<>();
             mContactPendingList.setValue(new ArrayList<>());
+            people =  new ArrayList<String>();
         }
     }
 
     public void addContactPendingObserver(String jwt,
                                    @NonNull LifecycleOwner owner,
                                    @NonNull Observer<? super List<ContactPending>> observer) {
-        connectGet(jwt).observe(owner, observer);
+        mContactPendingList.observe(owner, observer);
     }
 
     private void handleError(final VolleyError error) {
@@ -77,7 +81,6 @@ public class ContactPendingViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<List<ContactPending>> connectGet(String jwt) {
-        System.out.println("thishishishishishishishishishishis");
         String url = getApplication().getResources().getString(R.string.base_url) +
                 "contacts?pending=true";
         Request request = new JsonObjectRequest(
@@ -107,9 +110,72 @@ public class ContactPendingViewModel extends AndroidViewModel {
         return mContactPendingList;
     }
 
+    public void connectAccept(String jwt, int position) {
+        String url = getApplication().getResources().getString(R.string.base_url) +
+                "contacts";
+        JSONObject body = new JSONObject(); try {
+            body.put("username", people.get(position));
+        } catch (JSONException e) {
+            e.printStackTrace(); }
+        Request request = new JsonObjectRequest(
+                Request.Method.PUT,
+                url,
+                body,
+                this::handleAcceptResult,
+                this::handleError) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                // add headers <key,value>
+                headers.put("Authorization", jwt);
+                return headers;
+            }
+        };
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                10_000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //Instantiate the RequestQueue and add the request to the queue
+        RequestQueueSingleton.getInstance(getApplication().getApplicationContext())
+                .addToRequestQueue(request);
+
+    }
+
+    public void connectReject(String jwt, int position) {
+        String url = getApplication().getResources().getString(R.string.base_url) +
+                "contacts?username=" + people.get(position);
+        Request request = new JsonObjectRequest(
+                Request.Method.DELETE,
+                url,
+                null,
+                this::handleRejectResult,
+                this::handleError) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                // add headers <key,value>
+                headers.put("Authorization", jwt);
+                return headers;
+            }
+        };
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                10_000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //Instantiate the RequestQueue and add the request to the queue
+        RequestQueueSingleton.getInstance(getApplication().getApplicationContext())
+                .addToRequestQueue(request);
+
+    }
+
     private void handleResult(final JSONObject response) {
-        List<ContactPending> list = new ArrayList<ContactPending>();
+        list.clear();
 //        chatIds = new ArrayList<Integer>();
+        boolean hasNewInfo = false;
         if (!response.has("rows")) {
             throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
         }
@@ -125,10 +191,15 @@ public class ContactPendingViewModel extends AndroidViewModel {
                 Log.i("CONTACTS", "username: " + username);
 //                chatIds.add(id);
                 //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
+                if(!people.contains(username)){
+                    people.add(username);
+                    hasNewInfo = true;
+                }
                 list.add(new ContactPending(new ContactPending.Builder(username)));
             }
-            mContactPendingList.setValue(list);
-
+            if(hasNewInfo) {
+                mContactPendingList.setValue(list);
+            }
 //            for(int i = 0; i < myIds.size(); i++) {
 //                chatIds.add(myIds.getInt(i));
 //                Log.i("CHATROOM", "ID added: " + chatIds.get(i));
@@ -139,6 +210,73 @@ public class ContactPendingViewModel extends AndroidViewModel {
             Log.e("JSON PARSE ERROR", "Found in handle Success ContactsPendingViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
+    }
+
+    private void handleAcceptResult(final JSONObject response) {
+        List<ContactPending> tempList = list;
+        list.clear();
+//        chatIds = new ArrayList<Integer>();
+        boolean hasNewInfo = false;
+        if (!response.has("rows")) {
+            throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
+        }
+        try {
+            Log.i("CONTACTS", "recieved a response");
+            //list = getMessageListByChatId(response.getInt("chatId"));
+            JSONArray myContact = response.getJSONArray("rows");
+            Log.i("CONTACTS", "rows length: " + myContact.length());
+            JSONObject contact = myContact.getJSONObject(0);
+            String username = contact.getString("username");
+            //List<Integer> myIds = new ArrayList<Integer>();
+            for(int i = 0; i < tempList.size(); i++) {
+                String tempUsername = tempList.get(i).getUsername();
+                Log.i("CONTACTS", "username: " + tempUsername);
+//                chatIds.add(id);
+                //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
+                if(!people.contains(tempUsername)){
+                    people.add(tempUsername);
+                    hasNewInfo = true;
+                }
+                if(tempUsername == username) {
+                    //do nothing
+                } else {
+                    list.add(new ContactPending(new ContactPending.Builder(username)));
+                }
+
+            }
+            if(hasNewInfo) {
+                mContactPendingList.setValue(list);
+            }
+//            for(int i = 0; i < myIds.size(); i++) {
+//                chatIds.add(myIds.getInt(i));
+//                Log.i("CHATROOM", "ID added: " + chatIds.get(i));
+//            }
+            //inform observers of the change (setValue)
+            //getOrCreateMapEntry(response.getInt("chatId")).setValue(list);
+        }catch (JSONException e) {
+            Log.e("JSON PARSE ERROR", "Found in handle Success ContactsPendingViewModel");
+            Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
+        }
+
+
+
+
+
+
+        try {
+            JSONArray myContact = response.getJSONArray("rows");
+            JSONObject contact = myContact.getJSONObject(0);
+            String username = contact.getString("username");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < list.size(); i++) {
+
+        }
+    }
+
+    private void handleRejectResult(final JSONObject response) {
+
     }
 
 }
