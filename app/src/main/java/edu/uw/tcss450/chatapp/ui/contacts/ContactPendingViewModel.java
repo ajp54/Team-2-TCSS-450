@@ -28,6 +28,8 @@ import edu.uw.tcss450.chatapp.io.RequestQueueSingleton;
 
 public class ContactPendingViewModel extends AndroidViewModel {
 
+    private MutableLiveData<JSONObject> mPendingRequestResponse;
+
     List<ContactPending> list = new ArrayList<ContactPending>();
 
     public MutableLiveData<List<ContactPending>> getmContactPendingList() {
@@ -43,6 +45,8 @@ public class ContactPendingViewModel extends AndroidViewModel {
         if (mContactPendingList == null) {
             mContactPendingList = new MutableLiveData<>();
             mContactPendingList.setValue(new ArrayList<>());
+            mPendingRequestResponse = new MutableLiveData<>();
+            mPendingRequestResponse.setValue(new JSONObject());
             people =  new ArrayList<String>();
         }
     }
@@ -50,7 +54,12 @@ public class ContactPendingViewModel extends AndroidViewModel {
     public void addContactPendingObserver(String jwt,
                                    @NonNull LifecycleOwner owner,
                                    @NonNull Observer<? super List<ContactPending>> observer) {
-        mContactPendingList.observe(owner, observer);
+        connectGet(jwt).observe(owner, observer);
+    }
+
+    public void addPendingRequestResponseObserver(@NonNull LifecycleOwner owner,
+                                              @NonNull Observer<? super JSONObject> observer) {
+        mPendingRequestResponse.observe(owner, observer);
     }
 
     private void handleError(final VolleyError error) {
@@ -213,7 +222,7 @@ public class ContactPendingViewModel extends AndroidViewModel {
     }
 
     private void handleAcceptResult(final JSONObject response) {
-        List<ContactPending> tempList = list;
+        List<ContactPending> tempList = new ArrayList<>(list);
         list.clear();
 //        chatIds = new ArrayList<Integer>();
         boolean hasNewInfo = false;
@@ -237,10 +246,11 @@ public class ContactPendingViewModel extends AndroidViewModel {
                     people.add(tempUsername);
                     hasNewInfo = true;
                 }
-                if(tempUsername == username) {
+                if(tempUsername.equals(username)) {
                     //do nothing
+                    people.remove(tempUsername);
                 } else {
-                    list.add(new ContactPending(new ContactPending.Builder(username)));
+                    list.add(new ContactPending(new ContactPending.Builder(tempUsername)));
                 }
 
             }
@@ -253,15 +263,10 @@ public class ContactPendingViewModel extends AndroidViewModel {
 //            }
             //inform observers of the change (setValue)
             //getOrCreateMapEntry(response.getInt("chatId")).setValue(list);
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             Log.e("JSON PARSE ERROR", "Found in handle Success ContactsPendingViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
-
-
-
-
-
 
         try {
             JSONArray myContact = response.getJSONArray("rows");
@@ -273,6 +278,7 @@ public class ContactPendingViewModel extends AndroidViewModel {
         for (int i = 0; i < list.size(); i++) {
 
         }
+        mPendingRequestResponse.setValue(response);
     }
 
     private void handleRejectResult(final JSONObject response) {
