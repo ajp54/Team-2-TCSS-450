@@ -44,7 +44,6 @@ import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.adapter.MyNotificationRecyclerViewAdapter;
 import edu.uw.tcss450.chatapp.databinding.FragmentSuccessBinding;
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
-import edu.uw.tcss450.chatapp.ui.home.signin.HomeViewModel;
 import edu.uw.tcss450.chatapp.ui.weather.CurrentWeatherBuilder;
 import edu.uw.tcss450.chatapp.ui.weather.WeatherViewModel;
 

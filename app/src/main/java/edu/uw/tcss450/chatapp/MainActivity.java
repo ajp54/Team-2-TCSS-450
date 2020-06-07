@@ -1,21 +1,15 @@
 package edu.uw.tcss450.chatapp;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -33,7 +27,7 @@ import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.services.PushReceiver;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatMessage;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomViewModel;
-import edu.uw.tcss450.chatapp.ui.home.signin.HomeViewModel;
+import edu.uw.tcss450.chatapp.ui.home.HomeViewModel;
 import edu.uw.tcss450.chatapp.utils.ThemeChanger;
 
 /**

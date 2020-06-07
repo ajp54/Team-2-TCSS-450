@@ -1,4 +1,4 @@
-package edu.uw.tcss450.chatapp.ui.home.signin;
+package edu.uw.tcss450.chatapp.ui.home;
 
 import android.app.Application;
 
