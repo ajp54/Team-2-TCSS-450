@@ -19,11 +19,7 @@
         android:id="@+id/navigation_contacts"
         android:name="edu.uw.tcss450.chatapp.ui.contacts.ContactsFragment"
         android:label="@string/label_contacts"
-        tools:layout="@layout/fragment_contacts" >
-        <action
-            android:id="@+id/action_navigation_contacts_to_editContactsFragment"
-            app:destination="@id/editContactsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_contacts" />
     <fragment
         android:id="@+id/navigation_chat"
         android:name="edu.uw.tcss450.chatapp.ui.chat.ChatListFragment"
@@ -71,9 +67,4 @@
         android:name="edu.uw.tcss450.chatapp.ui.settings.ChangePassConfirmFragment"
         android:label="fragment_change_pass_confirm"
         tools:layout="@layout/fragment_change_pass_confirm" />
-    <fragment
-        android:id="@+id/editContactsFragment"
-        android:name="edu.uw.tcss450.chatapp.ui.contacts.EditContactsFragment"
-        android:label="Edit Contacts"
-        tools:layout="@layout/fragment_contacts_edit"/>
 </navigation>
