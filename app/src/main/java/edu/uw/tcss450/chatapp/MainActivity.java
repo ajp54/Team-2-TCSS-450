@@ -74,11 +74,11 @@ public class MainActivity extends AppCompatActivity {
         mNewMessageModel = new ViewModelProvider(this).get(NewMessageCountViewModel.class);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.navigation_chat) {
+            if (destination.getId() == R.id.navigation_chat_room) {
                 //When the user navigates to the chats page, reset the new message count.
                 //This will need some extra logic for your project as it should have
                 //multiple chat rooms.
-                mNewMessageModel.reset();
+                mNewMessageModel.reset(arguments.getInt("chatId"));
             }
         });
 
@@ -163,15 +163,16 @@ public class MainActivity extends AppCompatActivity {
             if (intent.hasExtra("chatMessage")) {
 
                 ChatMessage cm = (ChatMessage) intent.getSerializableExtra("chatMessage");
+                int chatId = (Integer) intent.getIntExtra("chatid", -1);
 
                 //If the user is not on the chat screen, update the
                 // NewMessageCountView Model
-                if (nd.getId() != R.id.navigation_chat) {
-                    mNewMessageModel.increment();
+                if (nd.getId() != R.id.navigation_chat_room) {
+                    mNewMessageModel.increment(chatId);
                 }
                 //Inform the view model holding chatroom messages of the new
                 //message.
-                mChatModel.addMessage(intent.getIntExtra("chatid", -1), cm);
+                mChatModel.addMessage(chatId, cm);
                 mHomeModel.addNotification(cm.getSender(), cm.getMessage());
             }
         }
