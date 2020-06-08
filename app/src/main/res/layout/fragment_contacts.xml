@@ -34,8 +34,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_contacts"
-        android:layout_width="380dp"
+        android:layout_width="0dp"
         android:layout_height="300dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/text_contactAddRemove"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,8 +47,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_contacts_pending"
-        android:layout_width="381dp"
+        android:layout_width="0dp"
         android:layout_height="141dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/recycler_contacts"
         app:layout_constraintEnd_toEndOf="parent"
