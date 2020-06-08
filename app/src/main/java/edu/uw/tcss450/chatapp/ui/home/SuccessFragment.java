@@ -43,6 +43,7 @@ import java.util.Locale;
 import edu.uw.tcss450.chatapp.R;
 import edu.uw.tcss450.chatapp.adapter.MyNotificationRecyclerViewAdapter;
 import edu.uw.tcss450.chatapp.databinding.FragmentSuccessBinding;
+import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.ui.weather.CurrentWeatherBuilder;
 import edu.uw.tcss450.chatapp.ui.weather.WeatherViewModel;
 
@@ -51,10 +52,12 @@ import edu.uw.tcss450.chatapp.ui.weather.WeatherViewModel;
  * A simple {@link Fragment} subclass.
  */
 public class SuccessFragment extends Fragment {
+    private WeatherViewModel mCurrentWeatherModel;
+    private HomeViewModel mHomeModel;
+    private UserInfoViewModel mUserModel;
 
     private FragmentSuccessBinding binding;
     private View myView;
-    private WeatherViewModel mCurrentWeatherModel;
     private FusedLocationProviderClient mFusedLocationClient;
     private static final int MY_PERMISSIONS_LOCATIONS = 8414;
     private static double longitude;
@@ -69,8 +72,11 @@ public class SuccessFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ViewModelProvider provider = new ViewModelProvider(getActivity());
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        mCurrentWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+        mCurrentWeatherModel = provider.get(WeatherViewModel.class);
+        mUserModel = provider.get(UserInfoViewModel.class);
+        mHomeModel = provider.get(HomeViewModel.class);
         getLastLocation();
 
         // This callback will only be called when MyFragment is at least Started.
@@ -114,44 +120,74 @@ public class SuccessFragment extends Fragment {
         });
 
 
-        RecyclerView recyclerView = myView.findViewById(R.id.notifications_recyclerview);
+        RecyclerView recyclerView = binding.notificationsRecyclerview;
 
-        ArrayList<Notification> notifications = new ArrayList<>();
+        ArrayList<Notification> notifications = new ArrayList<>(mHomeModel.getList());
 
-        notifications.add(new Notification("user0", "this is my message 0"));
-        notifications.add(new Notification("user1", "this is my message 1"));
-        notifications.add(new Notification("user2", ""));
-        notifications.add(new Notification("user3", "this is my message 3"));
-        notifications.add(new Notification("user4", ""));
-        notifications.add(new Notification("user5", "this is my message 5"));
+//        notifications.add(new Notification("user0", "this is my message 0"));
+//        notifications.add(new Notification("user1", "this is my message 1"));
+//        notifications.add(new Notification("user2", ""));
+//        notifications.add(new Notification("user3", "this is my message 3"));
+//        notifications.add(new Notification("user4", ""));
+//        notifications.add(new Notification("user5", "this is my message 5"));
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(myView.getContext());
 
         recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.setAdapter(new MyNotificationRecyclerViewAdapter(getContext(), notifications));
 
-        MyNotificationRecyclerViewAdapter adapter = new MyNotificationRecyclerViewAdapter(getContext(),
-                notifications, new MyNotificationRecyclerViewAdapter.DetailsAdapterListener() {
-            @Override
-            public void acceptOnClick(View v, int position) {
-                String user = notifications.get(position).getUsername();
-                Log.e("Notifications", user + " accepted :)");
-            }
+        mHomeModel.addListCreateResponseObserver(notifications, getViewLifecycleOwner(), notificationList -> {
+//            if(!notificationList.isEmpty()) {
+                if (recyclerView.getAdapter() == null ) {
+                    Log.i("HOME", "resetting recycler view");
+                    recyclerView.setAdapter(
+                            new MyNotificationRecyclerViewAdapter(getContext(), notificationList)
+                    );
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                }
+                Log.i("HOME", "updating recycler view");
+                recyclerView.getAdapter().notifyDataSetChanged();
+//            }
+        });
 
-            @Override
-            public void rejectOnClick(View v, int position) {
-                String user = notifications.get(position).getUsername();
-                Log.e("Notifications", user + " rejected :(");
-            }
-        }, new MyNotificationRecyclerViewAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                String user = notifications.get(position).getUsername();
-                Log.e("Notifications", "message from " + user + " clicked");
+        mHomeModel.addMessageObserver(getViewLifecycleOwner(), chatList -> {
+            if(recyclerView.getAdapter() != null) {
+                Log.i("HOME", "received a message");
+                recyclerView.getAdapter().notifyDataSetChanged();
+                notifications.clear();
+                for (Notification n : mHomeModel.getList()){
+                    notifications.add(n);
+                }
+                Log.i("HOME", "recycler view size: " + recyclerView.getAdapter().getItemCount());
             }
         });
 
-        binding.notificationsRecyclerview.setAdapter(adapter);
+    // old recycler view adapter
+//        MyNotificationRecyclerViewAdapter adapter = new MyNotificationRecyclerViewAdapter(getContext(),
+//                notifications, new MyNotificationRecyclerViewAdapter.DetailsAdapterListener() {
+//            @Override
+//            public void acceptOnClick(View v, int position) {
+//                String user = notifications.get(position).getUsername();
+//                Log.e("Notifications", user + " accepted :)");
+//            }
+//
+//            @Override
+//            public void rejectOnClick(View v, int position) {
+//                String user = notifications.get(position).getUsername();
+//                Log.e("Notifications", user + " rejected :(");
+//            }
+//        }, new MyNotificationRecyclerViewAdapter.ItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                String user = notifications.get(position).getUsername();
+//                Log.e("Notifications", "message from " + user + " clicked");
+//            }
+//        });
+
+//        MyNotificationRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position) -> {
+
+//        binding.notificationsRecyclerview.setAdapter(adapter);
 
 
     }
@@ -159,7 +195,7 @@ public class SuccessFragment extends Fragment {
     /**
      * Requests the device location from the API
      */
-    private void getLastLocation(){
+    private void getLastLocation() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
                 mFusedLocationClient.getLastLocation().addOnCompleteListener(

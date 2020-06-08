@@ -19,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ChangePasswordViewModel extends AndroidViewModel {
@@ -89,14 +91,23 @@ public class ChangePasswordViewModel extends AndroidViewModel {
      * @author Charles Bryan
      * @version 1.0
      */
-    public void connect(final String password) {
+    public void connect(final String password, String jwt) {
         String url = "https://team-2-tcss-450-backend.herokuapp.com/change_pass?newpw=" +
                 password;
         Request request = new JsonObjectRequest(
                 Request.Method.POST,
                 url,
                 null,
-                mResponse::setValue, this::handleError);
+                mResponse::setValue,
+                this::handleError){
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                // add headers <key,value>
+                headers.put("Authorization", jwt);
+                return headers;
+            }
+        };
         request.setRetryPolicy(new DefaultRetryPolicy( 10_000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

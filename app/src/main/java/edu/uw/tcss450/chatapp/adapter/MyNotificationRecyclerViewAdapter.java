@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.uw.tcss450.chatapp.R;
@@ -28,16 +29,16 @@ public class MyNotificationRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
     public DetailsAdapterListener onClickListener;
 
-    public ItemClickListener onItemClickListener;
+//    public ItemClickListener onItemClickListener;
 
     private Context mContext;
 
 
-    public MyNotificationRecyclerViewAdapter(Context context, List<Notification> items, DetailsAdapterListener listener, ItemClickListener itemClickListener) {
+    public MyNotificationRecyclerViewAdapter(Context context, List<Notification> items) {
         this.mNotifications = items;
         this.mContext = context;
-        this.onClickListener = listener;
-        this.onItemClickListener = itemClickListener;
+//        this.onClickListener = listener;
+//        this.onItemClickListener = itemClickListener;
     }
 
 
@@ -120,16 +121,16 @@ public class MyNotificationRecyclerViewAdapter extends RecyclerView.Adapter<Recy
             txtName = itemView.findViewById(R.id.txt_message);
             item = itemView.findViewById(R.id.message_item);
 
-            item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.onItemClick(v, getAdapterPosition());
-                }
-            });
+//            item.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    onItemClickListener.onItemClick(v, getAdapterPosition());
+//                }
+//            });
         }
 
         private void setMessageDetails(Notification notification) {
-            txtName.setText(notification.getMessage());
+            txtName.setText(notification.getUsername() + ": " + notification.getMessage());
         }
 
 

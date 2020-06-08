@@ -1,22 +1,17 @@
 package edu.uw.tcss450.chatapp;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavArgument;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -33,6 +28,7 @@ import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.services.PushReceiver;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatMessage;
 import edu.uw.tcss450.chatapp.ui.chat.chat_room.ChatRoomViewModel;
+import edu.uw.tcss450.chatapp.ui.home.HomeViewModel;
 import edu.uw.tcss450.chatapp.utils.ThemeChanger;
 
 /**
@@ -79,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
         mNewMessageModel = new ViewModelProvider(this).get(NewMessageCountViewModel.class);
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.navigation_chat) {
+            if (destination.getId() == R.id.navigation_chat_room) {
                 //When the user navigates to the chats page, reset the new message count.
                 //This will need some extra logic for your project as it should have
                 //multiple chat rooms.
-                mNewMessageModel.reset();
+                mNewMessageModel.reset(arguments.getInt("chatId"));
             }
         });
 
@@ -154,10 +150,9 @@ public class MainActivity extends AppCompatActivity {
      * A BroadcastReceiver that listens for messages sent from PushReceiver
      */
     private class MainPushMessageReceiver extends BroadcastReceiver {
-
-        private ChatRoomViewModel mModel =
-                new ViewModelProvider(MainActivity.this)
-                        .get(ChatRoomViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(MainActivity.this);
+        private ChatRoomViewModel mChatModel = provider.get(ChatRoomViewModel.class);
+        private HomeViewModel mHomeModel = provider.get(HomeViewModel.class);
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -169,15 +164,18 @@ public class MainActivity extends AppCompatActivity {
             if (intent.hasExtra("chatMessage")) {
 
                 ChatMessage cm = (ChatMessage) intent.getSerializableExtra("chatMessage");
+                int chatId = (Integer) intent.getIntExtra("chatid", -1);
 
                 //If the user is not on the chat screen, update the
                 // NewMessageCountView Model
-                if (nd.getId() != R.id.navigation_chat) {
-                    mNewMessageModel.increment();
+                if (nd.getId() != R.id.navigation_chat_room) {
+                    mNewMessageModel.increment(chatId);
+                    mHomeModel.addNotification(cm.getSender(), cm.getMessage(), chatId);
                 }
                 //Inform the view model holding chatroom messages of the new
                 //message.
-                mModel.addMessage(intent.getIntExtra("chatid", -1), cm);
+                mChatModel.addMessage(chatId, cm);
+
             }
         }
     }

@@ -38,6 +38,7 @@ public class ChangePasswordFragment extends Fragment {
 
 
     private ChangePasswordViewModel mChangePassModel;
+    private UserInfoViewModel mUserModel;
 
     private FragmentChangePasswordBinding binding;
 
@@ -56,8 +57,9 @@ public class ChangePasswordFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mChangePassModel = new ViewModelProvider(getActivity())
-                .get(ChangePasswordViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(getActivity());
+        mChangePassModel = provider.get(ChangePasswordViewModel.class);
+        mUserModel = provider.get(UserInfoViewModel.class);
 
     }
 
@@ -118,7 +120,7 @@ public class ChangePasswordFragment extends Fragment {
 
         String email = LoginFragment.getEmail();
 
-        mChangePassModel.connect(binding.editPassChangePass.getText().toString());
+        mChangePassModel.connect(binding.editPassChangePass.getText().toString(), mUserModel.getmJwt());
 
     }
 
