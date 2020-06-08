@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavArgument;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -169,11 +170,12 @@ public class MainActivity extends AppCompatActivity {
                 // NewMessageCountView Model
                 if (nd.getId() != R.id.navigation_chat_room) {
                     mNewMessageModel.increment(chatId);
+                    mHomeModel.addNotification(cm.getSender(), cm.getMessage(), chatId);
                 }
                 //Inform the view model holding chatroom messages of the new
                 //message.
                 mChatModel.addMessage(chatId, cm);
-                mHomeModel.addNotification(cm.getSender(), cm.getMessage());
+
             }
         }
     }

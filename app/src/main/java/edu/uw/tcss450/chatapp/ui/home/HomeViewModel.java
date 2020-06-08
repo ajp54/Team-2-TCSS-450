@@ -35,11 +35,11 @@ public class HomeViewModel extends AndroidViewModel {
         mListAddResponse.observe(owner, observer);
     }
 
-    public void addNotification(String username, String message) {
+    public void addNotification(String username, String message, int chatId) {
         List newList = new ArrayList();
-        newList.add(new Notification(username, message));
+        newList.add(new Notification(username, message, chatId));
         Log.i("HOMEMODEL", "added notification with message: " + message);
-        mNotificationList.getValue().add(0, new Notification(username, message));
+        mNotificationList.getValue().add(0, new Notification(username, message, chatId));
         Log.i("HOMEMODEL", "recycler list size: " + mNotificationList.getValue().size());
         mListAddResponse.setValue(new Integer(1));
     }

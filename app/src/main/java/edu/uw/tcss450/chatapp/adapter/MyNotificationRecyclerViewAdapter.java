@@ -130,7 +130,7 @@ public class MyNotificationRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         }
 
         private void setMessageDetails(Notification notification) {
-            txtName.setText(notification.getMessage());
+            txtName.setText(notification.getUsername() + ": " + notification.getMessage());
         }
 
 
