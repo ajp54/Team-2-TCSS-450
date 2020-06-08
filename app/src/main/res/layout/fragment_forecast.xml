@@ -86,7 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/today_info"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="45dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -99,6 +99,7 @@
                 android:id="@+id/img_weather"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:clickable="false"
                 android:src="@mipmap/ic_launcher">
 
             </ImageView>

@@ -5,38 +5,65 @@
     android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.contacts.ContactsFragment" >
+    tools:context=".ui.contacts.ContactsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_contacts"
-        android:layout_width="382dp"
-        android:layout_height="480dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="96dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
-        tools:listitem="@layout/fragment_contacts_card" />
-
-    <Button
-        android:id="@+id/button_contacts_edit"
+    <ImageButton
+        android:id="@+id/button_add"
+        style="@style/Widget.App.Button.OutlinedButton.IconOnly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
-        android:text="@string/hint_contacts"
+        android:layout_marginEnd="78dp"
+        android:layout_marginBottom="16dp"
+        android:background="#FFFFFF"
+        android:contentDescription="TODO"
+        android:src="@drawable/ic_add_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <EditText
+        android:id="@+id/edit_contact_username"
+        android:layout_width="199dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="@string/hint_user"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="383dp"
-        android:layout_height="118dp"
+        android:id="@+id/recycler_contacts"
+        android:layout_width="380dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/text_contactAddRemove"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/fragment_contacts_card" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_contacts_pending"
+        android:layout_width="381dp"
+        android:layout_height="141dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/recycler_contacts"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/fragment_contacts_pending_card" />
+
+    <TextView
+        android:id="@+id/text_contactAddRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add a contact"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/edit_contact_username"
+        app:layout_constraintEnd_toEndOf="@+id/edit_contact_username"
+        app:layout_constraintStart_toStartOf="@+id/edit_contact_username" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

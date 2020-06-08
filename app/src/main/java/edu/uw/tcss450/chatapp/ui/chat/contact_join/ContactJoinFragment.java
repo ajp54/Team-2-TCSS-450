@@ -90,15 +90,15 @@ public class ContactJoinFragment extends Fragment {
         final RecyclerView rv = binding.recyclerContacts;
 
         //this is for navigating somewhere when the card is tapped
-        ContactRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position) -> {
+        ContactRecyclerViewAdapter.RecyclerViewClickListener listener = (v, position, delete) -> {
             FragmentContactsCardBinding cardBinding = FragmentContactsCardBinding.bind(v);
-            if(cardBinding.imageSelected.getVisibility() == View.INVISIBLE) {
+            if(cardBinding.imageSelected.getVisibility() == View.GONE) {
                 cardBinding.imageSelected.setVisibility(View.VISIBLE);
 //                String name = cardBinding.textUsername.getText().toString();
                 contactsBeingAdded.add(cardBinding.textUsername.getText().toString());
                 binding.buttonCreateRoom.setEnabled(true);
             } else {
-                cardBinding.imageSelected.setVisibility(View.INVISIBLE);
+                cardBinding.imageSelected.setVisibility(View.GONE);
 //                String name = cardBinding.textUsername.getText().toString();
                 contactsBeingAdded.remove(cardBinding.textUsername.getText().toString());
                 if(contactsBeingAdded.size() == 0)
@@ -109,10 +109,10 @@ public class ContactJoinFragment extends Fragment {
             Log.i("COLOR", "number of people to be added: " + contactsBeingAdded.size());
         };
 
-        mContactsModel.addContactObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
+        mContactsModel.addContactObserver(getActivity(), mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
             if (!contactList.isEmpty()) {
                 rv.setAdapter(
-                        new ContactRecyclerViewAdapter(contactList, listener)
+                        new ContactRecyclerViewAdapter(contactList, listener, mContactsModel, mUserModel, true)
                 );
                 rv.getAdapter().notifyDataSetChanged();
                 rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -123,20 +123,24 @@ public class ContactJoinFragment extends Fragment {
         });
 
         mChatModel.addChatCreateResponseObserver(getViewLifecycleOwner(), result -> {
+            Log.i("ADDCONTACT", "room created");
                     try {
+
                         addMembersToRoom(result.getInt("chatID"));
                     } catch (JSONException e) {
+                        Log.i("ADDCONTACT", "failed to add members to room");
                         e.printStackTrace();
                     }
-                })  ;
+                });
 
         binding.buttonCreateRoom.setOnClickListener(button -> {
             if(creatingRoom){
                 createNewRoom();
+                Log.i("ADDCONTACT", "user clicked 'create room' button");
             } else {
                 addMembersToRoom(chatId);
             }
-            navigateBackToChat();
+
 
         });
 
@@ -144,7 +148,8 @@ public class ContactJoinFragment extends Fragment {
 
         private void createNewRoom() {
             mChatModel.createChatRoom(mUserModel.getmJwt()); //user is automatically added
-            //int chatId = mChatModel.getRecentRoom();
+            //int newChatId = mChatModel.getRecentRoom();
+//            addMembersToRoom(chatId);
 
         }
 
@@ -153,6 +158,7 @@ public class ContactJoinFragment extends Fragment {
             Log.i("ADDCONTACT", "adding " + contactsBeingAdded.get(i) + " to chat room " + chatId);
             mChatModel.joinChatRoom(chatId, contactsBeingAdded.get(i), mUserModel.getmJwt());
         }
+        navigateBackToChat();
     }
 
     private void navigateBackToChat() {

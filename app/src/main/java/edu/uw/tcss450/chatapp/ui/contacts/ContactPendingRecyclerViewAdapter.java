@@ -16,10 +16,10 @@ import edu.uw.tcss450.chatapp.databinding.FragmentContactsPendingCardBinding;
 public class ContactPendingRecyclerViewAdapter extends RecyclerView.Adapter<ContactPendingRecyclerViewAdapter.ContactPendingViewHolder> {
 
     private final List<ContactPending> mContactsPending;
+    private RecyclerViewClickListener mListener;
+    private ContactPendingViewModel mContactsPendingModel;
 
-    private ContactRecyclerViewAdapter.RecyclerViewClickListener mListener;
-
-    public ContactPendingRecyclerViewAdapter(List<ContactPending> items, ContactRecyclerViewAdapter.RecyclerViewClickListener listener) {
+    public ContactPendingRecyclerViewAdapter(List<ContactPending> items, RecyclerViewClickListener listener) {
         this.mContactsPending = items;
         mListener = listener;
     }
@@ -27,12 +27,14 @@ public class ContactPendingRecyclerViewAdapter extends RecyclerView.Adapter<Cont
     @NonNull
     @Override
     public ContactPendingRecyclerViewAdapter.ContactPendingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        return new ContactPendingRecyclerViewAdapter.ContactPendingViewHolder(LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.fragment_contacts_pending_card, parent, false), mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ContactPendingRecyclerViewAdapter.ContactPendingViewHolder holder, int position) {
-
+        holder.setContact(mContactsPending.get(position));
     }
 
     @Override
@@ -56,21 +58,44 @@ public class ContactPendingRecyclerViewAdapter extends RecyclerView.Adapter<Cont
         }
 
 
-        void setContact(final Contact contact) {
+        void setContact(final ContactPending contactPending) {
             Log.i("RECYCLER", "getting Contact information");
-            binding.textName.setText(contact.getUsername());
+            binding.textName.setText(contactPending.getUsername());
+
+            binding.buttonPendingContactAccept.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    mListener.onClick(v, getAdapterPosition(), "accept");
+//                    if(mListener != null) {
+//
+//                    }
+                    //contactPending.connectAccept();
+                }
+            });
+
+            binding.buttonPendingContactReject.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    mListener.onClick(v, getAdapterPosition(), "reject");
+                    //contactPending.connectReject();
+                }
+            });
+
+
         }
 
         @Override
         public void onClick(View v) {
-            mListener.onClick(v, getAdapterPosition());
+            mListener.onClick(v, getAdapterPosition(), "just a user");
         }
 
     }
 
     public interface RecyclerViewClickListener {
 
-        void onClick(View view, int position);
+        void onClick(View view, int position, String pending);
     }
 
 

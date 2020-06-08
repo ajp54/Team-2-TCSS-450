@@ -132,36 +132,61 @@ public class ChatListFragment extends Fragment {
         };
 
         mChatModel.addChatRoomObserver(mUserModel.getmJwt(), mUserModel.getEmail(), getViewLifecycleOwner(), chatList -> {
+            Log.i("CHATLIST", "updating recycler view");
             if (!chatList.isEmpty()) {
                 rv.setAdapter(
                         new ChatRecyclerViewAdapter(chatList, listener, mChatModel, mUserModel, getView())
                 );
-                rv.getAdapter().notifyDataSetChanged();
                 rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                rv.getAdapter().notifyDataSetChanged();
+            }
                 chatIds = mChatModel.getChatIdList();
                 //TODO add wait capabilities
                 //binding.layoutWait.setVisibility(View.GONE);
-            }
+
         });
 
-
+        //update the recycler view when the names have been retrieved
         mChatModel.addFillNamesResponseObserver(getViewLifecycleOwner(), result -> {
             if (rv.getAdapter() != null) {
                 rv.getAdapter().notifyDataSetChanged();
             }
         });
 
-        //also the 'add people' button
+        //update the recycler view when a new chat room gets created
+        mChatModel.addChatCreateResponseObserver(getViewLifecycleOwner(), result -> {
+            Log.i("CHATLIST", "Room created. Updating recycler view");
+            if (rv.getAdapter() != null) {
+                rv.getAdapter().notifyDataSetChanged();
+                mChatModel.getChatIds(mUserModel.getEmail(), mUserModel.getmJwt());
+            }
+        });
+
+        //update the recycler vew when a chat gets deleted
+        mChatModel.addDeleteRoomResponseObserver(getViewLifecycleOwner(), result -> {
+            Log.i("CHATLIST", "Room created. Updating recycler view");
+            if (rv.getAdapter() != null) {
+                rv.getAdapter().notifyDataSetChanged();
+                mChatModel.getChatIds(mUserModel.getEmail(), mUserModel.getmJwt());
+            }
+        });
+
+        //also the 'Delete' button
         binding.buttonNewChat.setOnClickListener(button -> {
+            Log.i("CHATLIST", "Clicked create/delete button");
             if(!editMode) {
+//                int chatId
+                Log.i("CHATLIST", "navigating to chat create...");
                 navigateToContactJoin(true, 0);
             } else {
+                Log.i("CHATLIST", "trying to delete rooms...");
                 deleteRooms();
             }
         });
 
         //also the cancel button
         binding.buttonEditChat.setOnClickListener(button -> {
+            Log.i("CHATLIST", "Clicked edit/cancel button");
             if (!editMode) {
                 editMode = true;
                 binding.buttonEditChat.setText(getString(R.string.label_cancel));

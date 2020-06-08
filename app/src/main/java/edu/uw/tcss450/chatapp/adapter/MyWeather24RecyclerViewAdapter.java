@@ -68,8 +68,8 @@ public class MyWeather24RecyclerViewAdapter extends RecyclerView.Adapter<MyWeath
         }
 
         public void setHour(final DailyForecastWeatherBuilder hour) {
-            binding.txtTime.setText(hour.getAvgTempF());
-
+            binding.txtTime.setText(hour.getTime());
+            binding.txtTemp.setText(hour.getAvgTempF());
         }
     }
 

@@ -40,7 +40,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,11 +56,10 @@ public class ForecastFragment extends Fragment implements OnMapReadyCallback, Go
     private FragmentForecastBinding binding;
     private View myView;
     private GoogleMap mMap;
-    Marker marker;
+    private Marker marker;
     private WeatherViewModel mCurrentWeatherModel;
     private WeatherViewModel mDailyWeatherModel;
     private WeatherViewModel mWeeklyWeatherModel;
-    private WeatherViewModel mWeatherModelObserver;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private static final int MY_PERMISSIONS_LOCATIONS = 8414;
@@ -81,7 +79,6 @@ public class ForecastFragment extends Fragment implements OnMapReadyCallback, Go
         mCurrentWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         mDailyWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         mWeeklyWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
-        mWeatherModelObserver = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         getLastLocation();
     }
 
@@ -134,8 +131,6 @@ public class ForecastFragment extends Fragment implements OnMapReadyCallback, Go
                                 new MyWeatherRecyclerViewAdapter(weeklyWeatherList));
                     }
                 });
-
-
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -212,11 +207,8 @@ public class ForecastFragment extends Fragment implements OnMapReadyCallback, Go
      * @return true or false
      */
     private boolean checkPermissions() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        return false;
+        return (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
     }
 
     /**
@@ -255,7 +247,7 @@ public class ForecastFragment extends Fragment implements OnMapReadyCallback, Go
      *
      * @param longitude the longitude of the location
      * @param latitude the latitude of the location
-     * @throws IOException
+     * @throws IOException IOexception
      */
     private void getZipCodeFromCoords(Double longitude, Double latitude) throws IOException {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -268,7 +260,7 @@ public class ForecastFragment extends Fragment implements OnMapReadyCallback, Go
      *
      * @param view the View
      */
-    public void getUserZipcode(View view) {
+    private void getUserZipcode(View view) {
         EditText edit = view.findViewById(R.id.edit_zip);
         mZipcode = edit.getText().toString();
         mCurrentWeatherModel.connectGet(mZipcode);

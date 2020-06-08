@@ -17,6 +17,7 @@ import java.util.List;
 
 import edu.uw.tcss450.chatapp.databinding.FragmentChatRoomBinding;
 import edu.uw.tcss450.chatapp.databinding.FragmentContactsCardBinding;
+import edu.uw.tcss450.chatapp.model.NewMessageCountViewModel;
 import edu.uw.tcss450.chatapp.model.UserInfoViewModel;
 import edu.uw.tcss450.chatapp.R;
 
@@ -31,6 +32,7 @@ public class ChatRoomFragment extends Fragment {
     private ChatRoomViewModel mChatModel;
     private UserInfoViewModel mUserModel;
     private ChatRoomSendViewModel mSendModel;
+//    private NewMessageCountViewModel mNewMessageModel;
 
     private List<Integer> ChatIds;
     private int chatId;
@@ -49,6 +51,8 @@ public class ChatRoomFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(getActivity());
         mUserModel = provider.get(UserInfoViewModel.class);
         mChatModel = provider.get(ChatRoomViewModel.class);
+//        mNewMessageModel = provider.get(NewMessageCountViewModel.class);
+//        mNewMessageModel.reset(chatId);
         mChatModel.getChatIds(mUserModel.getEmail(), mUserModel.getmJwt());
         mChatModel.getFirstMessages(chatId, mUserModel.getmJwt());
         ChatIds = mChatModel.getChatIdList();
@@ -61,6 +65,7 @@ public class ChatRoomFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_chat_room, container, false);
+
     }
 
     @Override

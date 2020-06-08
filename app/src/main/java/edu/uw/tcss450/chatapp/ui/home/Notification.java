@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Notification implements Serializable {
     private final String mUsername;
     private final String mMessage;
+    private final int mChatId;
 
 
 //    public static class Builder {
@@ -21,9 +22,10 @@ public class Notification implements Serializable {
 //        }
 //    }
 
-    public Notification(String username, String message) {
+    public Notification(String username, String message, int chatId) {
         this.mUsername = username;
         this.mMessage = message;
+        this.mChatId = chatId;
     }
 
 //    private NotificationBuilder(final Builder builder) {
@@ -37,5 +39,9 @@ public class Notification implements Serializable {
 
     public String getMessage() {
         return mMessage;
+    }
+
+    public int getChatId() {
+        return mChatId;
     }
 }
