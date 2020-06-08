@@ -48,7 +48,7 @@
     <string name="label_edit">Edit</string>
     <string name="label_new_chat">New Chat</string>
     <string name="label_create_room">Create Room</string>
-    <string name="label_delete_rooms">Select Chat Rooms To Edit</string>
+    <string name="label_delete_rooms">Select Chat Rooms To Delete</string>
 
 
 
