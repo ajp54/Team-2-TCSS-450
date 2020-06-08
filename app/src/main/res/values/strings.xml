@@ -72,5 +72,6 @@
     <string name="text_weather_wind">Wind:</string>
     <string name="text_weather_humidity">Humidity:</string>
     <string name="text_weather_precipitation">Precipitation:</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

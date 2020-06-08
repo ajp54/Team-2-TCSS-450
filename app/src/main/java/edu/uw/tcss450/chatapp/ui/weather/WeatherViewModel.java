@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -30,16 +31,19 @@ public class WeatherViewModel extends AndroidViewModel {
     private MutableLiveData<List<CurrentWeatherBuilder>> mCurrentWeatherList;
     private MutableLiveData<List<DailyForecastWeatherBuilder>> mDailyWeatherList;
     private MutableLiveData<List<WeeklyForecastWeatherBuilder>> mWeeklyWeatherList;
+    private MutableLiveData<JSONObject> mWeatherCreateResponse;
 
     public WeatherViewModel(@NonNull Application application) {
         super(application);
         mCurrentWeatherList = new MutableLiveData<>();
         mDailyWeatherList = new MutableLiveData<>();
         mWeeklyWeatherList = new MutableLiveData<>();
+        mWeatherCreateResponse = new MutableLiveData<>();
 
         mCurrentWeatherList.setValue(new ArrayList<>());
         mDailyWeatherList.setValue(new ArrayList<>());
         mWeeklyWeatherList.setValue(new ArrayList<>());
+        mWeatherCreateResponse.setValue(new JSONObject());
     }
 
     public void addWeatherListObserver(@NonNull LifecycleOwner owner,
@@ -58,6 +62,10 @@ public class WeatherViewModel extends AndroidViewModel {
     }
 
     private void handleResult(final JSONObject result) {
+        mCurrentWeatherList.getValue().clear();
+        mDailyWeatherList.getValue().clear();
+        mWeeklyWeatherList.getValue().clear();
+
         IntFunction<String> getString =
                 getApplication().getResources()::getString;
         try {
@@ -67,7 +75,9 @@ public class WeatherViewModel extends AndroidViewModel {
                 JSONObject data =
                         root.getJSONObject(getString.apply(
                                 R.string.keys_json_weather_data));
+
                 // CURRENT WEATHER
+                String cityName = getCity(data);
                 if (data.has(getString.apply(R.string.keys_json_weather_current_condition))) {
                         JSONArray current_condition = data.getJSONArray(
                                 getString.apply(R.string.keys_json_weather_current_condition));
@@ -75,6 +85,7 @@ public class WeatherViewModel extends AndroidViewModel {
                     for (int i = 0; i < current_condition.length(); i++) {
                         JSONObject jsonCurrentWeather = current_condition.getJSONObject(i);
                         mCurrentWeatherList.getValue().add(new CurrentWeatherBuilder.Builder(
+                                cityName,
                                 jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_temp_F)),
                                 jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_windspeedMiles)),
                                 jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_humidity)),
@@ -130,11 +141,12 @@ public class WeatherViewModel extends AndroidViewModel {
         mCurrentWeatherList.setValue(mCurrentWeatherList.getValue());
         mDailyWeatherList.setValue(mDailyWeatherList.getValue());
         mWeeklyWeatherList.setValue(mWeeklyWeatherList.getValue());
+        mWeatherCreateResponse.setValue(result);
     }
 
-    public void connectGet(List<String> locationInfo) {
+    public void connectGet(String zipcode) {
         String url = "https://api.worldweatheronline.com/premium/v1/weather.ashx?key=dc96b2428dc140f09a710254201405&q="
-                + locationInfo.get(1) + "&format=json&num_of_days=7&fx24=no";
+                + zipcode + "&format=json&num_of_days=7&fx24=no&includelocation=yes";
         Request request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -170,6 +182,15 @@ public class WeatherViewModel extends AndroidViewModel {
         JSONObject innerObject = weatherIconUrl.getJSONObject(0);
         String iconUrl = innerObject.getString("value");
         return iconUrl;
+    }
+
+    private String getCity(JSONObject data) throws JSONException {
+        JSONArray nearestArea = data.getJSONArray("nearest_area");
+        JSONObject innerObject = nearestArea.getJSONObject(0);
+        JSONArray areaName = innerObject.getJSONArray("areaName");
+        JSONObject innerObject2 = areaName.getJSONObject(0);
+        String city = innerObject2.getString("value");
+        return city;
     }
 
 }
