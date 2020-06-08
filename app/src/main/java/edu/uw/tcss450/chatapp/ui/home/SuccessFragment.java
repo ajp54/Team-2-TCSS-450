@@ -120,27 +120,46 @@ public class SuccessFragment extends Fragment {
         });
 
 
-        RecyclerView recyclerView = myView.findViewById(R.id.notifications_recyclerview);
+        RecyclerView recyclerView = binding.notificationsRecyclerview;
 
-        ArrayList<Notification> notifications = new ArrayList<>();
+        ArrayList<Notification> notifications = new ArrayList<>(mHomeModel.getList());
 
-        notifications.add(new Notification("user0", "this is my message 0"));
-        notifications.add(new Notification("user1", "this is my message 1"));
-        notifications.add(new Notification("user2", ""));
-        notifications.add(new Notification("user3", "this is my message 3"));
-        notifications.add(new Notification("user4", ""));
-        notifications.add(new Notification("user5", "this is my message 5"));
+//        notifications.add(new Notification("user0", "this is my message 0"));
+//        notifications.add(new Notification("user1", "this is my message 1"));
+//        notifications.add(new Notification("user2", ""));
+//        notifications.add(new Notification("user3", "this is my message 3"));
+//        notifications.add(new Notification("user4", ""));
+//        notifications.add(new Notification("user5", "this is my message 5"));
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(myView.getContext());
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new MyNotificationRecyclerViewAdapter(getContext(), notifications));
+//        recyclerView.setAdapter(new MyNotificationRecyclerViewAdapter(getContext(), notifications));
+
+        mHomeModel.addListCreateResponseObserver(notifications, getViewLifecycleOwner(), notificationList -> {
+//            if(!notificationList.isEmpty()) {
+                if (recyclerView.getAdapter() == null ) {
+                    Log.i("HOME", "resetting recycler view");
+                    recyclerView.setAdapter(
+                            new MyNotificationRecyclerViewAdapter(getContext(), notificationList)
+                    );
+                    recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                }
+                Log.i("HOME", "updating recycler view");
+                recyclerView.getAdapter().notifyDataSetChanged();
+//            }
+        });
 
         mHomeModel.addMessageObserver(getViewLifecycleOwner(), chatList -> {
-            if (recyclerView.getAdapter() != null) {
-                Log.i("HOME", "received a new notification");
+            if(recyclerView.getAdapter() != null) {
+                Log.i("HOME", "received a message");
                 recyclerView.getAdapter().notifyDataSetChanged();
+                notifications.clear();
+                for (Notification n : mHomeModel.getList()){
+                    notifications.add(n);
+                }
+                Log.i("HOME", "recycler view size: " + recyclerView.getAdapter().getItemCount());
             }
                 });
 
