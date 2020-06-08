@@ -272,7 +272,56 @@ public class ContactPendingViewModel extends AndroidViewModel {
     }
 
     private void handleRejectResult(final JSONObject response) {
+        List<ContactPending> tempList = new ArrayList<>(list);
+//        people.clear();
+        list.clear();
 
+        boolean hasNewInfo = false;
+        if (!response.has("rows")) {
+            throw new IllegalStateException("Unexpected response in ChatRoomViewModel: " + response);
+        }
+        try {
+            Log.i("CONTACTS ACCEPT", "recieved a response");
+
+            JSONArray myContact = response.getJSONArray("rows");
+            Log.i("CONTACTS ACCEPT", "rows length: " + myContact.length());
+            JSONObject contact = myContact.getJSONObject(0);
+            String username = contact.getString("username");
+
+            for(int i = 0; i < tempList.size(); i++) {
+                String tempUsername = tempList.get(i).getUsername();
+                Log.i("CONTACTS", "username: " + tempUsername);
+//                chatIds.add(id);
+                //ChatMessage recentMessage = mMessages.get(id).getValue().get(mMessages.get(id).getValue().size());
+                if(!people.contains(tempUsername)){
+                    people.add(tempUsername);
+                    hasNewInfo = true;
+                }
+                if(tempUsername.equals(username)) {
+                    //do nothing
+                    people.remove(tempUsername);
+                } else {
+                    list.add(new ContactPending(new ContactPending.Builder(tempUsername)));
+                }
+
+            }
+            if(hasNewInfo) {
+                mContactPendingList.setValue(list);
+            }
+
+        } catch (JSONException e) {
+            Log.e("JSON PARSE ERROR", "Found in handle Success ContactsPendingViewModel");
+            Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
+        }
+
+        try {
+            JSONArray myContact = response.getJSONArray("rows");
+            JSONObject contact = myContact.getJSONObject(0);
+            String username = contact.getString("username");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mPendingRequestResponse.setValue(response);
     }
 
 }
