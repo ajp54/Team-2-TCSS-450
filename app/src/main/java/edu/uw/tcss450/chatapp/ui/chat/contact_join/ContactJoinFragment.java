@@ -109,7 +109,7 @@ public class ContactJoinFragment extends Fragment {
             Log.i("COLOR", "number of people to be added: " + contactsBeingAdded.size());
         };
 
-        mContactsModel.addContactObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
+        mContactsModel.addContactObserver(getActivity(), mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
             if (!contactList.isEmpty()) {
                 rv.setAdapter(
                         new ContactRecyclerViewAdapter(contactList, listener, mContactsModel, mUserModel, true)

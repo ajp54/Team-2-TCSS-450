@@ -1,9 +1,12 @@
 package edu.uw.tcss450.chatapp.ui.contacts;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.DialogInterface;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
@@ -54,7 +57,8 @@ public class ContactsViewModel extends AndroidViewModel {
         }
     }
 
-    public void addContactObserver(String jwt,
+    public void addContactObserver(Activity act,
+                                   String jwt,
                                    @NonNull LifecycleOwner owner,
                                     @NonNull Observer<? super List<Contact>> observer) {
         mContactList.observe(owner, observer);
@@ -155,7 +159,8 @@ public class ContactsViewModel extends AndroidViewModel {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         //Instantiate the RequestQueue and add the request to the queue
         RequestQueueSingleton.getInstance(getApplication().getApplicationContext())
-                .addToRequestQueue(request); }
+                .addToRequestQueue(request);
+    }
 
     public void connectRemove(final String jwt, final int position) {
 //        String url = "https://team-2-tcss-450-backend.herokuapp.com/contacts";
@@ -229,6 +234,7 @@ public class ContactsViewModel extends AndroidViewModel {
             Log.e("JSON PARSE ERROR", "Found in handle Result ContactsViewModel");
             Log.e("JSON PARSE ERROR", "Error: " + e.getMessage());
         }
+
         mUpdateContactsResponse.setValue(response);
     }
 

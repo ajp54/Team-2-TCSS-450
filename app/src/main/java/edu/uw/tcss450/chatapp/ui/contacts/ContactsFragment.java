@@ -1,10 +1,13 @@
 package edu.uw.tcss450.chatapp.ui.contacts;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -39,6 +42,8 @@ public class ContactsFragment extends Fragment {
 
     List<Contact> userContacts;
     List<ContactPending> userContactsPending;
+
+    Dialog mDialog;
 
     private PasswordValidator mUsernameValidator = PasswordValidator.checkPwdLength(2)
             .and(PasswordValidator.checkExcludeWhiteSpace());
@@ -150,7 +155,7 @@ public class ContactsFragment extends Fragment {
             Log.i("CONTACTS", "user clicked on a contact");
         };
 
-        mContactsModel.addContactObserver(mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
+        mContactsModel.addContactObserver(getActivity(), mUserModel.getmJwt(), getViewLifecycleOwner(), contactList -> {
             if (!contactList.isEmpty()) {
                 rv.setAdapter(
                         new ContactRecyclerViewAdapter(contactList, listener, mContactsModel, mUserModel, false)
@@ -183,7 +188,21 @@ public class ContactsFragment extends Fragment {
 
     private void verifyContactWithServerAdd() {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Add the buttons
+        builder.setMessage(R.string.dialog_message);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+            }
+        });
+        AlertDialog dialog = builder.create();
+
         mContactsModel.connectAdd(mUserModel.getmJwt(), binding.editContactUsername.getText().toString());
+
+        dialog.show();
+
+// Set other dialog properties
 
     }
 
