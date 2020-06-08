@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,6 +31,13 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,19 +52,22 @@ import edu.uw.tcss450.chatapp.databinding.FragmentForecastBinding;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ForecastFragment extends Fragment {
+public class ForecastFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private FragmentForecastBinding binding;
     private View myView;
+    private GoogleMap mMap;
+    Marker marker;
     private WeatherViewModel mCurrentWeatherModel;
     private WeatherViewModel mDailyWeatherModel;
     private WeatherViewModel mWeeklyWeatherModel;
+    private WeatherViewModel mWeatherModelObserver;
 
-    private static List<String> locationInfo;
     private FusedLocationProviderClient mFusedLocationClient;
     private static final int MY_PERMISSIONS_LOCATIONS = 8414;
     private static double longitude;
     private static double latitude;
+    private static String mZipcode;
 
     public ForecastFragment() {
         // Required empty public constructor
@@ -72,6 +81,7 @@ public class ForecastFragment extends Fragment {
         mCurrentWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         mDailyWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         mWeeklyWeatherModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+        mWeatherModelObserver = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         getLastLocation();
     }
 
@@ -103,6 +113,7 @@ public class ForecastFragment extends Fragment {
 
         mCurrentWeatherModel.addWeatherListObserver(getViewLifecycleOwner(), currentWeatherList -> {
                     if (!currentWeatherList.isEmpty()) {
+                        binding.textCity.setText(CurrentWeatherBuilder.getCity());
                         binding.textTemperature.setText(CurrentWeatherBuilder.getTemp_F() + " F");
                         binding.textWind.setText("Wind: " + CurrentWeatherBuilder.getWindSpeedMiles() + " MPH");
                         binding.textHumidity.setText("Humidity: " +CurrentWeatherBuilder.getHumidity() + "%");
@@ -112,7 +123,8 @@ public class ForecastFragment extends Fragment {
 
         mDailyWeatherModel.addDailyWeatherListObserver(getViewLifecycleOwner(), dailyWeatherList -> {
                     if (!dailyWeatherList.isEmpty()) {
-                        binding.recyclerview24.setAdapter(new MyWeather24RecyclerViewAdapter(dailyWeatherList));
+                        binding.recyclerview24.setAdapter(
+                                new MyWeather24RecyclerViewAdapter(dailyWeatherList));
                     }
                 });
 
@@ -122,6 +134,15 @@ public class ForecastFragment extends Fragment {
                                 new MyWeatherRecyclerViewAdapter(weeklyWeatherList));
                     }
                 });
+
+
+
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        //add this fragment as the OnMapReadyCallback -> See onMapReady()
+        mapFragment.getMapAsync(this);
     }
 
     /**
@@ -139,9 +160,8 @@ public class ForecastFragment extends Fragment {
                                 longitude = location.getLongitude();
                                 latitude = location.getLatitude();
                                 try {
-                                    locationInfo = getZipCode(longitude, latitude);
-                                    binding.textCity.setText(locationInfo.get(0));
-                                    mCurrentWeatherModel.connectGet(locationInfo);
+                                    getZipCodeFromCoords(longitude, latitude);
+                                    mCurrentWeatherModel.connectGet(mZipcode);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -156,26 +176,6 @@ public class ForecastFragment extends Fragment {
         } else {
             requestPermissions();
         }
-    }
-
-    /**
-     * A helper method to get the zipcode of a location based off
-     * of its longitude and latitude coordinates
-     *
-     * @param longitude the longitude of the location
-     * @param latitude the latitude of the location
-     * @return the zipcode that the coordinates fall into
-     * @throws IOException
-     */
-    private List<String> getZipCode(Double longitude, Double latitude) throws IOException {
-        List<String> info = new ArrayList<>();
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-        String city = addresses.get(0).getLocality();
-        String zipcode = addresses.get(0).getPostalCode();
-        info.add(city);
-        info.add(zipcode);
-        return info;
     }
 
     /**
@@ -203,8 +203,7 @@ public class ForecastFragment extends Fragment {
     private boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-        LocationManager.NETWORK_PROVIDER
-        );
+            LocationManager.NETWORK_PROVIDER);
         }
 
     /**
@@ -250,9 +249,60 @@ public class ForecastFragment extends Fragment {
         }
     }
 
+    /**
+     * A helper method to get the zipcode and city of a location based off
+     * of its longitude and latitude coordinates
+     *
+     * @param longitude the longitude of the location
+     * @param latitude the latitude of the location
+     * @throws IOException
+     */
+    private void getZipCodeFromCoords(Double longitude, Double latitude) throws IOException {
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+        mZipcode = addresses.get(0).getPostalCode();
+    }
+
+    /**
+     * A helper method to get the zipcode from the editText field on button press
+     *
+     * @param view the View
+     */
     public void getUserZipcode(View view) {
         EditText edit = view.findViewById(R.id.edit_zip);
-        String zipcode = edit.getText().toString();
-        Log.i("User Zipcode", zipcode);
+        mZipcode = edit.getText().toString();
+        mCurrentWeatherModel.connectGet(mZipcode);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setMyLocationEnabled(true);
+        final LatLng c = new LatLng(latitude, longitude);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(c, 15.0f));
+        mMap.setOnMapClickListener(this);
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        Log.d("LAT/LONG", latLng.toString());
+        if (marker != null) {
+            marker.setPosition(latLng);
+        }  else {
+            marker = mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title("Your Destination")
+                    .draggable(true));
+        }
+        mMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                        latLng, mMap.getCameraPosition().zoom));
+        try {
+            getZipCodeFromCoords(latLng.longitude, latLng.latitude);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mCurrentWeatherModel.connectGet(mZipcode);
     }
 }

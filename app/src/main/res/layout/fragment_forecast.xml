@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:fillViewport="true"
     tools:context=".ui.weather.ForecastFragment">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
 
     <LinearLayout
         android:id="@+id/today_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
         android:layout_marginTop="0dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -52,7 +61,7 @@
 
         <EditText
             android:id="@+id/edit_zip"
-            android:layout_width="75dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:layout_marginBottom="15dp"
@@ -60,14 +69,15 @@
             android:hint="@string/enter_zip"
             android:importantForAutofill="no"
             android:inputType="number"
-            android:maxLength="5"
-            android:text="@string/text_zip" />
+            android:maxLength="5" />
 
-        <Button
+        <ImageButton
             android:id="@+id/button_zip"
-            android:layout_width="75dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/button_go" />
+            android:layout_weight="1"
+            android:src="@drawable/ic_search" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -103,18 +113,36 @@
                 android:textStyle="bold">
 
             </TextView>
-
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_wind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/text_weather_wind" />
+
+        <TextView
+            android:id="@+id/text_humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/text_weather_humidity" />
+
+        <TextView
+            android:id="@+id/text_precipitation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/text_weather_precipitation" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="0dp" />
+            android:layout_marginBottom="0dp">
 
-
+        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
 
@@ -124,8 +152,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/temp_box"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="97dp"
-        android:layout_marginBottom="301dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="0dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -139,41 +167,34 @@
 
         </TextView>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="400dp"
+                android:layout_height="400dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:layout="@layout/activity_maps" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/text_wind"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/temp_box"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="@string/text_weather_wind" />
-
-    <TextView
-        android:id="@+id/text_humidity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_wind"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="@string/text_weather_humidity" />
-
-    <TextView
-        android:id="@+id/text_precipitation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_humidity"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="@string/text_weather_precipitation" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="0dp"/>
 
 </RelativeLayout>
+</ScrollView>

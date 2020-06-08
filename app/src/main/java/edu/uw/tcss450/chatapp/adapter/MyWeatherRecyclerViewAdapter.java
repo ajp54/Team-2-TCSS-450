@@ -20,7 +20,6 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
     private final List<WeeklyForecastWeatherBuilder> mDays;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private final int limit = 7;
 
 
     public MyWeatherRecyclerViewAdapter(List<WeeklyForecastWeatherBuilder> items) {
@@ -47,11 +46,7 @@ public class MyWeatherRecyclerViewAdapter extends RecyclerView.Adapter<MyWeather
     // total number of rows
     @Override
     public int getItemCount() {
-        if (mDays.size() > limit) {
-            return limit;
-        } else {
-            return mDays.size();
-        }
+        return mDays.size();
     }
 
     // stores and recycles views as they are scrolled off screen

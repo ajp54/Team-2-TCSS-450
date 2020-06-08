@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class CurrentWeatherBuilder implements Serializable {
 
+    private static String mCity;
     private static String mTemp_F;
     private static String mWindSpeedMiles;
     private static String mHumidity;
@@ -11,12 +12,14 @@ public class CurrentWeatherBuilder implements Serializable {
 
 
     public static class Builder {
+        private final String mCity;
         private final String mTemp_F;
         private final String mWindSpeedMiles;
         private final String mHumidity;
         private final String mPrecipMM;
 
-        public Builder(String temp_F, String windSpeedMiles, String humidity, String precipMM) {
+        public Builder(String city, String temp_F, String windSpeedMiles, String humidity, String precipMM) {
+            this.mCity = city;
             this.mTemp_F = temp_F;
             this.mWindSpeedMiles = windSpeedMiles;
             this.mHumidity = humidity;
@@ -29,11 +32,14 @@ public class CurrentWeatherBuilder implements Serializable {
     }
 
     private CurrentWeatherBuilder(final Builder builder) {
+        this.mCity = builder.mCity;
         this.mTemp_F = builder.mTemp_F;
         this.mWindSpeedMiles = builder.mWindSpeedMiles;
         this.mHumidity = builder.mHumidity;
         this.mPrecipMM = builder.mPrecipMM;
     }
+
+    public static String getCity() { return mCity; }
 
     public static String getTemp_F() {
         return mTemp_F;

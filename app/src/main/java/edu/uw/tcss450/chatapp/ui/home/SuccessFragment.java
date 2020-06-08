@@ -55,11 +55,11 @@ public class SuccessFragment extends Fragment {
     private FragmentSuccessBinding binding;
     private View myView;
     private WeatherViewModel mCurrentWeatherModel;
-    private static List<String> locationInfo;
     private FusedLocationProviderClient mFusedLocationClient;
     private static final int MY_PERMISSIONS_LOCATIONS = 8414;
     private static double longitude;
     private static double latitude;
+    private static String mZipcode;
 
     public SuccessFragment() {
         // Required empty public constructor
@@ -105,7 +105,7 @@ public class SuccessFragment extends Fragment {
 
         mCurrentWeatherModel.addWeatherListObserver(getViewLifecycleOwner(), currentWeatherList -> {
             if (!currentWeatherList.isEmpty()) {
-                binding.textCity.setText(locationInfo.get(0));
+                binding.textCity.setText(CurrentWeatherBuilder.getCity());
                 binding.textTemperature.setText(CurrentWeatherBuilder.getTemp_F() + " F");
                 binding.textWind.setText("Wind: " + CurrentWeatherBuilder.getWindSpeedMiles() + " MPH");
                 binding.textHumidity.setText("Humidity: " +CurrentWeatherBuilder.getHumidity() + "%");
@@ -173,8 +173,8 @@ public class SuccessFragment extends Fragment {
                                 //Log.e("LONGITUDE:", String.valueOf(longitude));
                                 //Log.e("Latitude", String.valueOf(latitude));
                                 try {
-                                    locationInfo = getZipCode(longitude, latitude);
-                                    mCurrentWeatherModel.connectGet(locationInfo);
+                                    getZipCode(longitude, latitude);
+                                    mCurrentWeatherModel.connectGet(mZipcode);
                                     //Log.e("CITY", locationInfo.get(0));
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -201,15 +201,10 @@ public class SuccessFragment extends Fragment {
      * @return the zipcode that the coordinates fall into
      * @throws IOException
      */
-    private List<String> getZipCode(Double longitude, Double latitude) throws IOException {
-        List<String> info = new ArrayList<>();
+    private void getZipCode(Double longitude, Double latitude) throws IOException {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-        String city = addresses.get(0).getLocality();
-        String zipcode = addresses.get(0).getPostalCode();
-        info.add(city);
-        info.add(zipcode);
-        return info;
+        mZipcode = addresses.get(0).getPostalCode();
     }
 
     /**

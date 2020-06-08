@@ -22,7 +22,6 @@ public class MyWeather24RecyclerViewAdapter extends RecyclerView.Adapter<MyWeath
 
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private final int limit = 8;
 
     // data is passed into the constructor
     public MyWeather24RecyclerViewAdapter(List<DailyForecastWeatherBuilder> items) {
@@ -48,11 +47,7 @@ public class MyWeather24RecyclerViewAdapter extends RecyclerView.Adapter<MyWeath
     // total number of rows
     @Override
     public int getItemCount() {
-        if (mHours.size() > limit) {
-            return limit;
-        } else {
-            return mHours.size();
-        }
+        return mHours.size();
     }
 
     // stores and recycles views as they are scrolled off screen

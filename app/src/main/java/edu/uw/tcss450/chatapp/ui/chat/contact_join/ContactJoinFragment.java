@@ -5,7 +5,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -78,11 +81,11 @@ public class ContactJoinFragment extends Fragment {
         FragmentContactJoinBinding binding = FragmentContactJoinBinding.bind(getView());
 
         if(!creatingRoom) {
-            binding.buttonCreateRoom.setText("Add People");
+            binding.buttonCreateRoom.setText(R.string.label_add_people);
         } else {
-            binding.buttonCreateRoom.setText("Create Room");
+            binding.buttonCreateRoom.setText(R.string.label_create_room);
         }
-
+        binding.buttonCreateRoom.setEnabled(false);
 
         final RecyclerView rv = binding.recyclerContacts;
 
@@ -93,10 +96,13 @@ public class ContactJoinFragment extends Fragment {
                 cardBinding.imageSelected.setVisibility(View.VISIBLE);
 //                String name = cardBinding.textUsername.getText().toString();
                 contactsBeingAdded.add(cardBinding.textUsername.getText().toString());
+                binding.buttonCreateRoom.setEnabled(true);
             } else {
                 cardBinding.imageSelected.setVisibility(View.INVISIBLE);
 //                String name = cardBinding.textUsername.getText().toString();
                 contactsBeingAdded.remove(cardBinding.textUsername.getText().toString());
+                if(contactsBeingAdded.size() == 0)
+                    binding.buttonCreateRoom.setEnabled(false);
             }
 
 //            binding.recyclerContacts.getAdapter().getItemId(position);
@@ -130,6 +136,7 @@ public class ContactJoinFragment extends Fragment {
             } else {
                 addMembersToRoom(chatId);
             }
+            navigateBackToChat();
 
         });
 
@@ -146,6 +153,12 @@ public class ContactJoinFragment extends Fragment {
             Log.i("ADDCONTACT", "adding " + contactsBeingAdded.get(i) + " to chat room " + chatId);
             mChatModel.joinChatRoom(chatId, contactsBeingAdded.get(i), mUserModel.getmJwt());
         }
+    }
+
+    private void navigateBackToChat() {
+        NavController navController = Navigation.findNavController(getView());
+        navController.popBackStack(R.id.navigation_chat, true);
+        navController.navigate(R.id.navigation_chat);
     }
 
 }

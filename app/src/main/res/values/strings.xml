@@ -42,6 +42,13 @@
     <string name="label_notifications">Notifications</string>
     <string name="label_verify_email">Please Verify Your Email</string>
     <string name="label_continue">Continue</string>
+    <string name="label_delete">Delete</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_add_people">Add People</string>
+    <string name="label_edit">Edit</string>
+    <string name="label_new_chat">New Chat</string>
+    <string name="label_create_room">Create Room</string>
+
 
     <string name="toggle_theme">Toggle Theme</string>
     <string name="change_password">Change Password</string>
@@ -65,5 +72,6 @@
     <string name="text_weather_wind">Wind:</string>
     <string name="text_weather_humidity">Humidity:</string>
     <string name="text_weather_precipitation">Precipitation:</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

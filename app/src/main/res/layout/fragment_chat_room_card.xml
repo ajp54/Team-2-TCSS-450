@@ -7,12 +7,13 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     app:cardCornerRadius="5dp">
+<!--    @color/colorOffWhite-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_inner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorOffWhite"
+        android:background="#FFFF"
         app:layout_constraintBottom_toTopOf="@+id/text_message"
         app:layout_constraintTop_toTopOf="@+id/text_message">
 
@@ -34,9 +35,8 @@
 
         <TextView
             android:id="@+id/text_message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorOffWhite"
+            android:layout_width="360dp"
+            android:layout_height="36dp"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
@@ -44,9 +44,21 @@
             android:text="Recent Message"
             android:textColor="@color/secondaryTextColor"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buitton_more"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_people" />
+
+        <ImageButton
+            android:id="@+id/buitton_more"
+            style="@style/Widget.AppCompat.ImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:drawable/screen_background_light_transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_people"
+            app:srcCompat="@drawable/ic_more_grey_24dp" />
 
         <ImageView
             android:id="@+id/image_selected"
@@ -60,6 +72,31 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_check_circle_black_24dp" />
+
+        <Button
+            android:id="@+id/button_delete"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="76dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/label_delete"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button_edit" />
+
+        <Button
+            android:id="@+id/button_edit"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="108dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/label_add_people"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_delete"
+            app:layout_constraintTop_toBottomOf="@+id/buitton_more" />
 
         <!--            app:srcCompat="@drawable/ic_more_grey_24dp" />-->
 

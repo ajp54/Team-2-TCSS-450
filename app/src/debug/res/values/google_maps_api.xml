@@ -1,0 +1,24 @@
+<resources>
+    <!--
+
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=5E:24:CF:7B:FC:05:E9:7D:20:B0:9B:CB:4C:ED:65:BC:1E:1F:27:E1%3Bedu.uw.tcss450.chatapp
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    edu.uw.tcss450.chatapp
+
+    SHA-1 certificate fingerprint:
+    5E:24:CF:7B:FC:05:E9:7D:20:B0:9B:CB:4C:ED:65:BC:1E:1F:27:E1
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBj6Dbdc7LEQodQWMq8q_Pb08zey_q0C0Y</string>
+</resources>
