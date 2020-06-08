@@ -60,7 +60,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Select Chat Room To Edit"
+        android:text="@string/label_delete_rooms"
         android:textAlignment="center"
         android:textColor="?android:textColorPrimary"
         android:textSize="20sp"
