@@ -30,7 +30,7 @@ public class ContactPendingViewModel extends AndroidViewModel {
 
     private MutableLiveData<JSONObject> mPendingRequestResponse;
 
-    List<ContactPending> list = new ArrayList<ContactPending>();
+    private List<ContactPending> list = new ArrayList<ContactPending>();
 
     public MutableLiveData<List<ContactPending>> getmContactPendingList() {
         return mContactPendingList;
@@ -217,7 +217,7 @@ public class ContactPendingViewModel extends AndroidViewModel {
 
     private void handleAcceptResult(final JSONObject response) {
         List<ContactPending> tempList = new ArrayList<>(list);
-        people.clear();
+//        people.clear();
         list.clear();
 
         boolean hasNewInfo = false;
