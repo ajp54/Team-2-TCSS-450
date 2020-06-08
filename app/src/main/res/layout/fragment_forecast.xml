@@ -99,6 +99,7 @@
                 android:id="@+id/img_weather"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:clickable="false"
                 android:src="@mipmap/ic_launcher">
 
             </ImageView>

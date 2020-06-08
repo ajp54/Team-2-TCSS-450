@@ -22,9 +22,6 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     private UserInfoViewModel mUserModel;
     private View parentView;
 
-    String myEmail;
-    String myJwt;
-
     //Store all of the contacts to present
     private final List<ChatRoom> mChatRooms;
 

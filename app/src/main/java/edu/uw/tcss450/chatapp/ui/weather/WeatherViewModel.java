@@ -12,7 +12,6 @@ import androidx.lifecycle.Observer;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -20,7 +19,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.function.IntFunction;
 
@@ -31,19 +32,16 @@ public class WeatherViewModel extends AndroidViewModel {
     private MutableLiveData<List<CurrentWeatherBuilder>> mCurrentWeatherList;
     private MutableLiveData<List<DailyForecastWeatherBuilder>> mDailyWeatherList;
     private MutableLiveData<List<WeeklyForecastWeatherBuilder>> mWeeklyWeatherList;
-    private MutableLiveData<JSONObject> mWeatherCreateResponse;
 
     public WeatherViewModel(@NonNull Application application) {
         super(application);
         mCurrentWeatherList = new MutableLiveData<>();
         mDailyWeatherList = new MutableLiveData<>();
         mWeeklyWeatherList = new MutableLiveData<>();
-        mWeatherCreateResponse = new MutableLiveData<>();
 
         mCurrentWeatherList.setValue(new ArrayList<>());
         mDailyWeatherList.setValue(new ArrayList<>());
         mWeeklyWeatherList.setValue(new ArrayList<>());
-        mWeatherCreateResponse.setValue(new JSONObject());
     }
 
     public void addWeatherListObserver(@NonNull LifecycleOwner owner,
@@ -69,11 +67,10 @@ public class WeatherViewModel extends AndroidViewModel {
         IntFunction<String> getString =
                 getApplication().getResources()::getString;
         try {
-            JSONObject root = result;
 
-            if (root.has(getString.apply(R.string.keys_json_weather_data))) {
+            if (result.has(getString.apply(R.string.keys_json_weather_data))) {
                 JSONObject data =
-                        root.getJSONObject(getString.apply(
+                        result.getJSONObject(getString.apply(
                                 R.string.keys_json_weather_data));
 
                 // CURRENT WEATHER
@@ -82,10 +79,12 @@ public class WeatherViewModel extends AndroidViewModel {
                         JSONArray current_condition = data.getJSONArray(
                                 getString.apply(R.string.keys_json_weather_current_condition));
 
+                    String imageUrl = getIconUrlCurrent(current_condition);
                     for (int i = 0; i < current_condition.length(); i++) {
                         JSONObject jsonCurrentWeather = current_condition.getJSONObject(i);
                         mCurrentWeatherList.getValue().add(new CurrentWeatherBuilder.Builder(
                                 cityName,
+                                imageUrl,
                                 jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_temp_F)),
                                 jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_windspeedMiles)),
                                 jsonCurrentWeather.getString(getString.apply(R.string.keys_json_weather_humidity)),
@@ -110,15 +109,27 @@ public class WeatherViewModel extends AndroidViewModel {
                                         getString.apply(
                                                 R.string.keys_json_weather_hourly));
 
+                                SimpleDateFormat formatter= new SimpleDateFormat("HH:mm");
+                                Date date = new Date(System.currentTimeMillis());
+                                String hour = formatter.format(date);
+
                                 for (int j = 0; j < hourly.length(); j++) {
                                     JSONObject jsonHourlyWeather =
                                             hourly.getJSONObject(j);
+
                                     // Calls helper method to get the iconUrl
                                     String iconUrl = getIconUrlHourly(jsonHourlyWeather);
                                     // Adds the temperature and icon for each hourly increment of the day
                                     mDailyWeatherList.getValue().add(new DailyForecastWeatherBuilder.Builder(
                                             jsonHourlyWeather.getString(getString.apply(R.string.keys_json_weather_tempF)),
-                                            iconUrl).build());
+                                            iconUrl, hour).build());
+
+                                    int newHour = (Integer.parseInt(hour.substring(0, 2)) + 3) % 24;
+                                    if (newHour < 10) {
+                                        hour = "0" + newHour + hour.substring(2);
+                                    } else {
+                                        hour = newHour + hour.substring(2);
+                                    }
                                 }
                                 mWeeklyWeatherList.getValue().add(new WeeklyForecastWeatherBuilder.Builder(
                                         weekly_weather.getString(getString.apply(R.string.keys_json_weather_date)),
@@ -136,12 +147,10 @@ public class WeatherViewModel extends AndroidViewModel {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("ERROR IN WEATHERVIEWMODEL", e.getMessage());
         }
         mCurrentWeatherList.setValue(mCurrentWeatherList.getValue());
         mDailyWeatherList.setValue(mDailyWeatherList.getValue());
         mWeeklyWeatherList.setValue(mWeeklyWeatherList.getValue());
-        mWeatherCreateResponse.setValue(result);
     }
 
     public void connectGet(String zipcode) {
@@ -162,8 +171,9 @@ public class WeatherViewModel extends AndroidViewModel {
     }
 
     /**
+     * Handles any Volley error that may occur
      *
-     * @param error
+     * @param error the error
      */
     private void handleError(final VolleyError error) {
         Log.e("CONNECTION ERROR", "" + error.getLocalizedMessage());
@@ -180,8 +190,14 @@ public class WeatherViewModel extends AndroidViewModel {
     private String getIconUrlHourly(JSONObject theHour) throws JSONException {
         JSONArray weatherIconUrl = theHour.getJSONArray("weatherIconUrl");
         JSONObject innerObject = weatherIconUrl.getJSONObject(0);
-        String iconUrl = innerObject.getString("value");
-        return iconUrl;
+        return innerObject.getString("value");
+    }
+
+    private String getIconUrlCurrent(JSONArray currentConditions) throws JSONException {
+        JSONObject innerObject = currentConditions.getJSONObject(0);
+        JSONArray weatherIconUrl = innerObject.getJSONArray("weatherIconUrl");
+        JSONObject innerObject2 = weatherIconUrl.getJSONObject(0);
+        return innerObject2.getString("value");
     }
 
     private String getCity(JSONObject data) throws JSONException {
@@ -189,8 +205,7 @@ public class WeatherViewModel extends AndroidViewModel {
         JSONObject innerObject = nearestArea.getJSONObject(0);
         JSONArray areaName = innerObject.getJSONArray("areaName");
         JSONObject innerObject2 = areaName.getJSONObject(0);
-        String city = innerObject2.getString("value");
-        return city;
+        return innerObject2.getString("value");
     }
 
 }
